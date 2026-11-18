@@ -1,0 +1,207 @@
+Future Health Digital Innovation Challenge | Hack2skill
+.fhc-page{--fhc-font: "Outfit", ui-sans-serif, system-ui, sans-serif;--fhc-s: clamp(.8, calc(.8 + .2*(100vw - 375px)/1065px) , 1);font-family:var(--fhc-font);font-weight:400;font-synthesis:none;background:#e3ddd1;color:#1d1d1b}.fhc-page :is(h1,h2,h3,h4,h5,h6){font-weight:400}.fhc-page .fhc-fs{font-size:calc(var(--fs) * var(--fhc-s))}.fhc-page .fhc-lh{line-height:calc(var(--lh) * var(--fhc-s))}.fhc-page .fhc-tr{letter-spacing:calc(var(--tr) * var(--fhc-s))}.fhc-page .fhc-focus-title{--fs: 28px;--lh: 34px}@media(min-width:1024px){.fhc-page .fhc-focus-title{--fs: 40px;--lh: 48px}}.fhc-page .fhc-outfit{font-family:"Outfit",var(--fhc-font)}@media(max-width:1023.98px){.fhc-page .fhc-outfit-mobile{font-family:"Outfit",var(--fhc-font)}}.fhc-page button:not(:disabled){cursor:pointer;transition:transform .16s ease,filter .16s ease,background-color .16s ease,border-color .16s ease,color .16s ease,opacity .16s ease,box-shadow .16s ease}.fhc-page button:not(:disabled):hover{transform:scale(.97)}.fhc-page button:not(:disabled):active{transform:scale(.94)}@media(prefers-reduced-motion:reduce){.fhc-page button:not(:disabled):hover,.fhc-page button:not(:disabled):active{transform:none}}
+.cookie-consent-overlay{display:none;position:fixed;bottom:0;height:100vh;width:100%;background-color:#00000080;right:0;z-index:9999;padding:1rem;pointer-events:none}.cookie-consent-overlay.active{display:block;pointer-events:auto}.cookie-consent-modal{background:#fff;border-radius:12px;box-shadow:0 10px 40px #00000026;max-width:600px;position:fixed;bottom:20px;right:20px;width:90vw;padding:0;animation:slideIn .3s ease-out}@keyframes slideIn{0%{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}.cookie-modal-header{display:flex;align-items:center;gap:.5rem;padding:1.25rem;padding-bottom:0}.cookie-modal-icon{font-size:22px;flex-shrink:0}.cookie-modal-title{font-size:1.125rem;font-weight:700;color:#212b36;margin:0;line-height:1.35}.cookie-modal-body{padding:1.5rem}.cookie-description{color:#000;font-size:.875rem;line-height:1.6;margin-bottom:1rem}.cookie-link{color:#3462ae;font-weight:400;text-decoration:underline;cursor:pointer}.cookie-link:hover{color:#2851a3}.cookie-toggle-list{display:flex;flex-direction:column;gap:.75rem;margin-top:1rem}.cookie-toggle-item{display:flex;justify-content:space-between;align-items:center}.cookie-toggle-item:last-child{border-bottom:none}.cookie-toggle-label{display:flex;align-items:center;gap:.5rem;flex:1}.cookie-label-text{font-weight:600;color:#212b36;font-size:.8125rem}.cookie-helper-text{color:#919eab;font-size:.75rem;margin-top:.25rem}.info-icon{color:#919eab;cursor:help;font-size:16px}.toggle-switch{position:relative;width:36px;height:20px;background:#d2d4da;border-radius:20px;cursor:pointer;transition:background .3s}.toggle-switch.active{background:#3462ae}.toggle-switch.disabled{opacity:.5;cursor:not-allowed}.toggle-slider{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .3s;box-shadow:0 2px 4px #0003}.toggle-switch.active .toggle-slider{transform:translate(16px)}.cookie-buttons{display:flex;gap:.75rem;margin-top:.875rem;flex-wrap:wrap}.cookie-btn-primary{font-weight:900;background:#3462ae;color:#fff;border:1px solid #3462ae}.cookie-btn{flex:1;font-weight:900;min-width:120px;padding:.65rem 1.25rem;border-radius:8px;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .3s;border:none;text-align:center}.cookie-btn-primary:hover{background:#2851a3}.cookie-btn-secondary{background:#fff;color:#3462ae;border:1px solid #3462ae}.cookie-btn-secondary:hover{background:#f8f9fa}@media(max-width:768px){.cookie-consent-overlay{padding:.75rem;bottom:0;right:0;left:0}.cookie-consent-modal{background:#fff;border-radius:12px;box-shadow:0 10px 40px #00000026;max-width:600px;position:fixed;bottom:20px;right:20px;width:90vw;padding:0;animation:slideIn .3s ease-out}.cookie-buttons{flex-direction:column}.cookie-btn{width:100%}.cookie-modal-body{padding:.5rem 1rem 1rem}.cookie-modal-header{padding:.875rem 1rem .25rem}}@media(max-width:480px){.cookie-modal-title{font-size:1.1rem}.cookie-modal-icon{font-size:20px}}button.toggle-switch{border:0;padding:0;background:#d2d4da;appearance:none;font:inherit}.cookie-link-button{background:transparent;border:0;padding:0;margin:0;font-family:inherit;font-size:inherit;font-weight:400;line-height:inherit;color:#3462ae;text-decoration:underline;cursor:pointer}.cookie-link-button:hover{color:#2851a3}
+astro-island,astro-slot,astro-static-slot{display:contents}
+The Challenge
+Focus Areas
+Awards
+Timeline
+FAQ
+The Challenge
+Focus Areas
+Awards
+Timeline
+FAQ
+Future Health
+Digital Innovation Challenge
+From signals to solutions.
+How can AI, software, and connected technologies solve priority health needs and support earlier, safer, and more scalable action?
+Explore the Focus Areas
+Together with
+Co-creator
+Co-creator
+Co-creator
+Collaborator
+Awards
+USD 105,000
+Challenge statements
+10 across 3 Focus Areas
+Registration
+15 Oct – 10 Nov 2026
+Open to
+Individuals and teams worldwide
+Future Health Digital Innovation Challenge
+Credible, clinically relevant solutions to global health needs.
+Future Health – A Global Initiative by Abu Dhabi has launched a call to identify and advance solutions to global health needs.
+Multidisciplinary teams developing AI, software, sensing or connected‑device technologies across fertility, population health, and wellbeing are encouraged to register.
+How it works
+01
+Register
+Register as an individual or as a team of up to five participants.
+02
+Build
+Choose a Challenge Statement and start building the day you register.
+03
+Submit
+Submit your working prototype by 20 November, with technical documentation, assumptions, and limitations.
+04
+Present
+The top three teams will be invited to present their solutions and receive their awards at GITEX 2026.
+Note: Top three teams will be selected solely based on evaluations.
+Focus areas
+Focus Areas
+Digital Innovation Focus Areas
+Three Focus Areas. Ten Challenge Statements to address to define your solution.
+01
+Fertility
+Male Reproductive Health
+Reproductive Potential
+Understanding and Reducing Inherited Disease Risk
+02
+Population Health
+03
+Wellbeing
+Fertility
+· Challenge
+01
+Male Reproductive Health
+The Challenge
+How can we identify and address male reproductive health risks earlier, reduce barriers to assessment, and connect men to appropriate care before infertility is diagnosed?
+The Challenge
+Male reproductive health is too often treated as a late-stage infertility issue rather than a routine part of preventive and preconception care. Men may enter the pathway only after prolonged difficulty conceiving or after the female partner has undergone assessment. This delays identification of modifiable, metabolic, infectious, anatomical or semen-related risk factors and can narrow the available choices for the individual and couple. Abu Dhabi’s reproductive health direction is to move upstream: awareness and prevention across life stages, earlier risk detection, integrated digital and genomic-enabled care, and a more connected patient journey. Population Health Intelligence design work also recognizes that male and female infertility require distinct risk models and pathways. The remaining gap is a trusted, low friction front door for men one that reduces stigma and inconvenience, protects highly sensitive information, and translates risk signals into appropriate clinical action. The solution must be designed around religious, social, and cultural sensitivities.
+Objective
+Help men understand and act on reproductive health risks earlier, make assessment easier and more private to access, and guide them to the right care.
+Your solution should
+1
+Earlier, explainable risk identification. Use, where possible, consented history, lifestyle, metabolic, infectious, anatomical and available test inputs to identify relevant risk signals before infertility is diagnosed, while clearly distinguishing screening from diagnosis.
+2
+A culturally trusted experience. Provide discreet and understandable communication that reflects religious, social and cultural sensitivities; avoiding stigma and assumptions about family choices.
+3
+Lower-friction assessment. Remove a material access barrier through options such as private digital intake, teleconsultation, and at-home steps where clinically appropriate, clear service navigation or reduced unnecessary visits.
+4
+Safe triage and referral. Direct users to an appropriate next step: self-care information, primary care, andrology/urology, fertility services or urgent assessment, with red flags, clinical boundaries and human oversight made explicit.
+5
+Privacy by design. Use explicit consent, data minimization, user-controlled sharing, strong access controls, and a clear explanation of how reproductive data will and will not be used.
+6
+Demonstrable value. Show performance on realistic or simulated cases and report measures such as completed assessments, time to appropriate evaluation, referral completion, user trust and fairness across relevant population groups.
+Awards
+USD 105,000
+Across the top three teams.
+USD 50,000
+First place
+USD 35,000
+Second place
+USD 20,000
+Third place
+A pathway beyond
+Selected solutions will receive a readiness assessment and a potential pathway beyond the Challenge.
+The winners’ stage · 7–11 Dec 2026
+The winners’ stage · 7–11 December 2026
+Present your solution at GITEX 2026
+Awards are subject to the final rules, eligibility verification, acceptance of award terms, and payment requirements.
+Take part as an individual, or in a team of up to five people. Team members can be in different countries.
+Who should apply
+Built for people who turn health challenges into working solutions.
+Open worldwide
+Individuals, students, researchers, startups, developers, designers, clinicians, and engineers, from any country. Team leads must be 18 years or older.
+Technology‑neutral
+AI agents, machine learning, analytics, software, sensing, wearables, and connected devices. No platform, model, or device is mandatory.
+Hardware welcome
+Bring a working device or prototype that you can develop further and demonstrate safely.
+Build from day one
+Start building the day you register. Live sessions are held every Thursday and are recorded, so you can watch them any time.
+Take part as an individual, or in a team of up to five people. Team members can be in different countries.
+Timeline
+Up to thirty five days to build
+15 Oct
+Registration opens, and the build starts
+Register your team and start building the same day.
+10 Nov
+Registration closes
+The earlier you register, the longer you have to build.
+20 Nov
+Working prototypes due
+Submit your prototype and documentation.
+20–30 Nov
+Evaluation
+All submissions will be evaluated by an expert panel and the top three winning teams will be announced.
+7–11 Dec
+Awards at GITEX 2026
+The top three winning teams will present, and will be awarded.
+Dates may be subject to change. Any change will be published on this page.
+How the assessment works
+Impact first. Then proof
+that it works.
+Health impact and clinical relevance
+Technical depth and architecture
+Working solution and demonstration quality
+Responsible AI, safety and data governance
+Scalability and deployment readiness
+Commercial viability and path to pilot
+FAQ
+Your questions, answered.
+Who can apply?
+×
+Individuals, researchers, startups, developers, designers, clinicians, engineers, innovators, and multidisciplinary teams, from anywhere in the world. Team leads and award recipients must be at least 18 years old by the submission deadline. If you need permission from your employer or institution to take part, you are responsible for obtaining it.
+How big can a team be?
++
+Can I apply more than once?
++
+What data can we use?
++
+Who owns what we build?
++
+Can we bring hardware?
++
+Do we need to be in the UAE?
++
+Does it cost anything?
++
+Can we apply with an existing product?
++
+Do we have to use a particular technology?
++
+What do we need to submit?
++
+Who owns the Intellectual Property (IP) of the Solution?
++
+Registration opens 15 October
+Turn a health signal
+into a working solution.
+Registration closes on 10 November.
+Questions? Contact
+support+fhdic@hack2skill.com
+Challenge rules
+Privacy
+support+fhdic@hack2skill.com
+Challenge
+Focus Areas
+Awards
+Timeline
+FAQ
+Rules
+Challenge rules
+Privacy notice
+Contact
+support+fhdic@hack2skill.com
+Accept the use of cookies
+We use cookies to improve your browsing experience, serve personalized content, and
+analyze our traffic. By clicking Accept all Cookies, you agree to the storing of cookies
+on your device. You can customize your settings by clicking
+Manage Preferences
+. For more information, please review our
+Cookies Policy
+and
+Privacy Policy
+.
+Accept Recommended Cookies
+Accept All Cookies
+We use cookies to ensure this website works properly and to enhance your experience. Some
+cookies are essential for basic functionality and cannot be disabled, while others help us
+understand how the site is used, remember your preferences, and provide relevant content.
+You can manage your cookie preferences at any time.
+User Engagement & Personalization
+Performance & Behavior Analytics
+Conversion Tracking
+Accept Only Necessary
+Confirm Choices
