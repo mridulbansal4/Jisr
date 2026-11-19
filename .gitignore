@@ -1,2 +1,41 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local data
+*.db
+*.sqlite
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# local API artefacts
+services/api/jisr.db
+services/api/api.log
+services/api/.venv/
+apps/web/.next/
+apps/web/node_modules/
+
+# Local tool folders
 .claude/
 .serena/

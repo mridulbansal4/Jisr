@@ -1,0 +1,120 @@
+# Jisr production deploy (MVP): web -> Vercel, API -> Render deploy hook.
+# Runs CI + crisis evals first (reusable workflows); deploys only if both pass.
+# Required secrets (environment "production"):
+#   VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID, RENDER_DEPLOY_HOOK_URL
+# Required variables (environment "production"):
+#   API_BASE_URL (e.g. https://jisr-api.onrender.com), WEB_URL
+# Docs: docs/05-ops/CICD.md, docs/05-ops/DEPLOYMENT.md
+name: Deploy
+
+on:
+  # Manual only until Render/Vercel secrets are configured (re-add `push: branches: [main]` to deploy on every push).
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false # never cancel a deploy half-way
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  evals:
+    uses: ./.github/workflows/evals.yml
+    secrets: inherit
+
+  deploy-api:
+    name: Deploy API (Render)
+    needs: [ci, evals]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: ${{ vars.API_BASE_URL }}
+    steps:
+      - name: Trigger Render deploy hook
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::error::RENDER_DEPLOY_HOOK_URL not set"; exit 1; fi
+          # Render runs the pre-deploy command (alembic upgrade head) before switching traffic.
+          curl -fsS -X POST "$HOOK" -o /dev/null
+          echo "Render deploy triggered for ${GITHUB_SHA::7}"
+
+      - name: Wait for API health (version must match this commit)
+        env:
+          API: ${{ vars.API_BASE_URL }}
+        run: |
+          for i in $(seq 1 40); do
+            body=$(curl -fsS "$API/healthz" || true)
+            echo "attempt $i: $body"
+            if echo "$body" | grep -q "\"commit\":\"${GITHUB_SHA::7}"; then echo "API healthy on ${GITHUB_SHA::7}"; exit 0; fi
+            sleep 15
+          done
+          echo "::error::API did not report commit ${GITHUB_SHA::7} within 10 minutes"; exit 1
+
+  deploy-web:
+    name: Deploy web (Vercel)
+    needs: [deploy-api]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: ${{ vars.WEB_URL }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Pin to the CLI major verified on build day (docs/05-ops/CICD.md).
+      VERCEL_CLI: vercel@latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: apps/web/package.json
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: apps/web/pnpm-lock.yaml
+
+      - name: Install Vercel CLI
+        run: npm install --global "$VERCEL_CLI"
+
+      - name: Pull Vercel production settings + env
+        run: vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Build (prebuilt)
+        run: vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Deploy
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed: $url"
+
+  smoke:
+    name: Post-deploy smoke test
+    needs: [deploy-web]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    steps:
+      - name: Smoke - web, API health, crisis gate
+        env:
+          API: ${{ vars.API_BASE_URL }}
+          WEB: ${{ vars.WEB_URL }}
+        run: |
+          curl -fsS "$WEB" -o /dev/null && echo "web OK"
+          curl -fsS "$API/healthz" && echo
+          # Synthetic crisis phrase must return RED from the deterministic gate (API-04).
+          resp=$(curl -fsS -X POST "$API/v1/crisis/check" \
+            -H 'Content-Type: application/json' \
+            -d '{"text":"I want to end my life","lang":"en","source":"smoke_test"}')
+          echo "$resp"
+          echo "$resp" | grep -q '"level":"RED"' || { echo "::error::Crisis gate smoke test failed"; exit 1; }
