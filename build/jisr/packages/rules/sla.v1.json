@@ -1,0 +1,18 @@
+{
+  "id": "jisr.sla",
+  "version": "1.0.0",
+  "status": "DRAFT — Jisr proposals, not DoH-mandated; confirm with pilot site",
+  "sources": [
+    "docs/00-overview/PROJECT_BRIEF.md §6 (SLAs)",
+    "DoH Standard of Care for Depression & Anxiety (2025): https://www.doh.gov.ae/-/media/Feature/Resources/Standards/2025/Standard-of-Care-Depression--Anxiety.ashx"
+  ],
+  "env_override": true,
+  "sla": {
+    "red_ack_minutes":            { "value": 15, "env": "SLA_RED_MINUTES",           "escalate_to": "clinician_on_call_backup" },
+    "step_confirm_hours":         { "value": 48, "env": "SLA_STEP_CONFIRM_HOURS",    "escalate_to": "coordinator" },
+    "referral_accept_hours":      { "value": 48, "env": "SLA_REFERRAL_ACCEPT_HOURS", "escalate_to": "coordinator" },
+    "first_appointment_days":     { "value": 14, "env": "SLA_FIRST_APPOINTMENT_DAYS","escalate_to": "coordinator" },
+    "recheck_days":               { "value": 14, "env": "RECHECK_DAYS",              "escalate_to": "person_reminder_then_coordinator" }
+  },
+  "lost_to_follow_up": { "contact_attempts": 3, "within_days": 14 }
+}

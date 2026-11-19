@@ -1,0 +1,826 @@
+{
+  "_meta": {
+    "locale": "en",
+    "status": "source",
+    "note": "English source strings. Instrument item text is NOT here: it comes verbatim from the API (validated instrument wording)."
+  },
+  "common": {
+    "appName": "Jisr",
+    "tagline": "Helps people go from a positive check-in to the right care. A fixed safety check runs before any AI.",
+    "syntheticBanner": "Synthetic data only. Not a medical device.",
+    "judgeMode": "Judge Mode",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "back": "Back",
+    "continue": "Continue",
+    "close": "Close",
+    "signedInAs": "Signed in as {persona}",
+    "switchRole": "Switch role",
+    "sessionExpired": "Your demo session has ended. Choose a persona again.",
+    "toJudge": "Back to Judge Mode",
+    "language": "Language",
+    "skipToContent": "Skip to content",
+    "rulesVersion": "rules {version}",
+    "none": "None",
+    "errorPrefix": "Something went wrong",
+    "apiTarget": "API: {url}"
+  },
+  "badges": {
+    "observed": "Observed",
+    "calculated": "Calculated",
+    "ai": "AI-drafted",
+    "standard": "Standard explanation",
+    "observedHint": "What was answered or recorded",
+    "calculatedHint": "Output of a fixed, versioned rule",
+    "aiHint": "Wording drafted by AI and checked against the scores"
+  },
+  "gates": {
+    "crisisClear": "Safety check: clear",
+    "crisisFired": "Safety check: help shown",
+    "aiLocked": "AI off for safety",
+    "validatorPassed": "Checked against your scores",
+    "validatorBlocked": "AI text didn't pass our checks, so you're seeing the standard text",
+    "standardExplanation": "Standard explanation",
+    "clinicianPending": "A clinician still needs to confirm this. You can book now.",
+    "clinicianConfirmed": "Confirmed by a clinician",
+    "consentOff": "AI summaries are off in your privacy choices"
+  },
+  "judge": {
+    "title": "Judge Mode",
+    "oneLiner": "Jisr follows each positive mental-health check-in until the person is seen by the right service. Rules suggest the step, a clinician confirms it, and AI only helps with wording.",
+    "passcodeLabel": "Demo passcode",
+    "passcodeHelp": "Given in the submission form. Only unlocks synthetic data.",
+    "choose": "Explore as",
+    "enter": "Enter as {name}",
+    "signingIn": "Signing in…",
+    "loginFailed": "Couldn't sign in. Check the passcode and make sure the API is running.",
+    "reset": "Reset demo",
+    "resetting": "Resetting…",
+    "resetConfirm": "Reset all synthetic demo data to the starting state?",
+    "resetDone": "Demo data reset ({count} episodes seeded).",
+    "resetFailed": "Reset failed.",
+    "legendTitle": "Three kinds of content, shown separately",
+    "tourTitle": "Suggested 3-minute path",
+    "tour1": "Mariam: screen → result → next step → book in three taps.",
+    "tour2": "Mariam: type an indirect crisis phrase in the free-text box. Watch the gate fire.",
+    "tour3": "Khalid: the RED episode is pinned on top with a 15-minute clock. Acknowledge it.",
+    "tour4": "Dr Salma: one-screen summary, confirm the step. AI cannot.",
+    "tour5": "Programme lead: simulated conversion vs baseline, fairness with suppressed cells.",
+    "personas": {
+      "mariam": {
+        "name": "Mariam",
+        "role": "Person · Arabic-first",
+        "desc": "34, Emirati, on Thiqa. Prefers Arabic and a female doctor by video. Worried her employer will find out."
+      },
+      "imran": {
+        "name": "Imran",
+        "role": "Person · Urdu, low literacy",
+        "desc": "41, on a basic plan, speaks Urdu and English. Already in care, so you can see his progress."
+      },
+      "dr_salma": {
+        "name": "Dr Salma",
+        "role": "Clinician",
+        "desc": "Family physician. Signs off every step change. Has about six minutes per patient."
+      },
+      "khalid": {
+        "name": "Khalid",
+        "role": "Care coordinator",
+        "desc": "Looks after the crisis queue and any referral that's running late."
+      },
+      "programme_lead": {
+        "name": "Programme lead",
+        "role": "Programme",
+        "desc": "Wants to know how many people reach care, how fast, and whether every group is treated fairly. Sees totals only."
+      }
+    }
+  },
+  "person": {
+    "helpNow": "I need help now",
+    "exit": "Exit",
+    "exitLabel": "Exit to a neutral page",
+    "discreet": "Discreet mode",
+    "discreetOn": "Discreet mode on",
+    "discreetTitle": "Health app",
+    "helpNumbers": "Help numbers",
+    "exitHint": "Exit can't erase your browser history. Use a private window for extra privacy."
+  },
+  "home": {
+    "title": "A short check-in",
+    "intro": "A few questions about the last two weeks. It takes about three minutes, and your answers help us suggest the right support.",
+    "notDx": "This is not a diagnosis and it is not therapy.",
+    "start": "Start",
+    "starting": "Starting…",
+    "myPlan": "See my plan",
+    "privacy": "Nothing is shared with your employer.",
+    "noSession": "Choose a person in Judge Mode first.",
+    "startFailed": "We couldn't start the check-in."
+  },
+  "screen": {
+    "progress": "Question {n} of {total}",
+    "reassure": "Take your time. No right or wrong answers.",
+    "arPending": "We're still waiting on the validated Arabic wording, so the official English question is shown.",
+    "yes": "Yes",
+    "no": "No",
+    "saving": "Saving…",
+    "saveFailed": "We couldn't save that answer. Please try again.",
+    "optionsLabel": "Answer options"
+  },
+  "note": {
+    "title": "Almost done",
+    "prompt": "Is there anything else you'd like us to know? (optional)",
+    "privacy": "Only your care team can read this.",
+    "label": "Anything else you want to tell us",
+    "counter": "{count} / {max}",
+    "submit": "See my result",
+    "skip": "Skip",
+    "checking": "Checking…"
+  },
+  "result": {
+    "title": "Your result",
+    "observedTitle": "Your answers",
+    "observedSummary": "{count} questions answered",
+    "noteGiven": "You also wrote a note. It was checked for safety first.",
+    "viewAnswers": "View my answers",
+    "hideAnswers": "Hide my answers",
+    "calcTitle": "Scores",
+    "scoreOf": "{total} of {max}",
+    "means": "What this means",
+    "doesnt": "What it doesn't mean",
+    "tplMeans": "Your answers suggest worry or low mood has been affecting your days more than usual. A lot of people go through this, and support helps.",
+    "tplDoesnt": "It isn't a diagnosis, and it doesn't mean something is wrong with you.",
+    "tplNext": "On the next screen you'll see a kind of support that fits your answers and what you prefer.",
+    "nextStepHeading": "What happens next",
+    "aiTitle": "In plain words",
+    "aiWhy": "This summary was written by AI using only your scores, then checked by rules. It can't change your result or your next step.",
+    "aiLoading": "Writing a short summary for you…",
+    "aiLocked": "AI explanations are off while we make sure you're safe.",
+    "aiUnavailable": "The short summary isn't available right now. The standard explanation above says the same thing.",
+    "next": "See my next step",
+    "belowThreshold": "Your answers don't suggest you need extra support right now.",
+    "requestSupport": "I'd still like support",
+    "loadFailed": "We couldn't load your result. Your answers are saved.",
+    "redBanner": "Help is available any time.",
+    "noResult": "No result yet. Start a check-in first."
+  },
+  "instruments": {
+    "PHQ9": "Mood (PHQ-9)",
+    "GAD7": "Worry (GAD-7)",
+    "PHQ2": "Mood (PHQ-2)",
+    "GAD2": "Worry (GAD-2)",
+    "CSSRS_SCREEN": "Safety screener"
+  },
+  "bands": {
+    "minimal": "Minimal",
+    "none": "Minimal",
+    "mild": "Mild",
+    "moderate": "Moderate",
+    "moderately_severe": "Moderately severe",
+    "severe": "Severe",
+    "negative": "Below threshold",
+    "positive": "Above threshold"
+  },
+  "step": {
+    "title": "Your next step",
+    "names": {
+      "L0": "Self-guided wellbeing",
+      "L1": "Guided self-help and community support",
+      "L2": "Family physician (primary care)",
+      "L3": "Tele-mental-health or psychologist",
+      "L4": "Specialist psychiatry",
+      "RED": "Crisis pathway"
+    },
+    "level": "Step {step}",
+    "why": "Why we suggested this",
+    "factorCol": "Factor",
+    "valueCol": "Value",
+    "effectCol": "Effect",
+    "ruleCol": "Rule",
+    "factors": {
+      "severity": "Severity",
+      "functional_impairment": "Day-to-day difficulty",
+      "comorbidity": "Physical health",
+      "preference": "Your preference",
+      "language": "Language",
+      "clinician_gender": "Clinician gender",
+      "modality": "How you meet",
+      "insurance_network": "Insurance network",
+      "capacity": "Availability",
+      "rci": "Change since last check",
+      "crisis": "Safety"
+    },
+    "providersTitle": "Options that fit you, best match first",
+    "rank": "Option {n}",
+    "choose": "Choose this",
+    "kinds": {
+      "community": "Community support",
+      "family_physician": "Family physician",
+      "psychologist": "Psychologist",
+      "tele_mh": "Tele-mental-health",
+      "psychiatry": "Psychiatry"
+    },
+    "languages": "Languages",
+    "gender": {
+      "female": "Female clinician",
+      "male": "Male clinician"
+    },
+    "modality": {
+      "in_person": "In person",
+      "video": "Video",
+      "phone": "Phone"
+    },
+    "networks": "Networks",
+    "wait": "Usual wait: {days} days",
+    "nextSlot": "Next: {date}",
+    "synthetic": "Synthetic provider",
+    "notAccepting": "Not accepting new referrals",
+    "noCandidates": "We haven't found a match yet. You can start with self-guided support while a clinician looks at your step.",
+    "loadFailed": "We couldn't load your next step.",
+    "redLocked": "Someone from the care team is handling this with you directly. If you want to talk now, use the help numbers."
+  },
+  "book": {
+    "title": "Confirm and send",
+    "chosen": "You chose",
+    "consentTitle": "What you share",
+    "consentIntro": "Each switch works straight away, and you can change it any time.",
+    "scopes": {
+      "share_with_receiving_provider": {
+        "label": "Share my referral with the chosen clinician",
+        "desc": "Scores, step and preferences go to the clinician you chose."
+      },
+      "share_physical_context": {
+        "label": "Share my physical health check results",
+        "desc": "For example HbA1c, BMI and blood pressure from your IFHAS check, so the clinician sees the full picture."
+      },
+      "ai_drafted_summaries": {
+        "label": "Allow AI-drafted summaries",
+        "desc": "Lets AI write plain-language text from your scores, without your name. If it's off, you see standard text."
+      },
+      "store_free_text": {
+        "label": "Keep what I write in free-text boxes",
+        "desc": "If it's off, we only keep the result of the safety check, never your words."
+      },
+      "notify_sms": {
+        "label": "SMS reminders (discreet wording)",
+        "desc": "The text won't say what it's about."
+      },
+      "notify_whatsapp": {
+        "label": "WhatsApp reminders (discreet wording)",
+        "desc": "The message won't say what it's about."
+      }
+    },
+    "previewTitle": "What the clinician will receive",
+    "previewReferral": "Your scores, suggested step and preferences",
+    "previewPhysical": "Your physical health check results",
+    "previewNothing": "Nothing yet. The clinician can only receive the referral if you allow it.",
+    "employer": "Nothing is shared with your employer.",
+    "insurer": "Your insurer only gets what a normal claim for the appointment needs. They never see your answers, scores or notes.",
+    "effectsTitle": "What your choices mean",
+    "send": "Send booking request",
+    "sending": "Sending…",
+    "consentRequired": "Sharing with the clinician is needed to send the request.",
+    "sendFailed": "We couldn't send the request.",
+    "consentFailed": "We couldn't save that choice.",
+    "noProvider": "Choose an option on the previous screen first."
+  },
+  "plan": {
+    "title": "Your plan",
+    "sent": "Request sent. Nothing was shared with your employer.",
+    "now": "Where things are",
+    "step": "Your step",
+    "timeline": "What has happened",
+    "deadline": "Next: {kind} by {date}",
+    "deadlineKinds": {
+      "crisis_ack": "care team contact",
+      "referral_accept": "clinician accepts",
+      "first_appt": "first appointment",
+      "recheck": "next check-in"
+    },
+    "refreshing": "Updates every 10 seconds",
+    "noEpisode": "No plan yet. Start a check-in first.",
+    "startAgain": "Start a new check-in",
+    "loadFailed": "We couldn't load your plan."
+  },
+  "states": {
+    "SCREENED_POSITIVE": "Check-in received",
+    "EXPLAINED": "Result explained",
+    "STEP_RECOMMENDED": "Next step suggested",
+    "STEP_CONFIRMED": "Step confirmed by a clinician",
+    "REFERRED": "Request sent",
+    "ACCEPTED": "Clinician accepted",
+    "BOOKED": "Appointment booked",
+    "ATTENDED": "Appointment attended",
+    "MONITORING": "Checking in regularly",
+    "STEP_CHANGED": "Step changed by a clinician",
+    "CLOSED": "Closed",
+    "RED_CRISIS": "Care team contacting you",
+    "ESCALATED": "Escalated to the care team",
+    "DECLINED_BY_PROVIDER": "That clinic can't take you, so we're finding another",
+    "DECLINED_BY_PERSON": "You declined",
+    "LOST_TO_FOLLOW_UP": "No contact"
+  },
+  "actors": {
+    "person": "You",
+    "staff": "Care team",
+    "system": "System",
+    "llm": "AI (wording only)"
+  },
+  "crisis": {
+    "h1": "You're not alone.",
+    "h1b": "Help is available right now.",
+    "names": {
+      "emergency": "Emergency",
+      "sakina": "800-SAKINA",
+      "hope": "800-HOPE"
+    },
+    "desc": {
+      "emergency": "If you are in danger now",
+      "sakina": "Mental health support, Abu Dhabi",
+      "hope": "National support line"
+    },
+    "callLabel": "Call {name} on {number}",
+    "copy": "Copy number",
+    "copied": "Copied",
+    "clinician": "A clinician will contact you.",
+    "alerted": "Our care team has been alerted and will try to contact you.",
+    "connecting": "Connecting to the care team…",
+    "alertFailed": "We couldn't alert the care team. Please call one of the numbers above.",
+    "noSession": "Please call one of the numbers above if you need to talk to someone now.",
+    "trust": "If you can, stay with someone you trust.",
+    "aiOff": "AI explanations are off while we make sure you're safe.",
+    "back": "Back to where I was",
+    "failClosed": "We couldn't check your message, so we're showing you the help numbers to be safe.",
+    "continueResult": "Continue to my result",
+    "demoNote": "Demo: alerts go to Khalid's synthetic queue.",
+    "gateTime": "Safety check answered in {ms} ms."
+  },
+  "staff": {
+    "title": "Care console",
+    "queue": "Queue",
+    "views": {
+      "all": "All",
+      "red": "RED",
+      "overdue": "Overdue",
+      "to_confirm": "To confirm",
+      "mine": "Mine"
+    },
+    "col": {
+      "status": "Status",
+      "person": "Person",
+      "reason": "Reason",
+      "step": "Step",
+      "state": "State",
+      "sla": "SLA"
+    },
+    "redBanner": "{count, plural, one {# RED episode needs acknowledgement} other {# RED episodes need acknowledgement}}",
+    "openNow": "Open now",
+    "open": "Open",
+    "empty": "Nothing needs you right now.",
+    "pollError": "Live updates paused. Trying again.",
+    "lastUpdated": "Updated {time}",
+    "left": "{time} left",
+    "overdue": "Overdue {time}",
+    "noDeadline": "None",
+    "red": "RED",
+    "overdueTag": "Overdue",
+    "waiting": "Waiting",
+    "forbidden": "This role can't open the care console.",
+    "episode": {
+      "back": "Queue",
+      "title": "Episode summary",
+      "scores": "Scores",
+      "physical": "Physical context (IFHAS)",
+      "physicalNone": "Not shared. Either the person hasn't agreed, or no results were imported.",
+      "hba1c": "HbA1c",
+      "bmi": "BMI",
+      "bp": "Blood pressure",
+      "observedAt": "Recorded {date}",
+      "timeline": "Timeline",
+      "factors": "Why this step was suggested",
+      "recommended": "Recommended: {step}",
+      "noRec": "No recommendation available.",
+      "currentStep": "Current step: {step}",
+      "state": "State: {state}",
+      "owner": "Owner: {owner}",
+      "slaClock": "Acknowledge within 15 min",
+      "noAi": "No AI-drafted content on this screen.",
+      "loadFailed": "We couldn't load this episode."
+    },
+    "ack": {
+      "title": "Acknowledge RED",
+      "category": "What are you doing?",
+      "categories": {
+        "calling_now": "Calling now",
+        "crisis_line_transfer": "Transferring to a crisis line",
+        "emergency_services_called": "Emergency services called",
+        "other": "Other"
+      },
+      "submit": "Acknowledge, I'm on it",
+      "done": "Acknowledged at {time} · {sla}",
+      "within": "within SLA",
+      "outside": "outside SLA"
+    },
+    "contact": {
+      "title": "Log contact attempt",
+      "channel": "Channel",
+      "outcome": "Outcome",
+      "channels": {
+        "phone": "Phone",
+        "video": "Video",
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "in_person": "In person",
+        "crisis_line_transfer": "Crisis line transfer"
+      },
+      "outcomes": {
+        "reached_safe": "Reached, safe",
+        "reached_needs_emergency": "Reached, needs emergency help",
+        "no_answer": "No answer",
+        "wrong_number": "Wrong number",
+        "declined_contact": "Declined contact",
+        "voicemail_neutral": "Neutral voicemail left"
+      },
+      "submit": "Log attempt",
+      "done": "Attempt {n} logged.",
+      "escalated": "Escalated to {to}."
+    },
+    "confirm": {
+      "title": "Confirm or change step",
+      "step": "Step",
+      "reason": "Reason (required when changing)",
+      "resolveCrisis": "Resolve the crisis (leave RED)",
+      "resolution": "Crisis resolution",
+      "resolutions": {
+        "contacted_safe": "Contacted, safe, plan agreed",
+        "emergency_services": "Referred to emergency services",
+        "referred_l4": "Referred to specialist psychiatry",
+        "unreachable_escalated": "Couldn't reach them, escalated"
+      },
+      "submit": "Confirm step",
+      "done": "Step {step} confirmed ({status}).",
+      "clinicianOnly": "Only a clinician can confirm a step.",
+      "stale": "Someone else updated this episode. We reloaded it, so please check and confirm again."
+    },
+    "simulate": {
+      "title": "Simulate provider (Judge Mode)",
+      "note": "Plays the part of the receiving clinic's system.",
+      "referral": "Referral",
+      "noReferral": "There's no referral on this episode yet. Book as Mariam first and these buttons will use it.",
+      "referralId": "Referral id",
+      "accept": "Provider accepts",
+      "decline": "Provider declines (no capacity)",
+      "book": "Book appointment (video, +2 days)",
+      "accepted": "Referral {status}. Episode: {state}.",
+      "booked": "Appointment {status}. Episode: {state}."
+    },
+    "close": {
+      "title": "Close episode",
+      "reason": "Reason",
+      "submit": "Close episode",
+      "done": "Closed ({reason})."
+    },
+    "actionFailed": "Action failed"
+  },
+  "programme": {
+    "title": "Programme dashboard",
+    "simulated": "Simulated on synthetic data",
+    "aggregate": "Aggregate figures only. No individual data is shown.",
+    "funnel": "Conversion funnel",
+    "kpis": "Key indicators",
+    "dropOff": "Drop-off reasons",
+    "suppressedCells": "{count} small cells suppressed",
+    "fairness": "Fairness by subgroup",
+    "metric": "Metric",
+    "by": "Group by",
+    "metrics": {
+      "conversion": "Conversion to care",
+      "time_to_care": "Time to care",
+      "reliable_improvement": "Reliable improvement"
+    },
+    "byOptions": {
+      "sex": "Sex",
+      "age_band": "Age band",
+      "nationality_group": "Nationality group",
+      "language": "Language",
+      "insurance_plan": "Insurance plan"
+    },
+    "group": "Group",
+    "n": "n",
+    "value": "Value",
+    "ci": "95% CI",
+    "suppressed": "<10, hidden",
+    "suppressionNote": "Groups with fewer than {k} people are hidden. We hide one more as well, so nobody can work out the hidden number from the totals.",
+    "maxGap": "Largest gap: {gap} percentage points",
+    "total": "Total n: {n}",
+    "sim": {
+      "title": "Baseline vs Jisr",
+      "run": "Run simulation",
+      "running": "Running…",
+      "cohort": "Cohort size",
+      "seed": "Seed",
+      "baseline": "Baseline",
+      "jisr": "Jisr",
+      "conversion": "Conversion to care (%)",
+      "days": "Median days to care",
+      "assumptions": "Assumptions"
+    },
+    "loadFailed": "We couldn't load this panel.",
+    "forbidden": "This role can't open the programme dashboard."
+  },
+  "errors": {
+    "notFound": "Page not found.",
+    "home": "Go to Judge Mode"
+  },
+  "nav": {
+    "home": "Home",
+    "check": "Check-in",
+    "companion": "Companion",
+    "plan": "My plan",
+    "queue": "Queue",
+    "safety": "Safety",
+    "dashboard": "Dashboard",
+    "tour": "Tour",
+    "theme": "Toggle colour theme"
+  },
+  "landing": {
+    "eyebrow": "DoH Abu Dhabi · Future Health Challenge · C10",
+    "h1a": "From a positive screen",
+    "h1b": "to the right care, on time.",
+    "sub": "Abu Dhabi is screening more people for anxiety and depression every year. Too many of them never make it to a first appointment. Jisr follows each person until they do.",
+    "ctaTour": "Take the 3-minute tour",
+    "ctaPersonas": "Try it as a persona",
+    "ctaSafety": "See the safety benchmark",
+    "problemEyebrow": "The gap",
+    "problemTitle": "Imagine scoring “moderate” on a screening form, then hearing nothing for three weeks.",
+    "problemBody": "You don't know where to go, whether your insurance covers it, or whether your manager will find out. So you wait, and it gets worse.",
+    "stat1Label": "of adults in an Abu Dhabi sample scored moderate to severe on the PHQ-9",
+    "stat1Source": "Population Medicine, Abu Dhabi population study",
+    "stat2Label": "family physicians trained in common mental-health conditions",
+    "stat2Source": "Gulf News, 2025",
+    "statConvLabel": "reach care: today vs with Jisr",
+    "statDaysLabel": "median days to care: today vs with Jisr",
+    "statRecallLabel": "of crisis phrases caught, out of {n} test cases (target 100%)",
+    "simTag": "SIMULATED",
+    "sourcedTag": "Sourced",
+    "benchTag": "Benchmark run",
+    "statsUnavailable": "Start the demo API to see the simulated figures here.",
+    "flowEyebrow": "How it works",
+    "flowTitle": "Five steps, each with an owner and a deadline",
+    "flowSub": "Every step is recorded, so you can see who did what and when.",
+    "flow": {
+      "screen": {
+        "title": "Screen",
+        "body": "PHQ-9 and GAD-7, scored with fixed rules."
+      },
+      "gate": {
+        "title": "Crisis gate",
+        "body": "Checks question 9 and the person's own words before any AI runs. Takes under a second."
+      },
+      "step": {
+        "title": "Lightest safe step",
+        "body": "Levels L0 to L4, matched on severity, language, clinician gender, insurance and wait time."
+      },
+      "handoff": {
+        "title": "Hand-off",
+        "body": "A referral the person agreed to, with a named owner and a clock."
+      },
+      "outcome": {
+        "title": "Follow-up",
+        "body": "Re-checks every two weeks to see if things are actually getting better."
+      }
+    },
+    "uniqueEyebrow": "What's different",
+    "uniqueTitle": "Built so safety can't be skipped",
+    "unique": {
+      "gate": {
+        "title": "Safety check before AI",
+        "body": "Fixed rules read every answer and every message first. AI can flag more risk, but it can never clear it."
+      },
+      "trace": {
+        "title": "Every AI sentence has a source",
+        "body": "Each sentence the AI writes points to the facts it used. If a sentence mentions anything that isn't in those facts, it gets removed."
+      },
+      "clinician": {
+        "title": "A clinician signs off",
+        "body": "The rules suggest a step. Only a clinician can confirm or change it."
+      },
+      "employer": {
+        "title": "Employers can't see anything",
+        "body": "There's no login for employers, insurers or family admins. The person decides what gets shared."
+      }
+    },
+    "personasEyebrow": "Judge Mode",
+    "personasTitle": "Step into five people's shoes",
+    "personasSub": "Each card signs you in with made-up data. None of these are real people.",
+    "footer": "Synthetic data only. Not a medical device. Jisr doesn't diagnose and isn't therapy.",
+    "newTag": "New",
+    "newNote": "Safety check tested on 157 phrases in five languages",
+    "railsEyebrow": "Designed for Abu Dhabi's health system",
+    "railsNote": "Jisr follows these standards and is shaped to connect to these systems. No live integration in this prototype.",
+    "problemBody2": "The C10 brief calls this the gap between a positive screen and timely follow-up. Jisr is built for that gap."
+  },
+  "tour": {
+    "title": "The 3-minute tour",
+    "intro": "Six stops. Each button signs you in as the right person and opens the right screen. Come back here between stops.",
+    "stop": "Stop {n}",
+    "go": "Go",
+    "going": "Opening…",
+    "tip": "Tip: reset the demo on the overview first, so every judge sees the same starting point.",
+    "back": "Back to the overview",
+    "failed": "Couldn't sign in. Check the passcode on the overview and that the API is running.",
+    "stops": {
+      "s1": {
+        "who": "Mariam",
+        "title": "Screen → result → step → book",
+        "body": "Answer the check-in with moderate scores. You'll see the explanation, a matched Arabic-speaking female doctor, and you can book in three taps."
+      },
+      "s2": {
+        "who": "Imran",
+        "title": "Companion: the safety check steps in",
+        "body": "As Imran, type an indirect phrase like the Arabizi \"ma abi a3eesh\" or the Roman Urdu \"jeene ka dil nahi karta\". The AI stops and a person takes over."
+      },
+      "s3": {
+        "who": "Khalid",
+        "title": "Crisis case on top, 15-minute clock",
+        "body": "The new crisis case sits at the top of the queue. Acknowledge it."
+      },
+      "s4": {
+        "who": "Dr Salma",
+        "title": "AI hand-off you can check",
+        "body": "Open a case, draft the hand-off summary, hover the source tags, then confirm the step yourself."
+      },
+      "s5": {
+        "who": "Programme lead",
+        "title": "Copilot and what-if sliders",
+        "body": "Ask the Copilot a question, then move the capacity and response-time sliders."
+      },
+      "s6": {
+        "who": "Judge",
+        "title": "Safety benchmark, live",
+        "body": "Run the safety check against all the test phrases and watch the results come in."
+      }
+    }
+  },
+  "companion": {
+    "title": "Jisr Companion",
+    "subtitle": "A quiet place to talk things through. It can't diagnose or give therapy, but it can help you find your next step.",
+    "placeholder": "Type how you're feeling (English, العربية or Arabizi)…",
+    "inputLabel": "Your message",
+    "send": "Send",
+    "sending": "Writing…",
+    "gateIdle": "Safety check on. It runs before the AI sees anything.",
+    "gateChecking": "Running the safety check…",
+    "gateClear": "Safety check done in {ms} ms, nothing found",
+    "gateHit": "AI paused. A person will help.",
+    "gateHitBody": "It sounds like you might need support right now. We've let the care team know.",
+    "openHelp": "Open help numbers",
+    "aiBadge": "AI-drafted",
+    "templateBadge": "Standard reply",
+    "validatorPass": "Checked by our rules",
+    "lockedNote": "The companion stays paused for now. The help numbers are always here.",
+    "welcome": "Hi. I'm here to listen. What's on your mind today?",
+    "suggestionsLabel": "Suggestions",
+    "tryLabel": "Try",
+    "ex1": "I've been feeling low and tired for weeks",
+    "ex2": "What kind of support fits me?",
+    "ex3": "ما أقدر أنام من التفكير",
+    "demoLabel": "Demo: try the safety check",
+    "exCrisis": "ma abi a3eesh",
+    "failClosed": "We couldn't reach the safety check, so we're showing you the help numbers to be safe.",
+    "you": "You",
+    "bot": "Companion",
+    "rules": "Matched rules: {rules}",
+    "exCrisis2": "jeene ka dil nahi karta",
+    "gateClearFast": "Safety check done in under 1 ms, nothing found"
+  },
+  "handoff": {
+    "title": "AI hand-off summary",
+    "generate": "Draft hand-off summary",
+    "regenerate": "Regenerate",
+    "generating": "Writing and checking…",
+    "factsTitle": "Facts",
+    "factsHint": "Each sentence has to point to at least one fact. Hover or tap a tag to see which.",
+    "validator": "Claim check: {verified} kept, {removed} removed",
+    "removedDefault": "Removed: it mentions a number, date or name that isn't in its facts",
+    "removedReason": "Removed: {reason}",
+    "template": "Standard template (AI wasn't available)",
+    "provider": "Provider: {provider}",
+    "generated": "Generated {time}",
+    "lockedRed": "AI summaries are off while this episode is RED.",
+    "failed": "Couldn't draft the summary.",
+    "empty": "Draft a summary and you'll see which facts each sentence came from.",
+    "source": "Source {id}"
+  },
+  "trajectory": {
+    "title": "Symptom trajectory",
+    "phq": "PHQ-9 (mood)",
+    "gad": "GAD-7 (worry)",
+    "caseness": "Caseness",
+    "reliable": "Reliable change",
+    "rciNote": "Reliable change = at least {phq} points on PHQ-9 or {gad} on GAD-7 between checks.",
+    "classes": {
+      "reliable_improvement": "Reliable improvement",
+      "reliable_deterioration": "Reliable deterioration",
+      "no_reliable_change": "No reliable change"
+    },
+    "empty": "Your trajectory appears after the first re-check.",
+    "failed": "Couldn't load the trajectory.",
+    "note": "Lower is better. The shaded band is at or above the caseness line."
+  },
+  "dash": {
+    "kpiScreens": "Screens (12 wks)",
+    "kpiConversion": "Conversion to care",
+    "kpiDays": "Median days to care",
+    "kpiRedAck": "RED ack p50",
+    "minutes": "{n} min",
+    "days": "{n} d",
+    "trend": "12-week trend",
+    "trendSub": "Weekly volumes through the funnel",
+    "series": {
+      "screens": "Screens",
+      "positive": "Positive",
+      "referred": "Referred",
+      "accepted": "Accepted",
+      "attended": "Attended",
+      "conversion": "Conversion %",
+      "median_days": "Median days",
+      "screened": "Screened"
+    },
+    "funnel": "Screens to attended",
+    "timeToCare": "Time to care",
+    "timeToCareSub": "Median days from positive screen to first appointment",
+    "sla": "SLA performance",
+    "slaKinds": {
+      "crisis_ack": "Crisis acknowledgement",
+      "referral_accept": "Referral accepted",
+      "first_appt": "First appointment",
+      "recheck": "Re-check"
+    },
+    "target": "Target {t}",
+    "breaches": "{n, plural, one {# breach} other {# breaches}}",
+    "p50p90": "p50 {p50} · p90 {p90}",
+    "met": "met",
+    "geo": "Abu Dhabi regions",
+    "geoSub": "Conversion to care by region",
+    "geoScreens": "{n} screens",
+    "heatmap": "Fairness heatmap",
+    "whatIf": "What-if simulator",
+    "whatIfSub": "Move a slider and the simulation runs again on the synthetic cohort.",
+    "capacity": "Capacity multiplier",
+    "slaHours": "Referral-accept SLA",
+    "hours": "{n} h",
+    "baselineConv": "Baseline conversion",
+    "cumCare": "Cumulative % reached care",
+    "waiting": "Waiting list at week 12",
+    "dayN": "Day {d}",
+    "aggregateNote": "Totals only. No individual is shown.",
+    "noData": "No data yet."
+  },
+  "copilot": {
+    "title": "Programme Copilot",
+    "sub": "Ask a question in plain words. The numbers come from the analytics engine, and the AI only puts them into sentences.",
+    "placeholder": "Ask about conversion, fairness, SLAs or regions…",
+    "inputLabel": "Your question",
+    "ask": "Ask",
+    "asking": "Working it out…",
+    "q1": "Which nationality group has the lowest conversion?",
+    "q2": "How has median time to care changed over 12 weeks?",
+    "q3": "Are we meeting the crisis acknowledgement SLA?",
+    "q4": "Which region converts best?",
+    "intent": "Intent: {intent}",
+    "suppressed": "<10, hidden",
+    "failed": "Couldn't answer that."
+  },
+  "safety": {
+    "eyebrow": "Safety",
+    "title": "Safety benchmark",
+    "sub": "The fixed safety check, run live on test phrases in Arabic, English, Arabizi and Urdu. No AI involved.",
+    "run": "Run benchmark live",
+    "running": "Running…",
+    "recall": "Recall",
+    "precision": "Precision",
+    "target": "target 100%",
+    "latency": "p95 latency",
+    "ms": "{n} ms",
+    "cases": "{n} cases · {pos} crisis · {neg} non-crisis",
+    "byLang": "By language",
+    "fp": "False positives",
+    "fpNote": "A false alarm means someone talks to a person sooner. Missing a real one is what we work hardest to avoid.",
+    "fn": "False negatives",
+    "fnNone": "None in this run.",
+    "ranAt": "Ran {time}",
+    "rules": "Rules {v}",
+    "noData": "Run the benchmark to see results.",
+    "failed": "Couldn't load the benchmark.",
+    "onlyApi": "These are the numbers the API returned. Nothing is rounded up.",
+    "langs": {
+      "ar": "Arabic",
+      "en": "English",
+      "arabizi": "Arabizi",
+      "ur": "Urdu",
+      "mixed": "Mixed",
+      "ar-latn": "Arabizi",
+      "ur-latn": "Roman Urdu"
+    },
+    "byCategory": "By category"
+  }
+}

@@ -1,0 +1,1869 @@
+openapi: 3.1.0
+info:
+  title: Jisr API
+  version: 0.1.0
+  summary: Measurement-based stepped-care ledger for mental-health screening follow-up (synthetic data only in the MVP).
+  description: |
+    Contract for API-01..API-29 from docs/00-overview/PROJECT_BRIEF.md.
+    Human-readable guide: docs/03-engineering/API_SPEC.md.
+    Errors use RFC 9457 problem+json. Every state-changing POST accepts an Idempotency-Key.
+    Security requirement arrays list required scopes (OpenAPI 3.1 allows role/scope names for non-OAuth schemes).
+    `x-roles` lists which roles hold the scope: person, clinician, coordinator, programme, judge (observer).
+  license:
+    name: Proprietary (hackathon prototype)
+    identifier: LicenseRef-Proprietary
+  contact:
+    name: Jisr team
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.jisr.example
+    description: MVP demo (synthetic data only; replace with the Render URL)
+tags:
+  - name: screening
+    description: API-01..03 PHQ-2/GAD-2 to PHQ-9/GAD-7 screening (F-01)
+  - name: crisis
+    description: API-04 deterministic Crisis Gate (F-03)
+  - name: episodes
+    description: API-05,06,10,12,13 episode ledger (F-08, F-10)
+  - name: referrals
+    description: API-07..09 warm hand-off (F-07)
+  - name: staff
+    description: API-11 clinician and coordinator queue (F-11)
+  - name: consents
+    description: API-14 consent centre (F-13)
+  - name: providers
+    description: API-15 synthetic provider directory (F-06)
+  - name: programme
+    description: API-16,17 aggregate KPIs and fairness (F-15)
+  - name: ai
+    description: API-18 validated explanation (F-04, M-01, M-03)
+  - name: fhir
+    description: API-19,20 FHIR R4 import and export (F-02, F-19)
+  - name: simulation
+    description: API-21 baseline vs Jisr simulation (F-16)
+  - name: auth
+    description: API-22 Judge Mode demo login (F-17)
+  - name: audit
+    description: API-23 personal access log (F-13)
+  - name: me
+    description: API-26,27 person preferences and inbox (F-05, F-14, F-21)
+  - name: demo
+    description: API-28 Judge Mode reset (F-17)
+  - name: analytics
+    description: API-29 first-party analytics events without PII (F-15)
+security:
+  - bearerAuth: []
+
+paths:
+  /v1/screenings:
+    post:
+      operationId: createScreening
+      summary: API-01 Start a screening session
+      tags: [screening]
+      security:
+        - bearerAuth: ["screening:write"]
+      x-roles: [person]
+      x-feature: [F-01]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyOptional'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ScreeningCreate' }
+            example: { language: ar, stage: prescreen, source: jisr_app }
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ScreeningSession' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /v1/screenings/{id}/answers:
+    post:
+      operationId: submitScreeningAnswers
+      summary: API-02 Submit answers (Crisis Gate runs on item 9, C-SSRS and free text)
+      tags: [screening]
+      security:
+        - bearerAuth: ["screening:write"]
+      x-roles: [person]
+      x-feature: [F-01, F-03]
+      parameters:
+        - $ref: '#/components/parameters/ScreeningId'
+        - $ref: '#/components/parameters/IdempotencyKeyOptional'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnswersSubmit' }
+            example: { answers: { PHQ2_1: 2, PHQ2_2: 1, GAD2_1: 2, GAD2_2: 2 }, free_text: null }
+      responses:
+        '200':
+          description: Answers saved; next items or crisis
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AnswersResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/screenings/{id}/complete:
+    post:
+      operationId: completeScreening
+      summary: API-03 Score, run the Crisis Gate, open an episode
+      description: Server-side p95 < 300 ms. Never waits on an LLM.
+      tags: [screening]
+      security:
+        - bearerAuth: ["screening:write"]
+      x-roles: [person]
+      x-feature: [F-01, F-03, F-05, F-08]
+      parameters:
+        - $ref: '#/components/parameters/ScreeningId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                request_support:
+                  type: boolean
+                  default: false
+                  description: Self-referral; opens an episode at any score.
+      responses:
+        '200':
+          description: Completed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ScreeningCompleteResult' }
+              examples:
+                positive:
+                  value:
+                    session_id: 0193f1a0-7c1e-7b2a-9d1f-3c5e2a1b0001
+                    crisis: false
+                    positive: true
+                    scores:
+                      - { instrument: PHQ9, total: 11, band: moderate, item9: 0 }
+                      - { instrument: GAD7, total: 13, band: moderate }
+                    episode: { id: 0193f1b4-0000-7000-8000-0000000000e1, state: STEP_RECOMMENDED, proposed_step: L2 }
+                    explanation_available: true
+                crisis:
+                  value:
+                    session_id: 0193f1a0-7c1e-7b2a-9d1f-3c5e2a1b0001
+                    crisis: true
+                    positive: true
+                    crisis_lines:
+                      - { name: Emergency, number: '999', tel: 'tel:999' }
+                      - { name: 800-SAKINA (Abu Dhabi), number: 800 725462, tel: 'tel:800725462' }
+                      - { name: 800-HOPE (national), number: 800 4673, tel: 'tel:8004673' }
+                    episode: { id: 0193f1b4-0000-7000-8000-0000000000e2, state: RED_CRISIS, proposed_step: RED }
+                    llm_locked: true
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/crisis/check:
+    post:
+      operationId: crisisCheck
+      summary: API-04 Run the deterministic Crisis Gate on free text
+      tags: [crisis]
+      security:
+        - bearerAuth: ["crisis:check"]
+      x-roles: [person, clinician, coordinator, judge]
+      x-feature: [F-03]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CrisisCheckRequest' }
+            example: { text: "ma 3ad abi a3eesh", language_hint: ar, episode_id: null }
+      responses:
+        '200':
+          description: Gate result
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CrisisCheckResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /v1/episodes/{id}:
+    get:
+      operationId: getEpisode
+      summary: API-05 Episode with timeline
+      tags: [episodes]
+      security:
+        - bearerAuth: ["episode:read:self"]
+        - bearerAuth: ["episode:read:care"]
+      x-roles: [person, clinician, coordinator]
+      x-feature: [F-08, F-11, F-12]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+      responses:
+        '200':
+          description: Episode
+          headers:
+            ETag:
+              description: Quoted last_event_seq, for If-Match
+              schema: { type: string }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Episode' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /v1/episodes/{id}/recommendation:
+    get:
+      operationId: getRecommendation
+      summary: API-06 Step recommendation with transparent factors
+      tags: [episodes]
+      security:
+        - bearerAuth: ["episode:read:self"]
+        - bearerAuth: ["episode:read:care"]
+      x-roles: [person, clinician, coordinator]
+      x-feature: [F-05, F-06]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+      responses:
+        '200':
+          description: Latest recommendation
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StepRecommendation' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /v1/episodes/{id}/referrals:
+    post:
+      operationId: createReferral
+      summary: API-07 Create referral (warm hand-off)
+      tags: [referrals]
+      security:
+        - bearerAuth: ["referral:create"]
+      x-roles: [person, clinician, coordinator]
+      x-feature: [F-07]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReferralCreate' }
+      responses:
+        '201':
+          description: Referral created; SLA timer started
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Referral' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/referrals/{id}/decision:
+    post:
+      operationId: decideReferral
+      summary: API-08 Provider accepts or declines a referral
+      tags: [referrals]
+      security:
+        - bearerAuth: ["referral:decide"]
+      x-roles: [clinician, coordinator]
+      x-feature: [F-07]
+      parameters:
+        - $ref: '#/components/parameters/ReferralId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReferralDecision' }
+      responses:
+        '200':
+          description: Decision recorded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReferralDecisionResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/referrals/{id}/appointment:
+    post:
+      operationId: referralAppointment
+      summary: API-09 Book or record an appointment
+      tags: [referrals]
+      security:
+        - bearerAuth: ["appointment:write"]
+      x-roles: [person, clinician, coordinator]
+      x-feature: [F-07, F-08]
+      parameters:
+        - $ref: '#/components/parameters/ReferralId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AppointmentAction' }
+      responses:
+        '200':
+          description: Appointment updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AppointmentResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/episodes/{id}/recheck:
+    post:
+      operationId: recheckEpisode
+      summary: API-10 Re-check scores and compute reliable change (RCI)
+      tags: [episodes]
+      security:
+        - bearerAuth: ["recheck:write"]
+      x-roles: [person, clinician]
+      x-feature: [F-09, F-10]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnswersSubmit' }
+      responses:
+        '200':
+          description: Re-check result
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RecheckResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/staff/queue:
+    get:
+      operationId: getStaffQueue
+      summary: API-11 Clinician / coordinator queue
+      tags: [staff]
+      security:
+        - bearerAuth: ["queue:read"]
+      x-roles: [clinician, coordinator]
+      x-feature: [F-11]
+      parameters:
+        - name: view
+          in: query
+          required: false
+          schema: { type: string, enum: [red, overdue, to_confirm, mine, all], default: all }
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Queue
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QueuePage' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /v1/episodes/{id}/confirm-step:
+    post:
+      operationId: confirmStep
+      summary: API-12 Clinician confirms or changes the step (only way a step changes)
+      tags: [episodes]
+      security:
+        - bearerAuth: ["step:confirm"]
+      x-roles: [clinician]
+      x-feature: [F-05, F-10, F-11]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConfirmStep' }
+      responses:
+        '200':
+          description: Step confirmed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ConfirmStepResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/episodes/{id}/close:
+    post:
+      operationId: closeEpisode
+      summary: API-13 Close an episode with evidence or a clinician decision
+      tags: [episodes]
+      security:
+        - bearerAuth: ["episode:close"]
+      x-roles: [clinician]
+      x-feature: [F-08]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CloseEpisode' }
+      responses:
+        '200':
+          description: Closed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CloseEpisodeResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/consents:
+    get:
+      operationId: getConsents
+      summary: API-14 Read my consents
+      tags: [consents]
+      security:
+        - bearerAuth: ["consent:self"]
+      x-roles: [person]
+      x-feature: [F-13]
+      responses:
+        '200':
+          description: Current consents
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ConsentSet' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+    put:
+      operationId: putConsents
+      summary: API-14 Update my consents (effect is immediate)
+      tags: [consents]
+      security:
+        - bearerAuth: ["consent:self"]
+      x-roles: [person]
+      x-feature: [F-13]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConsentUpdate' }
+      responses:
+        '200':
+          description: Updated consents with visible effects
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ConsentSet' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/providers:
+    get:
+      operationId: searchProviders
+      summary: API-15 Search the (synthetic) provider directory
+      tags: [providers]
+      security:
+        - bearerAuth: ["provider:read"]
+      x-roles: [person, clinician, coordinator, programme, judge]
+      x-feature: [F-06]
+      parameters:
+        - { name: step, in: query, schema: { $ref: '#/components/schemas/Step' } }
+        - { name: language, in: query, schema: { $ref: '#/components/schemas/Language' } }
+        - { name: gender, in: query, schema: { type: string, enum: [female, male] } }
+        - { name: modality, in: query, schema: { $ref: '#/components/schemas/Modality' } }
+        - { name: network, in: query, schema: { type: string } }
+        - { name: city, in: query, schema: { type: string } }
+        - { name: accepting, in: query, schema: { type: boolean } }
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Providers
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProviderPage' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+
+  /v1/programme/metrics:
+    get:
+      operationId: getProgrammeMetrics
+      summary: API-16 Funnel and KPIs (aggregate only)
+      tags: [programme]
+      security:
+        - bearerAuth: ["programme:read"]
+      x-roles: [programme, judge]
+      x-feature: [F-15]
+      parameters:
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { name: cohort, in: query, schema: { type: string, enum: [all, simulated, live], default: all } }
+      responses:
+        '200':
+          description: Metrics
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProgrammeMetrics' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /v1/programme/fairness:
+    get:
+      operationId: getProgrammeFairness
+      summary: API-17 Subgroup metrics with small-cell suppression (k < 10)
+      tags: [programme]
+      security:
+        - bearerAuth: ["programme:read"]
+      x-roles: [programme, judge]
+      x-feature: [F-15]
+      parameters:
+        - name: metric
+          in: query
+          required: true
+          schema: { type: string, enum: [conversion, time_to_care, reliable_improvement] }
+        - name: by
+          in: query
+          required: true
+          schema: { type: string, enum: [sex, age_band, nationality_group, language, insurance_plan] }
+      responses:
+        '200':
+          description: Fairness table
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FairnessTable' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/explain:
+    post:
+      operationId: explain
+      summary: API-18 Validated plain-language explanation (LLM explain-only, template fallback)
+      tags: [ai]
+      security:
+        - bearerAuth: ["explain:request"]
+      x-roles: [person, clinician]
+      x-feature: [F-04]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExplainRequest' }
+            example: { episode_id: 0193f1b4-0000-7000-8000-0000000000e1, kind: result, language: ar }
+      responses:
+        '200':
+          description: Explanation (AI-drafted and validated, or template)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Explanation' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '423': { $ref: '#/components/responses/LockedCrisis' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /v1/fhir/import:
+    post:
+      operationId: fhirImport
+      summary: API-19 Import an IFHAS FHIR R4 Bundle
+      tags: [fhir]
+      security:
+        - bearerAuth: ["fhir:import"]
+      x-roles: [coordinator, judge]
+      x-feature: [F-02, F-12]
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema: { $ref: '#/components/schemas/FhirBundle' }
+          application/json:
+            schema: { $ref: '#/components/schemas/FhirBundle' }
+      responses:
+        '202':
+          description: Imported
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FhirImportResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/fhir/export/{episodeId}:
+    get:
+      operationId: fhirExport
+      summary: API-20 Export an episode as a FHIR R4 Bundle
+      tags: [fhir]
+      security:
+        - bearerAuth: ["fhir:export"]
+      x-roles: [person, clinician, coordinator]
+      x-feature: [F-19]
+      parameters:
+        - name: episodeId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: FHIR Bundle (collection)
+          content:
+            application/fhir+json:
+              schema: { $ref: '#/components/schemas/FhirBundle' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /v1/sim/run:
+    post:
+      operationId: runSimulation
+      summary: API-21 Run the baseline-vs-Jisr simulation on the synthetic cohort
+      tags: [simulation]
+      security:
+        - bearerAuth: ["sim:run"]
+      x-roles: [programme, judge]
+      x-feature: [F-16]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SimRequest' }
+      responses:
+        '200':
+          description: Simulation result
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SimResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /v1/auth/demo-login:
+    post:
+      operationId: demoLogin
+      summary: API-22 Judge Mode login as a seeded persona (only when DEMO_MODE=true)
+      tags: [auth]
+      security: []
+      x-roles: [public]
+      x-feature: [F-17]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DemoLoginRequest' }
+            example: { persona: mariam, passcode: '<JUDGE_PASSCODE>' }
+      responses:
+        '200':
+          description: Token issued
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TokenResponse' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /v1/audit/me:
+    get:
+      operationId: getMyAuditLog
+      summary: API-23 My own access log
+      tags: [audit]
+      security:
+        - bearerAuth: ["audit:read:self"]
+      x-roles: [person]
+      x-feature: [F-13]
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Access log entries
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuditPage' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+
+  /v1/episodes/{id}/red/ack:
+    post:
+      operationId: acknowledgeRed
+      summary: API-24 Acknowledge a RED episode (stops the 15-minute SLA clock; does not leave RED)
+      tags: [crisis]
+      security:
+        - bearerAuth: ["red:ack"]
+      x-roles: [coordinator, clinician]
+      x-feature: [F-03, F-11]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RedAck' }
+      responses:
+        '200':
+          description: Acknowledged (repeat calls return the first acknowledgement)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RedAckResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /v1/episodes/{id}/contact-attempts:
+    post:
+      operationId: logContactAttempt
+      summary: API-25 Log a contact attempt (stored as a CONTACT_ATTEMPT episode event)
+      tags: [episodes]
+      security:
+        - bearerAuth: ["contact:log"]
+      x-roles: [coordinator, clinician]
+      x-feature: [F-07, F-11]
+      parameters:
+        - $ref: '#/components/parameters/EpisodeId'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ContactAttempt' }
+            example: { channel: phone, outcome: reached_safe, note: null, next_attempt_at: null }
+      responses:
+        '201':
+          description: Logged
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ContactAttemptResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/me/preferences:
+    get:
+      operationId: getMyPreferences
+      summary: API-26 Read my preferences (feeds API-06)
+      tags: [me]
+      security:
+        - bearerAuth: ["preferences:self"]
+      x-roles: [person]
+      x-feature: [F-05, F-14]
+      responses:
+        '200':
+          description: Preferences
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Preferences' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+    put:
+      operationId: putMyPreferences
+      summary: API-26 Update my preferences (re-proposes, never confirms, a step)
+      tags: [me]
+      security:
+        - bearerAuth: ["preferences:self"]
+      x-roles: [person]
+      x-feature: [F-05, F-14]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Preferences' }
+      responses:
+        '200':
+          description: Updated preferences
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Preferences'
+                  - type: object
+                    properties:
+                      recommendation_refreshed: { type: boolean }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+
+  /v1/me/notifications:
+    get:
+      operationId: getMyNotifications
+      summary: API-27 My in-app inbox (discreet text)
+      tags: [me]
+      security:
+        - bearerAuth: ["notifications:self"]
+      x-roles: [person]
+      x-feature: [F-14, F-21]
+      parameters:
+        - { name: unread_only, in: query, schema: { type: boolean, default: false } }
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Inbox page
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NotificationPage' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+
+  /v1/me/notifications/{notificationId}/read:
+    post:
+      operationId: markNotificationRead
+      summary: API-27 Mark one notification read
+      tags: [me]
+      security:
+        - bearerAuth: ["notifications:self"]
+      x-roles: [person]
+      x-feature: [F-21]
+      parameters:
+        - name: notificationId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204':
+          description: Marked read
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /v1/demo/reset:
+    post:
+      operationId: demoReset
+      summary: API-28 Reset seeded demo data (only when DEMO_MODE=true)
+      tags: [demo]
+      security:
+        - bearerAuth: ["demo:reset"]
+      x-roles: [judge]
+      x-feature: [F-17]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DemoResetRequest' }
+      responses:
+        '200':
+          description: Reset complete
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DemoResetResult' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /v1/events:
+    post:
+      operationId: postEvents
+      summary: API-29 First-party analytics events (no PII, no scores, no free text)
+      tags: [analytics]
+      security:
+        - bearerAuth: ["events:write"]
+        - {}
+      x-roles: [person, clinician, coordinator, programme, judge, anonymous]
+      x-feature: [F-15]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EventBatch' }
+      responses:
+        '202':
+          description: Accepted (allow-listed properties only)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EventBatchResult' }
+        '413':
+          description: More than 50 events
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: MVP HS256 demo token from API-22. v1 UAE PASS (persons) and facility OIDC (staff).
+
+  parameters:
+    ScreeningId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    EpisodeId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    ReferralId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    IdempotencyKeyRequired:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, format: uuid }
+    IdempotencyKeyOptional:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema: { type: string, format: uuid }
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      description: Quoted last_event_seq from the episode ETag.
+      schema: { type: string }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+
+  responses:
+    BadRequest:
+      description: Malformed request
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Unauthenticated:
+      description: Missing or invalid token
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Forbidden:
+      description: Scope, row-level rule or consent denies the action (code FORBIDDEN or CONSENT_REQUIRED)
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    NotFound:
+      description: Not found (also used for resources the caller may not know exist)
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Conflict:
+      description: CONFLICT_STATE, CONFLICT_STALE or IDEMPOTENCY_MISMATCH
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    ValidationFailed:
+      description: Validation failed
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    LockedCrisis:
+      description: Episode is RED; LLM explanation is locked
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    RateLimited:
+      description: Too many requests
+      headers:
+        Retry-After:
+          schema: { type: integer }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+
+  schemas:
+    Problem:
+      type: object
+      required: [type, title, status, code]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        code:
+          type: string
+          enum: [BAD_REQUEST, UNAUTHENTICATED, FORBIDDEN, CONSENT_REQUIRED, NOT_FOUND, CONFLICT_STATE, CONFLICT_STALE, IDEMPOTENCY_MISMATCH, PAYLOAD_TOO_LARGE, VALIDATION_FAILED, LOCKED_CRISIS, RATE_LIMITED, UNAVAILABLE]
+        detail: { type: string }
+        instance: { type: string }
+        trace_id: { type: string }
+        required_consent: { type: string }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              loc: { type: array, items: { type: [string, integer] } }
+              msg: { type: string }
+
+    Language: { type: string, enum: [ar, en, ur] }
+    Step: { type: string, enum: [L0, L1, L2, L3, L4, RED] }
+    Modality: { type: string, enum: [in_person, video, phone] }
+    Instrument: { type: string, enum: [PHQ2, GAD2, PHQ9, GAD7, CSSRS_SCREEN] }
+    EpisodeState:
+      type: string
+      enum: [SCREENED_POSITIVE, EXPLAINED, STEP_RECOMMENDED, STEP_CONFIRMED, REFERRED, ACCEPTED, BOOKED, ATTENDED, MONITORING, STEP_CHANGED, CLOSED, RED_CRISIS, ESCALATED, DECLINED_BY_PROVIDER, DECLINED_BY_PERSON, LOST_TO_FOLLOW_UP]
+    ConsentScope:
+      type: string
+      enum: [share_with_receiving_provider, share_physical_context, ai_drafted_summaries, store_free_text, notify_sms, notify_whatsapp]
+
+    CrisisLine:
+      type: object
+      required: [name, number, tel]
+      properties:
+        name: { type: string }
+        number: { type: string }
+        tel: { type: string }
+
+    ScreeningCreate:
+      type: object
+      required: [language]
+      additionalProperties: false
+      properties:
+        language: { $ref: '#/components/schemas/Language' }
+        stage: { type: string, enum: [prescreen, full], default: prescreen }
+        source: { type: string, enum: [jisr_app, clinic], default: jisr_app }
+
+    ScreeningItem:
+      type: object
+      required: [link_id, instrument, text, options]
+      properties:
+        link_id: { type: string, examples: [PHQ9_9] }
+        instrument: { $ref: '#/components/schemas/Instrument' }
+        text: { type: string }
+        options:
+          type: array
+          items: { type: [integer, boolean] }
+
+    ScreeningSession:
+      type: object
+      required: [id, status, stage, language, items, rule_set_version]
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [in_progress, completed, abandoned] }
+        stage: { type: string, enum: [prescreen, full, recheck] }
+        language: { $ref: '#/components/schemas/Language' }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/ScreeningItem' }
+        rule_set_version: { type: string }
+
+    AnswersSubmit:
+      type: object
+      required: [answers]
+      additionalProperties: false
+      properties:
+        answers:
+          type: object
+          description: Map of item linkId to value (0-3 for PHQ/GAD items, boolean for C-SSRS screener items).
+          additionalProperties: { type: [integer, boolean] }
+        free_text:
+          type: [string, 'null']
+          maxLength: 2000
+
+    AnswersResult:
+      type: object
+      required: [id, crisis]
+      properties:
+        id: { type: string, format: uuid }
+        stage: { type: string }
+        next_items:
+          type: array
+          items: { $ref: '#/components/schemas/ScreeningItem' }
+        crisis: { type: boolean }
+        crisis_lines:
+          type: array
+          items: { $ref: '#/components/schemas/CrisisLine' }
+        episode_id: { type: [string, 'null'], format: uuid }
+
+    Score:
+      type: object
+      required: [instrument, total, band]
+      properties:
+        instrument: { $ref: '#/components/schemas/Instrument' }
+        total: { type: integer, minimum: 0, maximum: 27 }
+        band: { type: string }
+        item9: { type: [integer, 'null'], minimum: 0, maximum: 3 }
+        scored_at: { type: string, format: date-time }
+
+    EpisodeRef:
+      type: object
+      required: [id, state]
+      properties:
+        id: { type: string, format: uuid }
+        state: { $ref: '#/components/schemas/EpisodeState' }
+        proposed_step: { $ref: '#/components/schemas/Step' }
+
+    ScreeningCompleteResult:
+      type: object
+      required: [session_id, crisis]
+      properties:
+        session_id: { type: string, format: uuid }
+        crisis: { type: boolean }
+        positive: { type: boolean }
+        scores:
+          type: array
+          items: { $ref: '#/components/schemas/Score' }
+        episode:
+          oneOf:
+            - $ref: '#/components/schemas/EpisodeRef'
+            - type: 'null'
+        crisis_lines:
+          type: array
+          items: { $ref: '#/components/schemas/CrisisLine' }
+        next_contact: { type: string }
+        llm_locked: { type: boolean }
+        urgency:
+          type: [string, 'null']
+          enum: [emergency, same_day_check, null]
+          description: same_day_check when PHQ-9 item 9 = 1 (OQ-01)
+        can_request_support: { type: boolean }
+        recheck_reminder_offer_days: { type: integer }
+        explanation_available: { type: boolean }
+        self_help:
+          type: array
+          items: { type: string }
+
+    CrisisCheckRequest:
+      type: object
+      required: [text]
+      additionalProperties: false
+      properties:
+        text: { type: string, maxLength: 2000, description: May be empty when source is help_button }
+        source:
+          type: string
+          enum: [free_text, help_button, clinician_note]
+          default: free_text
+          description: help_button (S-06 "I need help now") always opens a RED episode for human contact
+        language_hint: { $ref: '#/components/schemas/Language' }
+        episode_id: { type: [string, 'null'], format: uuid }
+
+    CrisisCheckResult:
+      type: object
+      required: [crisis, matched_rule_ids, latency_ms]
+      properties:
+        crisis: { type: boolean }
+        matched_rule_ids:
+          type: array
+          items: { type: string }
+        crisis_lines:
+          type: array
+          items: { $ref: '#/components/schemas/CrisisLine' }
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+        latency_ms: { type: integer }
+
+    TimelineEvent:
+      type: object
+      required: [seq, type, actor_type, occurred_at]
+      properties:
+        seq: { type: integer }
+        type: { type: string }
+        from_state: { $ref: '#/components/schemas/EpisodeState' }
+        to_state: { $ref: '#/components/schemas/EpisodeState' }
+        actor_type: { type: string, enum: [person, staff, system, llm] }
+        occurred_at: { type: string, format: date-time }
+
+    PhysicalContext:
+      type: object
+      properties:
+        hba1c_pct: { type: [number, 'null'] }
+        bmi: { type: [number, 'null'] }
+        bp_systolic: { type: [integer, 'null'] }
+        bp_diastolic: { type: [integer, 'null'] }
+        observed_at: { type: string, format: date-time }
+
+    Deadline:
+      type: object
+      required: [kind, due_at]
+      properties:
+        kind: { type: string, enum: [crisis_ack, referral_accept, first_appt, recheck] }
+        due_at: { type: string, format: date-time }
+        overdue: { type: boolean }
+
+    Episode:
+      type: object
+      required: [id, state, is_red, timeline, last_event_seq]
+      properties:
+        id: { type: string, format: uuid }
+        state: { $ref: '#/components/schemas/EpisodeState' }
+        current_step:
+          oneOf:
+            - $ref: '#/components/schemas/Step'
+            - type: 'null'
+        is_red: { type: boolean }
+        owner:
+          type: object
+          properties:
+            team: { type: string }
+            staff_id: { type: [string, 'null'], format: uuid }
+        next_deadline:
+          oneOf:
+            - $ref: '#/components/schemas/Deadline'
+            - type: 'null'
+        scores:
+          type: array
+          items: { $ref: '#/components/schemas/Score' }
+        physical_context:
+          oneOf:
+            - $ref: '#/components/schemas/PhysicalContext'
+            - type: 'null'
+        timeline:
+          type: array
+          items: { $ref: '#/components/schemas/TimelineEvent' }
+        last_event_seq: { type: integer }
+
+    Factor:
+      type: object
+      required: [factor, value, effect, rule_id]
+      properties:
+        factor: { type: string, enum: [severity, functional_impairment, comorbidity, preference, language, clinician_gender, modality, insurance_network, capacity, rci, crisis] }
+        value: { type: string }
+        effect: { type: string }
+        rule_id: { type: string }
+
+    Provider:
+      type: object
+      required: [id, display_name, kind, languages, modalities, networks, accepting, is_synthetic]
+      properties:
+        id: { type: string, format: uuid }
+        display_name: { type: string }
+        kind: { type: string, enum: [community, family_physician, psychologist, tele_mh, psychiatry] }
+        steps_served:
+          type: array
+          items: { $ref: '#/components/schemas/Step' }
+        languages:
+          type: array
+          items: { $ref: '#/components/schemas/Language' }
+        clinician_gender: { type: string, enum: [female, male] }
+        modalities:
+          type: array
+          items: { $ref: '#/components/schemas/Modality' }
+        networks:
+          type: array
+          items: { type: string }
+        city: { type: string }
+        current_wait_days: { type: integer }
+        next_slot: { type: [string, 'null'], format: date-time }
+        accepting: { type: boolean }
+        is_synthetic: { type: boolean }
+
+    StepRecommendation:
+      type: object
+      required: [id, status, recommended_step, factors, candidates, rule_set_version, needs_clinician_confirmation]
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [proposed, confirmed, overridden, superseded] }
+        recommended_step: { $ref: '#/components/schemas/Step' }
+        source: { type: string, enum: [initial, rci, decline_rematch, clinician] }
+        factors:
+          type: array
+          items: { $ref: '#/components/schemas/Factor' }
+        candidates:
+          type: array
+          items: { $ref: '#/components/schemas/Provider' }
+        rule_set_version: { type: string }
+        needs_clinician_confirmation: { type: boolean, const: true }
+
+    ReferralCreate:
+      type: object
+      required: [provider_id, priority, consent_scopes]
+      additionalProperties: false
+      properties:
+        provider_id: { type: string, format: uuid }
+        priority: { type: string, enum: [routine, urgent, asap, stat] }
+        requested_slot: { type: [string, 'null'], format: date-time }
+        consent_scopes:
+          type: array
+          items: { $ref: '#/components/schemas/ConsentScope' }
+        note_to_provider: { type: [string, 'null'], maxLength: 1000 }
+
+    Referral:
+      type: object
+      required: [id, status, episode_state, sla_due_at]
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [requested, accepted, declined, cancelled, completed, expired] }
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+        sla_due_at: { type: string, format: date-time }
+        packet_preview: { type: object, additionalProperties: true }
+        fhir:
+          type: object
+          properties:
+            service_request_id: { type: string }
+            task_id: { type: string }
+
+    ReferralDecision:
+      type: object
+      required: [decision]
+      additionalProperties: false
+      properties:
+        decision: { type: string, enum: [accept, decline] }
+        reason: { type: [string, 'null'], enum: [no_capacity, out_of_scope, network, other, null] }
+        comment: { type: [string, 'null'], maxLength: 500 }
+        on_behalf_of_provider: { type: boolean, default: false }
+
+    ReferralDecisionResult:
+      type: object
+      required: [id, status, episode_state]
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [accepted, declined] }
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+        first_appointment_due_by: { type: string, format: date-time }
+        rematch:
+          type: object
+          properties:
+            recommendation_id: { type: string, format: uuid }
+            excluded_provider_ids:
+              type: array
+              items: { type: string, format: uuid }
+
+    AppointmentAction:
+      type: object
+      required: [action]
+      additionalProperties: false
+      properties:
+        action: { type: string, enum: [book, record] }
+        start_at: { type: string, format: date-time }
+        modality: { $ref: '#/components/schemas/Modality' }
+        appointment_id: { type: string, format: uuid }
+        status: { type: string, enum: [attended, no_show, cancelled] }
+
+    AppointmentResult:
+      type: object
+      required: [appointment_id, status, episode_state]
+      properties:
+        appointment_id: { type: string, format: uuid }
+        status: { type: string, enum: [booked, attended, no_show, cancelled] }
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+        notification:
+          type: object
+          properties:
+            channel: { type: string, enum: [in_app, sms_mock, whatsapp_mock] }
+            text: { type: string }
+
+    RciResult:
+      type: object
+      required: [instrument, baseline, current, delta, threshold, classification]
+      properties:
+        instrument: { $ref: '#/components/schemas/Instrument' }
+        baseline: { type: integer }
+        current: { type: integer }
+        delta: { type: integer }
+        threshold: { type: integer }
+        classification: { type: string, enum: [reliable_improvement, no_reliable_change, reliable_deterioration] }
+
+    RecheckResult:
+      type: object
+      required: [crisis, scores, episode_state]
+      properties:
+        crisis: { type: boolean }
+        crisis_lines:
+          type: array
+          items: { $ref: '#/components/schemas/CrisisLine' }
+        scores:
+          type: array
+          items: { $ref: '#/components/schemas/Score' }
+        rci:
+          type: array
+          items: { $ref: '#/components/schemas/RciResult' }
+        suggestion:
+          type: [object, 'null']
+          properties:
+            recommendation_id: { type: string, format: uuid }
+            from_step: { $ref: '#/components/schemas/Step' }
+            to_step: { $ref: '#/components/schemas/Step' }
+            status: { type: string, enum: [proposed] }
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+
+    QueueItem:
+      type: object
+      required: [episode_id, person_label, state, is_red, reason]
+      properties:
+        episode_id: { type: string, format: uuid }
+        person_label: { type: string }
+        state: { $ref: '#/components/schemas/EpisodeState' }
+        is_red: { type: boolean }
+        step:
+          oneOf:
+            - $ref: '#/components/schemas/Step'
+            - type: 'null'
+        reason: { type: string }
+        deadline:
+          oneOf:
+            - $ref: '#/components/schemas/Deadline'
+            - type: 'null'
+        language: { $ref: '#/components/schemas/Language' }
+
+    QueuePage:
+      type: object
+      required: [items, counts, next_cursor]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/QueueItem' }
+        counts:
+          type: object
+          properties:
+            red: { type: integer }
+            overdue: { type: integer }
+            to_confirm: { type: integer }
+        next_cursor: { type: [string, 'null'] }
+
+    ConfirmStep:
+      type: object
+      required: [recommendation_id, step]
+      additionalProperties: false
+      properties:
+        recommendation_id: { type: string, format: uuid }
+        step: { $ref: '#/components/schemas/Step' }
+        reason: { type: [string, 'null'], maxLength: 500 }
+        resolve_crisis: { type: boolean, default: false }
+        crisis_resolution:
+          type: [string, 'null']
+          enum: [contacted_safe, emergency_services, referred_l4, unreachable_escalated, null]
+
+    ConfirmStepResult:
+      type: object
+      required: [episode_state, current_step, recommendation_status, last_event_seq]
+      properties:
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+        current_step: { $ref: '#/components/schemas/Step' }
+        recommendation_status: { type: string, enum: [confirmed, overridden] }
+        last_event_seq: { type: integer }
+
+    CloseEpisode:
+      type: object
+      required: [basis]
+      additionalProperties: false
+      properties:
+        basis: { type: string, enum: [evidence, clinician_decision] }
+        evidence:
+          type: object
+          properties:
+            appointment_id: { type: string, format: uuid }
+            recheck_score_ids:
+              type: array
+              items: { type: string, format: uuid }
+        reason: { type: [string, 'null'], maxLength: 500 }
+
+    CloseEpisodeResult:
+      type: object
+      required: [episode_state, closed_at, close_reason]
+      properties:
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+        closed_at: { type: string, format: date-time }
+        close_reason: { type: string, enum: [evidence_attended_recheck, clinician_decision, declined_by_person, ltfu] }
+
+    Consent:
+      type: object
+      required: [scope, status]
+      properties:
+        scope: { $ref: '#/components/schemas/ConsentScope' }
+        status: { type: string, enum: [granted, revoked] }
+        version: { type: integer }
+        recorded_at: { type: string, format: date-time }
+
+    ConsentSet:
+      type: object
+      required: [notice_version, consents]
+      properties:
+        notice_version: { type: string }
+        consents:
+          type: array
+          items: { $ref: '#/components/schemas/Consent' }
+        effects:
+          type: array
+          items: { type: string }
+
+    ConsentUpdate:
+      type: object
+      required: [notice_version, consents]
+      additionalProperties: false
+      properties:
+        notice_version: { type: string }
+        consents:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [scope, status]
+            properties:
+              scope: { $ref: '#/components/schemas/ConsentScope' }
+              status: { type: string, enum: [granted, revoked] }
+
+    ProviderPage:
+      type: object
+      required: [items, next_cursor]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Provider' }
+        next_cursor: { type: [string, 'null'] }
+
+    ProgrammeMetrics:
+      type: object
+      required: [period, funnel, kpis, data_label]
+      properties:
+        period:
+          type: object
+          properties:
+            from: { type: string, format: date }
+            to: { type: string, format: date }
+        funnel:
+          type: object
+          additionalProperties: { type: integer }
+        kpis:
+          type: object
+          additionalProperties: { type: [number, 'null'] }
+        drop_off_reasons:
+          type: array
+          items:
+            type: object
+            properties:
+              reason: { type: string }
+              n: { type: [integer, 'null'] }
+        suppressed_cells: { type: integer }
+        data_label: { type: string }
+
+    FairnessRow:
+      type: object
+      required: [group, suppressed]
+      properties:
+        group: { type: string }
+        n:
+          type: string
+          description: Count as a string, or "<10" when suppressed
+        suppression:
+          type: [string, 'null']
+          enum: [primary, complementary, null]
+        value: { type: [number, 'null'] }
+        ci95:
+          type: [array, 'null']
+          items: { type: number }
+        suppressed: { type: boolean }
+
+    FairnessTable:
+      type: object
+      required: [metric, by, k, rows]
+      properties:
+        metric: { type: string }
+        by: { type: string }
+        k: { type: integer, const: 10 }
+        rows:
+          type: array
+          items: { $ref: '#/components/schemas/FairnessRow' }
+        total_n: { type: string }
+        max_gap_pp: { type: [number, 'null'] }
+        note: { type: string }
+
+    ExplainRequest:
+      type: object
+      required: [episode_id, kind, language]
+      additionalProperties: false
+      properties:
+        episode_id: { type: string, format: uuid }
+        kind: { type: string, enum: [result, step, message] }
+        language: { $ref: '#/components/schemas/Language' }
+
+    Explanation:
+      type: object
+      required: [explanation_id, language, sections, content_type, provider, validator, fallback_used]
+      properties:
+        explanation_id: { type: string, format: uuid }
+        language: { $ref: '#/components/schemas/Language' }
+        sections:
+          type: object
+          required: [what_this_means, what_it_does_not_mean, next_step]
+          properties:
+            what_this_means: { type: string }
+            what_it_does_not_mean: { type: string }
+            next_step: { type: string }
+        content_type: { type: string, enum: [ai_drafted, template] }
+        provider: { type: string, enum: [gemini, azure_openai, local, none] }
+        validator:
+          type: object
+          required: [result]
+          properties:
+            result: { type: string, enum: [pass, fail, skipped] }
+            findings:
+              type: array
+              items: { type: string }
+        fallback_used: { type: boolean }
+
+    FhirBundle:
+      type: object
+      required: [resourceType]
+      description: FHIR R4 Bundle. Validated server-side; only the shape is described here.
+      properties:
+        resourceType: { type: string, const: Bundle }
+        type: { type: string }
+        meta: { type: object }
+        entry:
+          type: array
+          items:
+            type: object
+            properties:
+              fullUrl: { type: string }
+              resource:
+                type: object
+                required: [resourceType]
+                properties:
+                  resourceType: { type: string }
+      additionalProperties: true
+
+    FhirImportResult:
+      type: object
+      required: [import_id, person_id, crisis]
+      properties:
+        import_id: { type: string, format: uuid }
+        person_id: { type: string, format: uuid }
+        screening_session_id: { type: string, format: uuid }
+        crisis: { type: boolean }
+        episode:
+          oneOf:
+            - $ref: '#/components/schemas/EpisodeRef'
+            - type: 'null'
+        physical_context_id: { type: [string, 'null'], format: uuid }
+        warnings:
+          type: array
+          items: { type: string }
+
+    SimRequest:
+      type: object
+      required: [cohort_size, seed]
+      additionalProperties: false
+      properties:
+        cohort_size: { type: integer, minimum: 100, maximum: 50000 }
+        seed: { type: integer }
+        scenario:
+          type: object
+          properties:
+            baseline_conversion: { type: number, minimum: 0, maximum: 1 }
+            capacity_multiplier: { type: number, minimum: 0.1, maximum: 5 }
+            sla_hours: { type: integer, minimum: 1, maximum: 720 }
+
+    SimArm:
+      type: object
+      required: [conversion_pct, median_days_to_care]
+      properties:
+        conversion_pct: { type: number }
+        median_days_to_care: { type: number }
+
+    SimResult:
+      type: object
+      required: [run_id, baseline, jisr, assumptions, data_label]
+      properties:
+        run_id: { type: string, format: uuid }
+        baseline: { $ref: '#/components/schemas/SimArm' }
+        jisr: { $ref: '#/components/schemas/SimArm' }
+        assumptions:
+          type: array
+          items: { type: string }
+        data_label: { type: string, const: SIMULATED }
+
+    DemoLoginRequest:
+      type: object
+      required: [persona, passcode]
+      additionalProperties: false
+      properties:
+        persona: { type: string, enum: [judge, mariam, imran, dr_salma, khalid, programme_lead] }
+        passcode:
+          type: string
+          minLength: 1
+          description: Shared JUDGE_PASSCODE from the submission form (demo access code for synthetic data).
+
+    TokenResponse:
+      type: object
+      required: [access_token, token_type, expires_in, role, scopes]
+      properties:
+        access_token: { type: string }
+        token_type: { type: string, const: Bearer }
+        expires_in: { type: integer }
+        role: { type: string, enum: [person, clinician, coordinator, programme, judge] }
+        persona: { type: string }
+        scopes:
+          type: array
+          items: { type: string }
+        judge: { type: boolean }
+
+    AuditEntry:
+      type: object
+      required: [occurred_at, actor_label, action, resource, purpose]
+      properties:
+        occurred_at: { type: string, format: date-time }
+        actor_label: { type: string }
+        action: { type: string, enum: [read, create, update, export, login, consent_change] }
+        resource: { type: string }
+        purpose: { type: string, enum: [care, coordination, self, programme_aggregate, demo] }
+        fields:
+          type: array
+          items: { type: string }
+
+    AuditPage:
+      type: object
+      required: [items, next_cursor]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/AuditEntry' }
+        next_cursor: { type: [string, 'null'] }
+
+    RedAck:
+      type: object
+      additionalProperties: false
+      properties:
+        note_category: { type: string, enum: [calling_now, crisis_line_transfer, emergency_services_called, other] }
+
+    RedAckResult:
+      type: object
+      required: [episode_id, state, acknowledged_at, within_sla]
+      properties:
+        episode_id: { type: string, format: uuid }
+        state: { $ref: '#/components/schemas/EpisodeState' }
+        acknowledged_by:
+          type: object
+          properties:
+            staff_id: { type: string, format: uuid }
+            role: { type: string, enum: [coordinator, clinician] }
+        acknowledged_at: { type: string, format: date-time }
+        ack_latency_seconds: { type: integer }
+        within_sla: { type: boolean }
+        event_seq: { type: integer }
+
+    ContactAttempt:
+      type: object
+      required: [channel, outcome]
+      additionalProperties: false
+      properties:
+        channel: { type: string, enum: [phone, video, sms, whatsapp, in_person, crisis_line_transfer] }
+        outcome: { type: string, enum: [reached_safe, reached_needs_emergency, no_answer, wrong_number, declined_contact, voicemail_neutral] }
+        note: { type: [string, 'null'], maxLength: 500 }
+        next_attempt_at: { type: [string, 'null'], format: date-time }
+
+    ContactAttemptResult:
+      type: object
+      required: [event_seq, type, attempt_number, episode_state]
+      properties:
+        event_seq: { type: integer }
+        type: { type: string, const: CONTACT_ATTEMPT }
+        attempt_number: { type: integer }
+        episode_state: { $ref: '#/components/schemas/EpisodeState' }
+        escalation:
+          type: [object, 'null']
+          properties:
+            level: { type: integer }
+            to: { type: string }
+
+    Preferences:
+      type: object
+      additionalProperties: false
+      properties:
+        language: { $ref: '#/components/schemas/Language' }
+        clinician_gender: { type: string, enum: [female, male, none] }
+        modality:
+          type: array
+          items: { $ref: '#/components/schemas/Modality' }
+        area: { type: string, enum: [abu_dhabi_city, al_ain, al_dhafra] }
+        insurance_plan: { type: string, enum: [thiqa, basic, enhanced, other, none] }
+        discreet_mode: { type: boolean }
+        read_aloud: { type: boolean }
+
+    NotificationItem:
+      type: object
+      required: [id, created_at, channel, text, read]
+      properties:
+        id: { type: string, format: uuid }
+        created_at: { type: string, format: date-time }
+        channel: { type: string, enum: [in_app, sms_mock, whatsapp_mock] }
+        text: { type: string }
+        read: { type: boolean }
+        deep_link: { type: [string, 'null'] }
+
+    NotificationPage:
+      type: object
+      required: [items, unread_count, next_cursor]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/NotificationItem' }
+        unread_count: { type: integer }
+        next_cursor: { type: [string, 'null'] }
+
+    DemoResetRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        seed: { type: integer, default: 42 }
+        scenario: { type: string, enum: [judge_tour, empty, busy_queue], default: judge_tour }
+
+    DemoResetResult:
+      type: object
+      required: [reset_at, personas, rules_version]
+      properties:
+        reset_at: { type: string, format: date-time }
+        personas:
+          type: array
+          items: { type: string }
+        episodes_seeded: { type: integer }
+        simulated_cohort: { type: integer }
+        rules_version: { type: string }
+
+    AnalyticsEvent:
+      type: object
+      required: [name, ts]
+      additionalProperties: false
+      properties:
+        name: { type: string, pattern: '^[a-z][a-z0-9_]{2,63}$' }
+        ts: { type: string, format: date-time }
+        props:
+          type: object
+          description: Allow-listed keys only (packages/rules/analytics_events.v1.json). No PII, scores or free text.
+          additionalProperties: { type: [string, number, boolean] }
+
+    EventBatch:
+      type: object
+      required: [events]
+      additionalProperties: false
+      properties:
+        events:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items: { $ref: '#/components/schemas/AnalyticsEvent' }
+
+    EventBatchResult:
+      type: object
+      required: [accepted, rejected]
+      properties:
+        accepted: { type: integer }
+        rejected: { type: integer }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              index: { type: integer }
+              reason: { type: string }

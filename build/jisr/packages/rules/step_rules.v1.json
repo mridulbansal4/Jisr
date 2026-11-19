@@ -1,0 +1,166 @@
+{
+  "$schema_note": "Jisr Crisis Gate + episode-opening + Step Matcher rules. Loaded by services/api/app/engines/{crisis_gate,step_matcher,rci,sla}.py. Stages run in order; inside a stage the first matching rule wins unless noted. Output is a SUGGESTION; a clinician confirms every step (API-12). Mirrors PROJECT_BRIEF.md §5–6 (revision of 2026-11-18).",
+  "id": "step_rules",
+  "version": "1.0.0",
+  "status": "draft — requires clinical lead sign-off before any non-synthetic use",
+  "last_updated": "2026-11-18",
+  "depends_on": { "instruments": "instruments.v1.json@1.0.0", "crisis_lexicon": "crisis_lexicon.v1.json@1.0.0" },
+  "feature_flags": {
+    "FF_CSSRS_ITEMS": { "default": false, "reason": "C-SSRS screener licence terms for digital use not yet confirmed (R-05). Rules CG-04/CG-05 are inactive while false." },
+    "LLM_CRISIS_SECOND_OPINION": { "default": false, "reason": "M-02 raise-only classifier; always off in Judge Mode (judges' free text must not leave the system)." }
+  },
+  "citations": {
+    "DOH_SOC_2025": "DoH Standard of Care for Depression & Anxiety (effective Sep 2025) — PHQ-2/GAD-2 then PHQ-9/GAD-7 in primary care. https://www.doh.gov.ae/-/media/Feature/Resources/Standards/2025/Standard-of-Care-Depression--Anxiety.ashx",
+    "NICE_CG123": "NICE CG123 Common mental health problems: identification and pathways to care (stepped care). https://www.nice.org.uk/guidance/cg123",
+    "KROENKE_2001": "Kroenke et al. 2001, PHQ-9 severity bands. https://doi.org/10.1046/j.1525-1497.2001.016009606.x",
+    "SPITZER_2006": "Spitzer et al. 2006, GAD-7 severity bands. https://doi.org/10.1001/archinte.166.10.1092",
+    "NHS_TT_MANUAL": "NHS Talking Therapies for anxiety and depression manual — reliable change (PHQ-9 >= 6, GAD-7 >= 4) and caseness (PHQ-9 >= 10, GAD-7 >= 8). https://www.england.nhs.uk/publication/the-improving-access-to-psychological-therapies-manual/",
+    "CSSRS": "Columbia-Suicide Severity Rating Scale, screener version. https://cssrs.columbia.edu/ — digital-use licence to verify (R-05).",
+    "BRIEF": "Jisr PROJECT_BRIEF.md §5 (F-03, F-22, cross-cutting safety rules) and §6 (levels, SLAs, episode opening).",
+    "JISR_DESIGN": "Jisr design decision (no external source); listed for transparency and clinical review."
+  },
+
+  "inputs": {
+    "phq9_total": "int 0-27 | null",
+    "phq9_item9": "int 0-3 | null (null = unknown)",
+    "phq9_difficulty": "int 0-3 | null (instrument item phq_10; 3 = 'extremely difficult')",
+    "gad7_total": "int 0-21 | null",
+    "phq2_total": "int 0-6 | null",
+    "gad2_total": "int 0-6 | null",
+    "cssrs_screener": "object {q1..q6: bool|null, q6_recent_3m: bool|null} | null — only read when FF_CSSRS_ITEMS=true",
+    "free_text_flags": "list of lexicon hits from crisis_lexicon.v1.json (F-22 box and any other free text)",
+    "gate_error": "bool — true if the gate threw, timed out, or could not load its rules",
+    "self_referral": "bool — the person asked for support regardless of score",
+    "comorbidity_flag": "bool — physical comorbidity from E-16 PhysicalContext (needs consent scope share-physical-context; false if no consent)",
+    "complexity_flags": "list — functional_impairment_extreme (phq9_difficulty == 3), prior_specialist_care, clinician_judgement",
+    "clinician_review_flags": "list — e.g. perinatal, psychosis_symptoms_reported, substance_use_reported; shown to the clinician, do not change the level automatically",
+    "age": "int",
+    "previous_step": "L0..L4 | null",
+    "rci_status": "improved | no_reliable_change | deteriorated | null (from stage_6_rci)",
+    "preferences": "object {language, clinician_gender, modality, area, insurance_plan, wants_human_support}"
+  },
+
+  "stage_1_crisis_gate": {
+    "description": "Runs first, before scoring display, step matching or any LLM call, on every screening completion and every free-text input (incl. F-22). Any hit -> RED. Fail-closed. Nothing downstream (rules, M-02, UI defaults) can clear RED; a coordinator may acknowledge, only a clinician may close a RED episode.",
+    "citation": ["BRIEF", "DOH_SOC_2025", "JISR_DESIGN"],
+    "rules": [
+      { "id": "CG-00", "if": "gate_error == true", "then": "RED", "severity": "review", "reason_code": "GATE_FAIL_CLOSED", "note": "Error, timeout or rules not loaded -> treat as RED: show emergency guidance, open RED episode for human review.", "citation": ["BRIEF"] },
+      { "id": "CG-01", "if": "phq9_item9 >= 2", "then": "RED", "severity": "high", "reason_code": "PHQ9_ITEM9_POSITIVE", "citation": ["KROENKE_2001", "DOH_SOC_2025"] },
+      { "id": "CG-02", "if": "phq9_item9 == 1", "then": "RED", "severity": "same_day_check", "reason_code": "PHQ9_ITEM9_SEVERAL_DAYS", "note": "Brief F-03: same-day human safety check, not an automatic emergency call. Clinical advisors to confirm (OQ-01). Still RED with 15-minute acknowledgement.", "citation": ["BRIEF"] },
+      { "id": "CG-03", "if": "phq9 was started AND phq9_item9 == null", "then": "RED", "severity": "review", "reason_code": "PHQ9_ITEM9_UNKNOWN", "note": "Missing item 9 is never treated as 0 (fail-closed principle applied to missing data).", "citation": ["BRIEF", "JISR_DESIGN"] },
+      { "id": "CG-04", "flag": "FF_CSSRS_ITEMS", "if": "cssrs_screener.q4 OR cssrs_screener.q5 OR cssrs_screener.q6_recent_3m", "then": "RED", "severity": "imminent", "reason_code": "CSSRS_HIGH", "citation": ["CSSRS"] },
+      { "id": "CG-05", "flag": "FF_CSSRS_ITEMS", "if": "cssrs_screener.q1 OR cssrs_screener.q2 OR cssrs_screener.q3", "then": "RED", "severity": "high", "reason_code": "CSSRS_POSITIVE", "citation": ["CSSRS", "JISR_DESIGN"] },
+      { "id": "CG-06", "if": "any free_text_flags.severity == 'imminent'", "then": "RED", "severity": "imminent", "reason_code": "LEXICON_IMMINENT", "citation": ["BRIEF"] },
+      { "id": "CG-07", "if": "any free_text_flags.severity in ['high','moderate']", "then": "RED", "severity": "high", "reason_code": "LEXICON_HIT", "citation": ["BRIEF"] },
+      { "id": "CG-08", "flag": "LLM_CRISIS_SECOND_OPINION", "if": "m02_raise == true (arrives asynchronously after the gate answered)", "then": "RED", "severity": "high", "reason_code": "LLM_RAISE", "note": "M-02 may only add this flag. raise=false, errors, timeouts have no effect.", "citation": ["BRIEF"] }
+    ],
+    "on_red": {
+      "episode_state": "RED_CRISIS",
+      "ack_sla_minutes": "SLA_RED_MINUTES (default 15) for every severity",
+      "ack_by": "coordinator or clinician (API-24); contact attempts logged (API-25); close only by clinician",
+      "person_ui": "Lock LLM panel; template copy only; show 999 first when severity == imminent, then 800-SAKINA (800 725462) and 800-HOPE (800 4673) as tel: links",
+      "fhir": "Flag (category: safety) + Task (priority: stat)",
+      "free_text_storage": "F-22: store only gate result + matched category + entry id; raw text stored only with consent scope 'store free text'"
+    }
+  },
+
+  "stage_2_validation": {
+    "citation": ["JISR_DESIGN"],
+    "rules": [
+      { "id": "VA-01", "if": "phq9_total out of 0-27 OR gad7_total out of 0-21 OR any item value out of range OR non-integer", "then": "REJECT", "reason_code": "INVALID_INPUT", "note": "HTTP 422; never clamp or coerce." },
+      { "id": "VA-02", "if": "items present AND supplied total != recomputed total", "then": "USE_RECOMPUTED", "reason_code": "TOTAL_MISMATCH", "note": "If items absent (FHIR import), accept supplied total and flag 'imported_total_unverified'." },
+      { "id": "VA-03", "if": "age < 18", "then": "OUT_OF_SCOPE", "reason_code": "MINOR", "note": "Adults 18+ only (brief §10). Crisis Gate still ran first; coordinator routes to child & adolescent services." },
+      { "id": "VA-04", "if": "(phq2_total >= 3 AND phq9_total == null) OR (gad2_total >= 3 AND gad7_total == null)", "then": "NEEDS_DATA", "reason_code": "FULL_INSTRUMENT_MISSING", "note": "Do not infer a level from a 2-item pre-screen." },
+      { "id": "VA-05", "if": "phq9.status == 'INCOMPLETE' OR gad7.status == 'INCOMPLETE'", "then": "NEEDS_DATA", "reason_code": "TOO_MANY_MISSING_ITEMS" }
+    ]
+  },
+
+  "stage_3_episode_opening": {
+    "description": "Brief §6 'When does an episode open?'. A RED from stage 1 always opens (or flips) an episode.",
+    "citation": ["BRIEF", "DOH_SOC_2025"],
+    "rules": [
+      { "id": "EO-01", "if": "stage_1 result == RED", "then": "OPEN", "state": "RED_CRISIS" },
+      { "id": "EO-02", "if": "phq9_total >= 10 OR gad7_total >= 10 OR phq9_item9 > 0", "then": "OPEN", "state": "SCREENED_POSITIVE", "reason_code": "POSITIVE_SCREEN" },
+      { "id": "EO-03", "if": "self_referral == true", "then": "OPEN", "state": "SCREENED_POSITIVE", "reason_code": "SELF_REFERRAL", "note": "Any score; typically L0/L1." },
+      { "id": "EO-04", "if": "otherwise", "then": "NO_EPISODE", "reason_code": "BELOW_THRESHOLD", "note": "Person gets an explanation and an optional re-check reminder." }
+    ]
+  },
+
+  "stage_4_severity": {
+    "description": "Higher of the two instruments wins: severity_level = max(level_from_phq9, level_from_gad7). A missing instrument contributes nothing (VA-04 already caught pre-screen-only cases).",
+    "citation": ["KROENKE_2001", "SPITZER_2006", "NICE_CG123", "DOH_SOC_2025", "BRIEF"],
+    "phq9_to_level": [
+      { "min": 0, "max": 4, "level": "L0", "band": "minimal" },
+      { "min": 5, "max": 9, "level": "L1", "band": "mild" },
+      { "min": 10, "max": 14, "level": "L2", "band": "moderate" },
+      { "min": 15, "max": 19, "level": "L3", "band": "moderately_severe" },
+      { "min": 20, "max": 27, "level": "L4", "band": "severe" }
+    ],
+    "gad7_to_level": [
+      { "min": 0, "max": 4, "level": "L0", "band": "minimal" },
+      { "min": 5, "max": 9, "level": "L1", "band": "mild" },
+      { "min": 10, "max": 14, "level": "L2", "band": "moderate" },
+      { "min": 15, "max": 21, "level": "L3", "band": "severe", "note": "GAD-7 >= 15 is L3; it becomes L4 only with a complexity flag (SM-03)." }
+    ]
+  },
+
+  "stage_5_modifiers": {
+    "description": "Applied in order to severity_level. Modifiers only ever move the level up; cap at L4. L0 and L1 are only reached by self-referral (EO-03); the person's choice can lift L0 to L1.",
+    "rules": [
+      { "id": "SM-01", "if": "severity_level == 'L1' AND phq9_difficulty >= 2", "then": "L2", "reason_code": "MILD_WITH_FUNCTIONAL_IMPAIRMENT", "citation": ["BRIEF", "NICE_CG123"] },
+      { "id": "SM-02", "if": "severity_level == 'L1' AND comorbidity_flag == true", "then": "L2", "reason_code": "MILD_WITH_PHYSICAL_COMORBIDITY", "citation": ["BRIEF", "NICE_CG123"] },
+      { "id": "SM-03", "if": "gad7_total >= 15 AND any complexity_flags", "then": "L4", "reason_code": "GAD7_SEVERE_WITH_COMPLEXITY", "note": "Complexity = functional impairment 'extremely difficult' (phq9_difficulty == 3), prior specialist care, or clinician judgement.", "citation": ["BRIEF"] },
+      { "id": "SM-04", "if": "previous_step == 'L2' AND rci_status in ['no_reliable_change','deteriorated'] at a re-check", "then": "max(severity_level, L3)", "reason_code": "L2_NOT_IMPROVING", "note": "Minimum time at L2 before step-up is a clinical decision (open question); engine suggests, clinician confirms.", "citation": ["BRIEF", "NICE_CG123", "NHS_TT_MANUAL"] },
+      { "id": "SM-05", "if": "previous_step == 'L3' AND rci_status in ['no_reliable_change','deteriorated'] at a re-check", "then": "L4", "reason_code": "L3_NOT_IMPROVING", "citation": ["BRIEF", "NICE_CG123"] },
+      { "id": "SM-06", "if": "severity_level == 'L0' AND preferences.wants_human_support == true", "then": "L1", "reason_code": "PERSON_CHOICE", "citation": ["BRIEF"] },
+      { "id": "SM-07", "if": "any clinician_review_flags", "then": "no level change; add factor 'clinician review recommended'", "reason_code": "CLINICIAN_REVIEW_FLAG", "note": "Perinatal, psychosis symptoms or substance use are surfaced, not auto-escalated (brief defines L4 complexity narrowly). Clinical lead to decide whether any should auto-lift.", "citation": ["JISR_DESIGN"] }
+    ]
+  },
+
+  "stage_6_rci": {
+    "description": "Computed on every re-check (API-10). Drives step-up / step-down SUGGESTIONS only.",
+    "citation": ["NHS_TT_MANUAL"],
+    "thresholds": { "PHQ-9": 6, "GAD-7": 4 },
+    "logic": [
+      "delta = baseline_total - current_total (positive = improvement)",
+      "deteriorated if (current_total - baseline_total) >= threshold on ANY instrument",
+      "improved if delta >= threshold on at least one instrument AND no instrument deteriorated",
+      "no_reliable_change otherwise",
+      "mixed (one improved, one deteriorated) -> 'deteriorated' (raise-only) + flag 'mixed_change' for the clinician",
+      "step_down suggestion: improved AND both instruments below caseness (PHQ-9 < 10, GAD-7 < 8) at 2 consecutive re-checks",
+      "no baseline -> rci_status = null (no step change suggested)"
+    ]
+  },
+
+  "stage_7_preference_matching": {
+    "description": "Does not change the level. Modality (in-person / tele) is a preference WITHIN a level. Ranks providers at the chosen level; every factor shown with its weight. Hard filters first, then score.",
+    "citation": ["BRIEF", "JISR_DESIGN"],
+    "hard_filters": [
+      "provider.levels_offered includes level",
+      "provider.networks includes person.insurance_plan — if none match, show the nearest in-network option and an explicit 'out of network' warning",
+      "provider.accepting == true"
+    ],
+    "score_weights": { "language_match": 0.30, "clinician_gender_match": 0.20, "modality_match": 0.20, "wait_days": 0.20, "area_match": 0.10 },
+    "wait_scoring": "wait_score = max(0, 1 - wait_days / 14)  (14 = first-appointment SLA)",
+    "tie_break": "lower wait_days, then provider_id (deterministic)",
+    "no_match": "0 providers pass hard filters -> coordinator task NO_CAPACITY (24 h) and L1 waiting-well bridge (F-09) meanwhile"
+  },
+
+  "sla": {
+    "description": "Brief §6 SLA proposals; configurable in .env. Breach -> ESCALATED + notification.",
+    "citation": ["BRIEF"],
+    "values": {
+      "SLA_RED_MINUTES": 15,
+      "SLA_PROVIDER_DECISION_HOURS": 48,
+      "SLA_FIRST_APPOINTMENT_DAYS": 14,
+      "SLA_RECHECK_DAYS": 14,
+      "SLA_STEP_CONFIRM_HOURS": 48
+    },
+    "notes": "SLA_STEP_CONFIRM_HOURS is a Jisr proposal not listed in the brief. First appointment is measured from the positive screen, not from referral."
+  },
+
+  "output_contract": {
+    "fields": ["level", "state (RED | NEEDS_DATA | NO_EPISODE | OUT_OF_SCOPE | REJECT | SUGGESTED)", "red_severity (imminent | high | same_day_check | review) when RED", "fired_rules[] (ids in order)", "factors[] {name, value, effect, citation}", "rule_set_version", "requires_clinician_confirmation: true"],
+    "invariant": "requires_clinician_confirmation is always true. No code path sets STEP_CONFIRMED or closes a RED episode without a clinician StaffUser id."
+  }
+}

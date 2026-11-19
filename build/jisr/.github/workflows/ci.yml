@@ -1,0 +1,150 @@
+# Jisr CI: web (pnpm lint/typecheck/test/build) + api (ruff, mypy, pytest) + rules schema check.
+# Docs: docs/05-ops/CICD.md
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call: # reused by deploy.yml so production deploys only after CI is green
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # github.workflow is the CALLER's name when reused by deploy.yml, so runs never cancel each other.
+  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "24"
+  PYTHON_VERSION: "3.12"
+  # Never call a real LLM in CI. M-03 template fallback only.
+  LLM_PROVIDER: none
+
+jobs:
+  web:
+    name: web (lint, typecheck, test, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          # pnpm version comes from "packageManager" in apps/web/package.json
+          package_json_file: apps/web/package.json
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: apps/web/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests (Vitest)
+        run: pnpm test -- --run
+
+      - name: Build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+          NEXT_PUBLIC_DEMO_MODE: "true"
+          NEXT_PUBLIC_DEFAULT_LOCALE: ar
+        run: pnpm build
+
+  api:
+    name: api (ruff, mypy, pytest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: jisr
+          POSTGRES_PASSWORD: jisr_ci_only
+          POSTGRES_DB: jisr_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U jisr"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: services/api
+    env:
+      APP_ENV: ci
+      DEMO_MODE: "true"
+      DATABASE_URL: postgresql+psycopg://jisr:jisr_ci_only@localhost:5432/jisr_test
+      JWT_SECRET: ci-only-not-a-secret-0123456789abcdef
+      RULES_DIR: ../../packages/rules
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: services/api/uv.lock
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install (locked)
+        run: uv sync --frozen --all-extras
+
+      - name: Ruff (lint + format check)
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Mypy
+        run: uv run mypy app
+
+      - name: Migrations apply cleanly
+        run: uv run alembic upgrade head
+
+      - name: Pytest
+        run: uv run pytest -q --maxfail=1
+
+  rules:
+    name: rules (JSON parse + version/citation check)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Every rule file parses and carries version + source
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          files = sorted(pathlib.Path("packages/rules").glob("*.json"))
+          bad = []
+          for f in files:
+              try:
+                  d = json.loads(f.read_text(encoding="utf-8"))
+              except Exception as e:
+                  bad.append(f"{f}: invalid JSON ({e})"); continue
+              for key in ("version", "sources"):
+                  if isinstance(d, dict) and key not in d:
+                      bad.append(f"{f}: missing '{key}'")
+          print(f"checked {len(files)} rule files")
+          if bad:
+              print("\n".join(f"::error::{b}" for b in bad)); sys.exit(1)
+          PY

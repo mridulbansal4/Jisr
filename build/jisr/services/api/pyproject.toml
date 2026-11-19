@@ -1,0 +1,41 @@
+[project]
+name = "jisr-api"
+version = "0.1.0"
+description = "Jisr API: deterministic stepped-care engines + episode ledger (synthetic data only)"
+requires-python = ">=3.12"
+dependencies = [
+    "apscheduler>=3.11.3",
+    "fastapi[standard]>=0.164.0",
+    "google-genai>=3.5.0",
+    "httpx>=0.28.1",
+    "psycopg[binary]>=3.3.9",
+    "pyjwt>=2.15.1",
+    "python-dotenv>=1.2.4",
+    "sqlalchemy>=2.1.9",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008", "E501"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "app.engines.*"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

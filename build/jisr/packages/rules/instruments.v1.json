@@ -1,0 +1,185 @@
+{
+  "$schema_note": "Jisr instrument definitions. Loaded by services/api/app/engines/scoring.py. Deterministic: no AI touches scoring.",
+  "id": "instruments",
+  "version": "1.0.0",
+  "status": "draft",
+  "last_updated": "2026-11-18",
+  "owner": "Clinical lead (to be named) + AI/rules engineer",
+  "licence_notice": {
+    "phq_gad": "PHQ-2, PHQ-9, GAD-2 and GAD-7 were developed by Drs Robert L. Spitzer, Janet B.W. Williams, Kurt Kroenke and colleagues, with an educational grant from Pfizer Inc. Publisher statement: no permission required to reproduce, translate, display or distribute. Source: https://www.phqscreeners.com/",
+    "item_text_language": "English item text is included verbatim from the free-to-use PHQ/GAD screeners. Arabic and Urdu item text is NOT included: a published, validated translation must be sourced (see translation_sources) and reviewed by a native-speaking clinician before use. Machine translation of instrument items is forbidden."
+  },
+  "translation_sources": {
+    "ar": {
+      "status": "PLACEHOLDER — must be sourced",
+      "candidates": [
+        "Official Arabic translations distributed via https://www.phqscreeners.com/ (check country variant)",
+        "Saudi Arabic PHQ-9 validation (AlHadi et al., 2017, Annals of General Psychiatry) — check the exact item wording used",
+        "Lebanese psychiatric outpatient validation of PHQ-9 / GAD-7 (Psychiatry Research, 2016)"
+      ],
+      "owner": "Clinical lead",
+      "due": "2026-11-19T18:00+04:00 for MVP demo; otherwise demo shows English text in the AR UI with a visible 'validated Arabic text pending' banner"
+    },
+    "ur": {
+      "status": "PLACEHOLDER — must be sourced",
+      "candidates": [
+        "Official Urdu translations via https://www.phqscreeners.com/",
+        "Published Urdu PHQ-9 validation studies (Pakistan) — verify wording and licence"
+      ],
+      "owner": "Clinical lead",
+      "due": "same as ar"
+    }
+  },
+  "response_scales": {
+    "frequency_2w": {
+      "options": [
+        { "value": 0, "en": "Not at all", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "value": 1, "en": "Several days", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "value": 2, "en": "More than half the days", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "value": 3, "en": "Nearly every day", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" }
+      ]
+    },
+    "difficulty": {
+      "options": [
+        { "value": 0, "en": "Not difficult at all", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "value": 1, "en": "Somewhat difficult", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "value": 2, "en": "Very difficult", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "value": 3, "en": "Extremely difficult", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" }
+      ]
+    }
+  },
+  "instruments": [
+    {
+      "id": "PHQ-2",
+      "name": "Patient Health Questionnaire-2",
+      "purpose": "Depression pre-screen (DoH Standard of Care step 1)",
+      "loinc": { "panel": "55757-9", "total": "55758-7" },
+      "stem": { "en": "Over the last 2 weeks, how often have you been bothered by any of the following problems?", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+      "scale": "frequency_2w",
+      "items": [
+        { "id": "phq_1", "loinc": "44250-9", "en": "Little interest or pleasure in doing things", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_2", "loinc": "44255-8", "en": "Feeling down, depressed, or hopeless", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" }
+      ],
+      "scoring": { "method": "sum", "min": 0, "max": 6, "missing_items_allowed": 0 },
+      "positive_threshold": 3,
+      "on_positive": "administer PHQ-9 (reuse phq_1 and phq_2 answers; do not ask twice)",
+      "bands": [
+        { "min": 0, "max": 2, "band": "negative" },
+        { "min": 3, "max": 6, "band": "positive" }
+      ],
+      "citation": "Kroenke K, Spitzer RL, Williams JB. The Patient Health Questionnaire-2: validity of a two-item depression screener. Med Care 2003;41:1284-92."
+    },
+    {
+      "id": "PHQ-9",
+      "name": "Patient Health Questionnaire-9",
+      "purpose": "Depression severity",
+      "loinc": { "panel": "44249-1", "total": "44261-6", "difficulty_item": "69722-7" },
+      "stem": { "en": "Over the last 2 weeks, how often have you been bothered by any of the following problems?", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+      "scale": "frequency_2w",
+      "items": [
+        { "id": "phq_1", "loinc": "44250-9", "en": "Little interest or pleasure in doing things", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_2", "loinc": "44255-8", "en": "Feeling down, depressed, or hopeless", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_3", "loinc": "44259-0", "en": "Trouble falling or staying asleep, or sleeping too much", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_4", "loinc": "44254-1", "en": "Feeling tired or having little energy", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_5", "loinc": "44251-7", "en": "Poor appetite or overeating", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_6", "loinc": "44258-2", "en": "Feeling bad about yourself — or that you are a failure or have let yourself or your family down", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_7", "loinc": "44252-5", "en": "Trouble concentrating on things, such as reading the newspaper or watching television", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_8", "loinc": "44253-3", "en": "Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "phq_9", "loinc": "44260-8", "en": "Thoughts that you would be better off dead or of hurting yourself in some way", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED", "crisis_item": true }
+      ],
+      "difficulty_item": {
+        "id": "phq_10",
+        "loinc": "69722-7",
+        "scale": "difficulty",
+        "en": "If you checked off any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?",
+        "ar": "AR_TEXT_REQUIRED",
+        "ur": "UR_TEXT_REQUIRED",
+        "scored": false,
+        "used_by": "step_rules.v1.json → SM-01 functional impairment (value >= 2) and complexity flag functional_impairment_extreme (value == 3, SM-03)"
+      },
+      "scoring": {
+        "method": "sum",
+        "min": 0,
+        "max": 27,
+        "missing_items_allowed": 1,
+        "missing_policy": "If exactly 1 of items 1-8 is missing: prorated_total = round(sum_answered * 9 / 8), flag 'prorated'. If item 9 is missing: total is NOT computed as complete; crisis_item_unknown=true; the Crisis Gate treats this as 'unknown' and routes to clinician review (never as 0). If >= 2 items missing: status INCOMPLETE, no band, no step.",
+        "missing_policy_note": "Conservative design choice for the MVP; requires clinical sign-off. Published PHQ guidance tolerates more missingness; we deliberately do not."
+      },
+      "bands": [
+        { "min": 0, "max": 4, "band": "minimal" },
+        { "min": 5, "max": 9, "band": "mild" },
+        { "min": 10, "max": 14, "band": "moderate" },
+        { "min": 15, "max": 19, "band": "moderately_severe" },
+        { "min": 20, "max": 27, "band": "severe" }
+      ],
+      "reliable_change": { "points": 6, "source": "NHS Talking Therapies manual (reliable change PHQ-9 >= 6)" },
+      "caseness_threshold": 10,
+      "citation": "Kroenke K, Spitzer RL, Williams JB. The PHQ-9: validity of a brief depression severity measure. J Gen Intern Med 2001;16:606-13. https://doi.org/10.1046/j.1525-1497.2001.016009606.x"
+    },
+    {
+      "id": "GAD-2",
+      "name": "Generalized Anxiety Disorder-2",
+      "purpose": "Anxiety pre-screen (DoH Standard of Care step 1)",
+      "loinc": {
+        "panel": null,
+        "total": null,
+        "verify": "GAD-2 panel/total LOINC codes not confirmed via the NLM Clinical Tables API on 2026-11-18. Owner: AI/rules engineer, look up on loinc.org before FHIR export (by 2026-11-19 12:00 GST). Until then export the two item codes only."
+      },
+      "stem": { "en": "Over the last 2 weeks, how often have you been bothered by the following problems?", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+      "scale": "frequency_2w",
+      "items": [
+        { "id": "gad_1", "loinc": "69725-0", "en": "Feeling nervous, anxious, or on edge", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "gad_2", "loinc": "68509-9", "en": "Not being able to stop or control worrying", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" }
+      ],
+      "scoring": { "method": "sum", "min": 0, "max": 6, "missing_items_allowed": 0 },
+      "positive_threshold": 3,
+      "on_positive": "administer GAD-7 (reuse gad_1 and gad_2 answers)",
+      "bands": [
+        { "min": 0, "max": 2, "band": "negative" },
+        { "min": 3, "max": 6, "band": "positive" }
+      ],
+      "citation": "Kroenke K, Spitzer RL, Williams JB, Monahan PO, Löwe B. Anxiety disorders in primary care: prevalence, impairment, comorbidity, and detection. Ann Intern Med 2007;146:317-25."
+    },
+    {
+      "id": "GAD-7",
+      "name": "Generalized Anxiety Disorder-7",
+      "purpose": "Anxiety severity",
+      "loinc": { "panel": "69737-5", "total": "70274-6" },
+      "stem": { "en": "Over the last 2 weeks, how often have you been bothered by the following problems?", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+      "scale": "frequency_2w",
+      "items": [
+        { "id": "gad_1", "loinc": "69725-0", "en": "Feeling nervous, anxious, or on edge", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "gad_2", "loinc": "68509-9", "en": "Not being able to stop or control worrying", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "gad_3", "loinc": "69733-4", "en": "Worrying too much about different things", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "gad_4", "loinc": "69734-2", "en": "Trouble relaxing", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "gad_5", "loinc": "69735-9", "en": "Being so restless that it is hard to sit still", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "gad_6", "loinc": "69689-8", "loinc_note": "NLM Clinical Tables lists the long name of 69689-8 with 'last 4 weeks'; confirm this is the code used in the GAD-7 panel 69737-5 before FHIR export.", "en": "Becoming easily annoyed or irritable", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" },
+        { "id": "gad_7", "loinc": "69736-7", "en": "Feeling afraid, as if something awful might happen", "ar": "AR_TEXT_REQUIRED", "ur": "UR_TEXT_REQUIRED" }
+      ],
+      "scoring": {
+        "method": "sum",
+        "min": 0,
+        "max": 21,
+        "missing_items_allowed": 1,
+        "missing_policy": "If exactly 1 item is missing: prorated_total = round(sum_answered * 7 / 6), flag 'prorated'. If >= 2 missing: status INCOMPLETE."
+      },
+      "bands": [
+        { "min": 0, "max": 4, "band": "minimal" },
+        { "min": 5, "max": 9, "band": "mild" },
+        { "min": 10, "max": 14, "band": "moderate" },
+        { "min": 15, "max": 21, "band": "severe" }
+      ],
+      "reliable_change": { "points": 4, "source": "NHS Talking Therapies manual (reliable change GAD-7 >= 4)" },
+      "caseness_threshold": 8,
+      "citation": "Spitzer RL, Kroenke K, Williams JB, Löwe B. A brief measure for assessing generalized anxiety disorder: the GAD-7. Arch Intern Med 2006;166:1092-7. https://doi.org/10.1001/archinte.166.10.1092"
+    }
+  ],
+  "validation_rules": [
+    "Every answer value must be an integer in the scale's range; anything else -> HTTP 422, never coerced.",
+    "Duplicate item ids in one submission -> 422.",
+    "Answers for an item id not in the instrument -> 422.",
+    "phq_1/phq_2 and gad_1/gad_2 answers given in the pre-screen are reused by the full instrument; a conflicting second answer for the same item in the same session -> keep the higher value and log 'conflicting_answer' (raise-only, mirrors the crisis principle).",
+    "Scores are stored with the rule-file version (E-17 RuleSetVersion) used to compute them."
+  ],
+  "loinc_verification": "Item and total codes for PHQ-2, PHQ-9 and GAD-7 were checked against the NLM Clinical Tables LOINC API on 2026-11-18. GAD-2 panel/total not confirmed."
+}
