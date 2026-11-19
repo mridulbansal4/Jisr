@@ -168,6 +168,7 @@ def run_benchmark(path: str | Path | None = None) -> dict[str, Any]:
         "severity_agreement": {"matched": sev_match, "of": sev_total, "rate": _ratio(sev_match, sev_total)},
         "rules_version": f"{lex.get('id', 'crisis_lexicon')}@{lex['version']}",
         "rules_status": lex.get("status", ""),
+        "suite": "crisis",  # read by the independent CI check in .github/workflows/evals.yml
         "mode": "deterministic (lexicon + normaliser only, no LLM)",
         "dataset": {
             "path": bench_path.relative_to(REPO_ROOT).as_posix() if bench_path.is_relative_to(REPO_ROOT)

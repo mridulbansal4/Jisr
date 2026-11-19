@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-11-19T13:17:48+00:00",
+  "ran_at": "2026-11-19T13:20:50+00:00",
   "n": 157,
   "positives": 117,
   "negatives": 40,
@@ -14,8 +14,8 @@
   },
   "false_negatives": [],
   "false_positives": [],
-  "latency_p95_ms": 0.087,
-  "latency_max_ms": 6.852,
+  "latency_p95_ms": 0.091,
+  "latency_max_ms": 7.393,
   "latency_budget_ms": 50,
   "by_language": [
     {
@@ -143,6 +143,7 @@
   },
   "rules_version": "crisis_lexicon@1.1.0",
   "rules_status": "DRAFT — NOT CLINICALLY REVIEWED. Every entry needs review by a native-speaking mental-health clinician for each language (Gulf Arabic, MSA, Arabizi, Urdu, Roman Urdu, English) before any non-synthetic use. Owner: Clinical lead. Tracked as R-01 / R-04.",
+  "suite": "crisis",
   "mode": "deterministic (lexicon + normaliser only, no LLM)",
   "dataset": {
     "path": "data/synthetic/crisis_benchmark.v1.jsonl",

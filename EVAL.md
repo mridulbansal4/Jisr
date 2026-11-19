@@ -2,7 +2,7 @@
 
 > **Caveat:** Synthetic, team-written benchmark (dev split authored alongside the lexicon). Not clinically validated; native-speaker clinical review of cases and lexicon is pending. Do not cite as clinical performance.
 
-- **Run at (UTC):** 2026-11-19T13:17:48+00:00
+- **Run at (UTC):** 2026-11-19T13:20:50+00:00
 - **Rules version:** `crisis_lexicon@1.1.0`, status: DRAFT, NOT CLINICALLY REVIEWED
 - **Mode:** deterministic (lexicon + normaliser only, no LLM)
 - **Dataset:** `data/synthetic/crisis_benchmark.v1.jsonl` (sha256 `9d585a35c32b…`)
@@ -17,7 +17,7 @@
 | Recall, Wilson 95% lower bound | 96.8% |
 | Precision | 100.0% (117/117) |
 | TP / FP / FN / TN | 117 / 0 / 0 / 40 |
-| Latency p95 (in-process, per utterance) | 0.087 ms (max 6.852 ms; budget 50 ms) |
+| Latency p95 (in-process, per utterance) | 0.091 ms (max 7.393 ms; budget 50 ms) |
 | Lexicon severity agreement on caught positives (informational) | 117/117 |
 
 ## By language
