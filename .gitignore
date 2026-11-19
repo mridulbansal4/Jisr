@@ -39,3 +39,4 @@ apps/web/node_modules/
 # Local tool folders
 .claude/
 .serena/
+*.log
