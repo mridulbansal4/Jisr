@@ -24,7 +24,7 @@ services/api/
       logging.py            # structlog JSON, ID-only, LOG_PEPPER hashing
       ratelimit.py          # slowapi limits (API_SPEC §1.3)
     models/                 # SQLAlchemy ORM, one module per entity group
-    schemas/                # Pydantic request/response models (mirror api/openapi.yaml)
+    schemas/                # Pydantic request/response models (mirror packages/contracts/openapi.yaml)
     rules/
       loader.py             # load + JSON-Schema-validate packages/rules/*.v1.json, compute sha256, activate E-17
     engines/                # PURE functions; no I/O, no clock reads, no DB
@@ -176,7 +176,7 @@ FastAPI `BackgroundTasks` is used for M-02 and notifications so they never block
 
 ## 6. Validation and error handling
 
-- Pydantic v2 models with `extra="forbid"` for requests; enums mirror `api/openapi.yaml`. A CI test compares FastAPI's generated schema with `api/openapi.yaml` for paths, methods and required fields.
+- Pydantic v2 models with `extra="forbid"` for requests; enums mirror `packages/contracts/openapi.yaml`. A CI test compares FastAPI's generated schema with `packages/contracts/openapi.yaml` for paths, methods and required fields.
 - Rules files are validated against JSON Schemas at startup; failure → refuse to start (FM-05).
 - Domain errors raise typed exceptions (`ConflictState`, `ConsentRequired`, `LockedCrisis`) mapped once in `core/errors.py` to problem+json.
 - Unhandled exceptions → 500 problem+json with `trace_id`, no stack trace in the body. Inside the Crisis Gate path, exceptions become RED (fail-closed) instead of 500.

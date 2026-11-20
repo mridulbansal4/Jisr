@@ -23,7 +23,7 @@ Abu Dhabi screens more people for anxiety and depression every year. But the cha
 ```bash
 git clone https://github.com/mridulbansal4/Jisr.git && cd Jisr
 cp .env.example .env            # add GEMINI_API_KEY (optional: LLM_PROVIDER=none works fully offline)
-docker compose up -d db         # Postgres 16
+docker compose -f deploy/compose.dev.yml up -d db  # Postgres 16
 cd services/api && uv sync && uv run uvicorn app.main:app --reload --port 8000   # SQLite by default; seeds synthetic data on first start (reseed: uv run python -m app.seed)
 cd ../../apps/web && pnpm install && pnpm dev   # http://localhost:3000  → "Judge Mode"
 ```
@@ -33,10 +33,10 @@ Full setup: [ENVIRONMENT_SETUP](docs/03-engineering/ENVIRONMENT_SETUP.md). Evals
 Next.js 16 · TypeScript · Tailwind 4 · next-intl (RTL) · FastAPI · Pydantic 2 · SQLAlchemy 2 · PostgreSQL 16 · Gemini API (explain-only, behind a provider switch) · FHIR R4 resource shapes · GitHub Actions · Vercel + Render (MVP) → in-country UAE hosting (v1).
 
 ## Project structure
-`apps/web` (person app, clinician console, programme dashboard) · `services/api` (engines + API) · `packages/rules` (versioned JSON rules: instruments, crisis lexicon, step rules) · `ai/` (prompts, evals) · `data/synthetic` · `api/openapi.yaml` · `docs/` · `misc/` (hackathon research, war-room notes, hackathon bible and idea shortlist; not part of the build). See **[MAP.md](MAP.md)**.
+`apps/web` (person app, clinician console, programme dashboard) · `services/api` (engines + API) · `packages/rules` (versioned JSON rules: instruments, crisis lexicon, step rules) · `ai/` (prompts, evals) · `data/synthetic` · `packages/contracts/openapi.yaml` · `docs/` (including `docs/research/` hackathon background, not part of the build). See **[MAP.md](docs/MAP.md)**.
 
 ## Docs index
-Start with [MAP](MAP.md) → [PROJECT_BRIEF](docs/00-overview/PROJECT_BRIEF.md) → [PRD](docs/01-product/PRD.md) → [ARCHITECTURE](docs/03-engineering/ARCHITECTURE.md) → [HACKATHON_PLAN](docs/00-overview/HACKATHON_PLAN.md). Pitch: [PITCH](docs/00-overview/PITCH.md). Safety: [RESPONSIBLE_AI](docs/04-ai/RESPONSIBLE_AI.md), [AI_EVALS](docs/04-ai/AI_EVALS.md), [MEDICAL_DEVICE](docs/06-security-compliance/MEDICAL_DEVICE.md).
+Start with [MAP](docs/MAP.md) → [PROJECT_BRIEF](docs/00-overview/PROJECT_BRIEF.md) → [PRD](docs/01-product/PRD.md) → [ARCHITECTURE](docs/03-engineering/ARCHITECTURE.md) → [HACKATHON_PLAN](docs/00-overview/HACKATHON_PLAN.md). Pitch: [PITCH](docs/00-overview/PITCH.md). Safety: [RESPONSIBLE_AI](docs/04-ai/RESPONSIBLE_AI.md), [AI_EVALS](docs/04-ai/AI_EVALS.md), [MEDICAL_DEVICE](docs/06-security-compliance/MEDICAL_DEVICE.md).
 
 ## Assumptions & limitations (summary)
 - **Not a diagnostic device and not therapy.** Jisr supports screening navigation and care coordination; clinicians make every clinical decision.

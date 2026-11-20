@@ -1,4 +1,4 @@
-# misc
+# Research
 
 Background material from the hackathon, kept for reference. None of it is used by the app.
 
@@ -10,4 +10,4 @@ Background material from the hackathon, kept for reference. None of it is used b
 | `war-room/` | Debate notes and scoring per domain |
 | `state.md` | Checklist from the research run |
 
-The product itself starts at the repo root: see [README](../README.md) and [MAP](../MAP.md).
+The product itself starts at the repo root: see [README](../../README.md) and [MAP](../MAP.md).

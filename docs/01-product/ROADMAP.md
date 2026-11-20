@@ -57,7 +57,7 @@ gantt
 | Directory | Real provider directory for pilot sites, with capacity feeds or weekly manual updates | PL |
 
 ## 4. 3–6 months (Mar–May 2027) — pilot
-**Proposed pilot (conditional on a partner):** 12 weeks; IFHAS positive mental-health screens at 2–3 PHC centres (site operator to be agreed; SEHA PHC centres were suggested in `misc/ideas.md` as a hunch, not a contact); providers in Thiqa and at least one expat plan network.
+**Proposed pilot (conditional on a partner):** 12 weeks; IFHAS positive mental-health screens at 2–3 PHC centres (site operator to be agreed; SEHA PHC centres were suggested in `docs/research/ideas.md` as a hunch, not a contact); providers in Thiqa and at least one expat plan network.
 
 Pilot KPIs (definitions in [METRICS.md](METRICS.md)): successful hand-off rate; follow-up within timeframe; median waiting time; reliable improvement (RCI); crisis-response completion within 15 minutes; adverse events; every KPI by age, gender, nationality, language and geography with suppression. Targets agreed with ADPHC at kick-off against a pre-pilot baseline measured at the same sites (owner: PL, at pilot kick-off).
 
@@ -66,7 +66,7 @@ What DoH / ADPHC must provide: data-sharing approval for IFHAS results, named fa
 ## 5. 6–12 months (Jun–Nov 2027)
 - Pilot report (published, including failures and fairness gaps) and scale decision with ADPHC.
 - Rollout path: all IFHAS sites → all PHC centres via the Sahatna module → other emirates' screening programmes.
-- v2 features: perinatal depression pathway (same episode engine), opt-in wearable sleep signal as a re-check prompt (never inference of risk), capacity forecasting for planners, more languages (Hindi, Malayalam, Tagalog considered in `misc/ideas.md`).
+- v2 features: perinatal depression pathway (same episode engine), opt-in wearable sleep signal as a re-check prompt (never inference of risk), capacity forecasting for planners, more languages (Hindi, Malayalam, Tagalog considered in `docs/research/ideas.md`).
 - Certification roadmap: ADHICS compliance audit; ISO 27001 and ISO/IEC 42001 considered (owner: BE, decision by 2027-06-30).
 
 ## 6. Partnerships (targets, none confirmed)

@@ -88,4 +88,4 @@ Procurement after the pilot follows Abu Dhabi government procurement rules. We h
 | Microsoft / Inception / MBZUAI | "A sovereign-ready, gated, benchmarked health workload." | Architecture; eval; licence table |
 
 ## Sources
-Numbered sources follow [PROJECT_BRIEF.md § Sources](../00-overview/PROJECT_BRIEF.md#sources). [S1][S29] = challenge page and press release (see `misc/biblehackathon.md`). Hub71 incentive figures: https://meatechwatch.com/2025/11/03/abu-dhabi-scales-up-startup-innovation-through-enhanced-hub71-incentive-program/ (secondary, `UNVERIFIED`).
+Numbered sources follow [PROJECT_BRIEF.md § Sources](../00-overview/PROJECT_BRIEF.md#sources). [S1][S29] = challenge page and press release (see `docs/research/biblehackathon.md`). Hub71 incentive figures: https://meatechwatch.com/2025/11/03/abu-dhabi-scales-up-startup-innovation-through-enhanced-hub71-incentive-program/ (secondary, `UNVERIFIED`).

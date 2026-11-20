@@ -1,11 +1,11 @@
 # Competitive Analysis
 > Project: Jisr · Owner: Product lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [PRD](PRD.md) · [Business model](../07-business/BUSINESS_MODEL.md) · [GTM](../07-business/GTM.md) · [Pitch](../00-overview/PITCH.md) · Source scan: `misc/research/E-competition.md` (C:\Projects\FutureHealth\research)
+> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [PRD](PRD.md) · [Business model](../07-business/BUSINESS_MODEL.md) · [GTM](../07-business/GTM.md) · [Pitch](../00-overview/PITCH.md) · Source scan: `docs/research/research/E-competition.md` (C:\Projects\FutureHealth\research)
 
 Two fields matter: (1) **the hackathon field** (other C10 entries, judged 20–30 Nov 2026) and (2) **the market** (what DoH / ADPHC could buy or already has). Funding and pricing were **not researched** for this document; any figure below is marked unverified, and the pitch must not quote it without checking.
 
 ## 1. Hackathon field (C10)
-Method (from `misc/research/E-competition.md`): ~75 GitHub repository searches for repos created on or after 14 Oct 2026, plus README reads for 85 candidates and web searches, on 18 Nov 2026.
+Method (from `docs/research/research/E-competition.md`): ~75 GitHub repository searches for repos created on or after 14 Oct 2026, plus README reads for 85 candidates and web searches, on 18 Nov 2026.
 
 | Finding | Detail |
 |---|---|
@@ -34,7 +34,7 @@ Method (from `misc/research/E-competition.md`): ~75 GitHub repository searches f
 | **Tele-mental-health marketplaces** (e.g. BetterHelp, Talkspace) | Therapist marketplace | US / global | Subscription therapy by video/chat | Not researched | Cash-pay, not network-aware for Thiqa/Basic; no stepped care; no link to IFHAS or family physician |
 | **Regional online therapy** (e.g. Takalam — UAE; Shezlong — Egypt) | Arabic-language therapist booking | UAE / MENA | Book Arabic-speaking therapists online (details **unverified**) | Not researched | Marketplace, not a measured pathway from a positive screen; no crisis gate; no programme fairness reporting |
 | **NHS Talking Therapies digital front doors** (e.g. Limbic Access) | AI-assisted referral and triage | UK | Self-referral chatbot into stepped-care services; Limbic Access reportedly UKCA Class IIa (**unverified here**) | Not researched | UK-specific pathways; not localised for Abu Dhabi networks, languages or rails; proves the stepped-care model has demand |
-| **SEHA SAKINA platform + 800-SAKINA** | Public screening platform + helpline | Abu Dhabi | Screens depression, anxiety, perinatal depression, autism, dementia (per `misc/research/A-organisers-judges.md`); 800-SAKINA helpline | Public | No public evidence of a cross-provider conversion ledger (hunch, verify). **Jisr should integrate with it, not compete** |
+| **SEHA SAKINA platform + 800-SAKINA** | Public screening platform + helpline | Abu Dhabi | Screens depression, anxiety, perinatal depression, autism, dementia (per `docs/research/research/A-organisers-judges.md`); 800-SAKINA helpline | Public | No public evidence of a cross-provider conversion ledger (hunch, verify). **Jisr should integrate with it, not compete** |
 | **Sahatna** | Patient super-app | Abu Dhabi | Appointments, teleconsult, Malaffi records, IFHAS, AI symptom checker; UAE PASS | Public | General app; no mental-health stepped-care loop visible. **Jisr is designed as a Sahatna module** |
 | **Facility EMR referral + Malaffi REF** | Status quo | Abu Dhabi | Referrals sent as HL7 v2 REF (Circular 144/2026) | Existing | Records the referral, not whether the person reached care, improved, or was safe while waiting |
 | **Printed "see a specialist" note** | Status quo | Abu Dhabi | What Mariam gets today (persona composite) | — | No owner, no deadline, no measurement |

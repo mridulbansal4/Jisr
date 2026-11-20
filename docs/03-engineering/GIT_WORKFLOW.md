@@ -1,6 +1,6 @@
 # Git Workflow
 > Project: Jisr · Owner: Tech lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [Contributing](../../CONTRIBUTING.md) · [CI/CD](../05-ops/CICD.md) · [Coding standards](CODING_STANDARDS.md) · [Hackathon plan](../00-overview/HACKATHON_PLAN.md)
+> Related: [Contributing](../../.github/CONTRIBUTING.md) · [CI/CD](../05-ops/CICD.md) · [Coding standards](CODING_STANDARDS.md) · [Hackathon plan](../00-overview/HACKATHON_PLAN.md)
 
 ## 1. Model: GitHub flow on `main`
 
@@ -51,7 +51,7 @@ gitGraph
 
 ## 4. Pull requests
 
-- Template from [CONTRIBUTING.md](../../CONTRIBUTING.md) (what/why with F-xx, screenshots or sample output, tests, safety checklist).
+- Template from [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) (what/why with F-xx, screenshots or sample output, tests, safety checklist).
 - **Size:** aim < 400 changed lines excluding generated files and fixtures.
 - **Reviews:** 1 approval; **2 approvals** (one from the clinical safety lead or tech lead) for changes to `packages/rules/**`, `app/engines/crisis_gate.py`, `app/llm/**`, `ai/prompts/**`, auth/RBAC.
 - `CODEOWNERS` encodes the second-review paths.
@@ -64,7 +64,7 @@ gitGraph
 ## 5. Release tagging and versioning
 
 - Semantic Versioning 2.0 for the product: `v0.1.0` = hackathon submission (tag at the submitted commit, 2026-11-20). `CHANGELOG.md` (Keep a Changelog) updated in the release PR.
-- **API version** is separate: URL major (`/v1`); `info.version` in `api/openapi.yaml` follows semver for additive changes.
+- **API version** is separate: URL major (`/v1`); `info.version` in `packages/contracts/openapi.yaml` follows semver for additive changes.
 - **Rules version** is separate again: `packages/rules/manifest.json` semver; each change is a minor or patch; a change in clinical meaning (threshold, trigger) is at least a minor bump and needs a clinical sign-off line in the PR.
 - **Prompt versions** live in file names under `ai/prompts/` (`explain_result.v3`).
 - Tags are annotated: `git tag -a v0.1.0 -m "Hackathon submission"`.

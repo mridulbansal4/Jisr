@@ -1,10 +1,10 @@
 # Contributing to Jisr
 
 ## Setup
-Follow [ENVIRONMENT_SETUP](docs/03-engineering/ENVIRONMENT_SETUP.md). Copy `.env.example` to `.env`.
+Follow [ENVIRONMENT_SETUP](../docs/03-engineering/ENVIRONMENT_SETUP.md). Copy `.env.example` to `.env`.
 
 ## Branches
-GitHub flow on `main`. Branch names: `feat/F-07-warm-handoff`, `fix/crisis-gate-arabizi`, `docs/pitch`, `chore/ci`. Details: [GIT_WORKFLOW](docs/03-engineering/GIT_WORKFLOW.md).
+GitHub flow on `main`. Branch names: `feat/F-07-warm-handoff`, `fix/crisis-gate-arabizi`, `docs/pitch`, `chore/ci`. Details: [GIT_WORKFLOW](../docs/03-engineering/GIT_WORKFLOW.md).
 
 ## Commits
 [Conventional Commits](https://www.conventionalcommits.org/): `feat(crisis-gate): add Urdu indirect phrases (F-03)`. Reference the feature ID.

@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose a feature or improvement aligned with docs/00-overview/PROJECT_BRIEF.md
+title: "[feat]: "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: feature_id
+    attributes:
+      label: Feature or API ID (from PROJECT_BRIEF.md)
+      placeholder: F-07 / API-08
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and proposed change
+      description: Describe what user or clinical workflow this supports.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Safety and scope checks
+      options:
+        - label: Does not add an employer, insurer, or family-admin role
+        - label: Keeps clinical thresholds in packages/rules (no hard-coded thresholds)
+        - label: Keeps all LLM outputs explain-only behind the claim validator

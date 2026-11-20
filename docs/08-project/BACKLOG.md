@@ -106,8 +106,8 @@ Each block below is one GitHub Issue: the heading is the title, the rest is the 
 
 #### JIS-001 Monorepo scaffold
 `labels: epic:foundation, owner:BE, block:B1, prio:must, mvp` · Est 1.5 h
-Create `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `api/openapi.yaml` (brief §10). Docker compose for Postgres 16.
-- [ ] `docker compose up -d db` works; `uv sync` and `pnpm install` succeed
+Create `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `packages/contracts/openapi.yaml` (brief §10). Docker compose for Postgres 16.
+- [ ] `docker compose -f deploy/compose.dev.yml up -d db` works; `uv sync` and `pnpm install` succeed
 - [ ] Commands in CLAUDE.md run without error
 
 #### JIS-002 CI skeleton
@@ -136,7 +136,7 @@ Next.js 16 App Router, Tailwind 4, next-intl with `ar` (default per `.env.exampl
 
 #### JIS-006 OpenAPI contract + mocks
 `labels: epic:foundation, owner:BE, block:B1, prio:must, mvp` · Est 2 h
-`api/openapi.yaml` with API-01–API-23 exactly as named in brief §8; generate TS client; mock server for FE.
+`packages/contracts/openapi.yaml` with API-01–API-23 exactly as named in brief §8; generate TS client; mock server for FE.
 - [ ] FE can call every endpoint against mocks
 
 #### JIS-007 Deploy pipeline
@@ -409,12 +409,12 @@ Five steps = brief §14 demo moments.
 
 #### JIS-082 Crisis benchmark dataset
 `labels: epic:eval, F-18, owner:AI, block:B3, prio:must, mvp, safety` · Est 3 h
-Adversarial utterances (direct, indirect, negated, quoted, misspelt, Arabizi, Roman Urdu, mixed script) plus clear negatives; target ≥ 150 cases (size from `misc/ideas.md`); labelled by the team, not clinicians (disclosed).
+Adversarial utterances (direct, indirect, negated, quoted, misspelt, Arabizi, Roman Urdu, mixed script) plus clear negatives; target ≥ 150 cases (size from `docs/research/ideas.md`); labelled by the team, not clinicians (disclosed).
 - [ ] Each case: id, text, language, expected, category
 
 #### JIS-083 Step-matcher test cases
 `labels: epic:eval, F-18, owner:AI, block:B5, prio:must, mvp` · Est 2 h
-Target ≥ 60 cases (size from `misc/ideas.md`) covering every band, RED override, preference/network edge cases.
+Target ≥ 60 cases (size from `docs/research/ideas.md`) covering every band, RED override, preference/network edge cases.
 - [ ] 100% agreement required
 
 #### JIS-084 Validator test suite

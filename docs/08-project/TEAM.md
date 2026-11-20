@@ -1,6 +1,6 @@
 # Team
 > Project: Jisr · Owner: Product lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [Hackathon plan](../00-overview/HACKATHON_PLAN.md) · [Backlog](BACKLOG.md) · [Features](../01-product/FEATURES.md) · [CONTRIBUTING](../../CONTRIBUTING.md)
+> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [Hackathon plan](../00-overview/HACKATHON_PLAN.md) · [Backlog](BACKLOG.md) · [Features](../01-product/FEATURES.md) · [CONTRIBUTING](../../.github/CONTRIBUTING.md)
 
 Team size: 2–4 people, JavaScript/TypeScript + Python, ~36-hour build (18–20 Nov 2026), submission 20 Nov 2026 (brief §13). Names are filled in by the team at kick-off; roles are fixed now so every doc can refer to them.
 
@@ -23,7 +23,7 @@ With 2 people, apply the cut list in [BACKLOG.md](BACKLOG.md) §4 at the start, 
 
 ## 2. Responsibilities per role (hackathon)
 - **PL:** guards scope against the brief; answers clinical-content questions within 30 minutes; writes all user-facing copy into `messages/{en,ar,ur}.json`; runs the H12, H24 and H32 demo checks; owns the open questions in the PRD.
-- **BE:** merges to `main`; keeps the API contract (`api/openapi.yaml`) in sync; no clinical threshold outside `packages/rules`; owns live API uptime during judging.
+- **BE:** merges to `main`; keeps the API contract (`packages/contracts/openapi.yaml`) in sync; no clinical threshold outside `packages/rules`; owns live API uptime during judging.
 - **FE:** builds against the OpenAPI contract with mocks until endpoints land; owns RTL, accessibility basics and the "I need help now" button on every screen.
 - **AI:** keeps CI eval gate green (crisis recall 100%); adds a benchmark case for every lexicon change; never lets an LLM decide a score, step or crisis clearance.
 
@@ -71,4 +71,4 @@ Sleep: each person takes at least one 4-hour block; blocks are staggered so BE o
 5. **Cut rule:** at any demo check, if a Must feature is not working end-to-end, the next Could/Should item on the cut list is dropped immediately.
 
 ## 6. Definition of done (per ticket)
-Code merged to `main` · tests for each engine branch · strings in all three locales · works on the deployed preview · no PII or free text in logs · acceptance criteria in the ticket checked · docs touched if behaviour changed (see [CONTRIBUTING](../../CONTRIBUTING.md)).
+Code merged to `main` · tests for each engine branch · strings in all three locales · works on the deployed preview · no PII or free text in logs · acceptance criteria in the ticket checked · docs touched if behaviour changed (see [CONTRIBUTING](../../.github/CONTRIBUTING.md)).

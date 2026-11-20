@@ -19,7 +19,7 @@
 | React Hook Form + @hookform/resolvers | 7.92.0 + 7.0.7 | Only for the few multi-field forms (settings, consent, contact attempt) | Formik | MIT |
 | lucide-react | 1.75.0 | Icon subset, tree-shaken SVG | Icon fonts | ISC |
 | Zod | 4.6.7 | Runtime validation of API responses and forms | Yup | MIT |
-| openapi-typescript | 7.13.0 | Generates TS types from `api/openapi.yaml` (single contract) | Hand-written types | MIT |
+| openapi-typescript | 7.13.0 | Generates TS types from `packages/contracts/openapi.yaml` (single contract) | Hand-written types | MIT |
 | Serwist (`@serwist/next`, `serwist`) | 9.5.15 | Service worker for the PWA: precache crisis page + lexicon, offline shell | next-pwa (unmaintained fork churn) | MIT |
 | Browser SpeechSynthesis | platform API | Read-aloud (F-20), no dependency | Cloud TTS (data leaves device) | — |
 
@@ -84,7 +84,7 @@ Deterministic engines (scoring, Crisis Gate, Step Matcher, RCI, SLA, fairness) a
 | testcontainers | 4.15.0 | Optional Postgres for local integration tests |
 | @lhci/cli (Lighthouse CI) | 0.16.1 | TTI / performance budget in CI |
 | Locust | 2.47.0 | Load test the Crisis Gate (p95 < 300 ms) |
-| @redocly/cli | 2.79.0 | Lint `api/openapi.yaml` in CI |
+| @redocly/cli | 2.79.0 | Lint `packages/contracts/openapi.yaml` in CI |
 
 ## 6. Infrastructure, CI, monitoring, auth
 

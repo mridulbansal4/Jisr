@@ -6,7 +6,7 @@ Jisr turns a positive mental-health screen (PHQ-9 / GAD-7) into a measured hand-
 ## Commands
 | Task | Command |
 |---|---|
-| DB | `docker compose up -d db` |
+| DB | `docker compose -f deploy/compose.dev.yml up -d db` |
 | API install | `cd services/api && uv sync` |
 | API dev | `uv run uvicorn app.main:app --reload --port 8000` |
 | Seed / reseed | `uv run python -m app.seed` (tables are created and seeded automatically on first start; SQLite by default, set `DATABASE_URL` for Postgres) |
@@ -52,4 +52,4 @@ Python: ruff + mypy strict on `app/engines`; Pydantic models for every IO. TypeS
 Synthetic data only. Treat every field as if real: encrypt at rest in v1, role-based access, audit every read of an episode (`AuditLog`). See [SECURITY_ARCHITECTURE](docs/06-security-compliance/SECURITY_ARCHITECTURE.md) and [PRIVACY](docs/06-security-compliance/PRIVACY.md).
 
 ## Key docs
-[PROJECT_BRIEF](docs/00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](docs/03-engineering/ARCHITECTURE.md) · [API_SPEC](docs/03-engineering/API_SPEC.md) · [DATA_MODEL](docs/03-engineering/DATA_MODEL.md) · [PROMPTS](docs/04-ai/PROMPTS.md) · [AI_EVALS](docs/04-ai/AI_EVALS.md) · [HACKATHON_PLAN](docs/00-overview/HACKATHON_PLAN.md) · [MAP](MAP.md)
+[PROJECT_BRIEF](docs/00-overview/PROJECT_BRIEF.md) · [ARCHITECTURE](docs/03-engineering/ARCHITECTURE.md) · [API_SPEC](docs/03-engineering/API_SPEC.md) · [DATA_MODEL](docs/03-engineering/DATA_MODEL.md) · [PROMPTS](docs/04-ai/PROMPTS.md) · [AI_EVALS](docs/04-ai/AI_EVALS.md) · [HACKATHON_PLAN](docs/00-overview/HACKATHON_PLAN.md) · [MAP](docs/MAP.md)

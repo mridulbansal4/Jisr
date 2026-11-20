@@ -26,7 +26,7 @@ cp .env.example .env               # Windows PowerShell: Copy-Item .env.example 
 # Edit .env: set JWT_SECRET (>= 32 random bytes), JUDGE_PASSCODE, and optionally GEMINI_API_KEY.
 # No key? set LLM_PROVIDER=none (templates only; everything else works).
 
-docker compose up -d db            # Postgres 16 on localhost:5432 (user/pass/db = jisr)
+docker compose -f deploy/compose.dev.yml up -d db  # Postgres 16 on localhost:5432 (user/pass/db = jisr)
 
 # API
 cd services/api
@@ -39,7 +39,7 @@ uv run uvicorn app.main:app --reload --port 8000
 # Web (new terminal)
 cd apps/web
 pnpm install
-pnpm gen:api                       # TS types from ../../api/openapi.yaml
+pnpm gen:api                       # TS types from ../../packages/contracts/openapi.yaml
 pnpm dev                           # http://localhost:3000/ar  -> Judge Mode at /ar/judge
 ```
 
@@ -118,7 +118,7 @@ All variables are in [`.env.example`](../../.env.example) with comments. The one
 For a laptop demo fallback without local toolchains, `infra/docker-compose.full.yml` (to be added by the tech lead by H+20) builds `services/api` and `apps/web` images and runs them with `db`:
 
 ```bash
-docker compose -f docker-compose.yml -f infra/docker-compose.full.yml up --build
+docker compose -f deploy/compose.dev.yml -f infra/docker-compose.full.yml up --build
 ```
 
 ## 8. Troubleshooting

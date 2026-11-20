@@ -66,7 +66,7 @@ First-principles check: an episode costs almost nothing to track. The scarce res
 | 800-SAKINA (Abu Dhabi) crisis line alongside the national 800-HOPE | 2026 | [7] |
 | DoH Circular 144/2026: Malaffi referrals move as HL7 v2 REF, so referral events already exist | Since 31 Aug 2026 | [14] |
 | DoH Circular 170/2026: all facilities on Sahatna by 30 Nov 2026, ten days after submission | 30 Nov 2026 | [13] |
-| DoH Responsible AI Standard; DoH AI Clinician Framework | Oct 2025; Oct 2026 | `misc/biblehackathon.md` [S25][S26] |
+| DoH Responsible AI Standard; DoH AI Clinician Framework | Oct 2025; Oct 2026 | `docs/research/biblehackathon.md` [S25][S26] |
 | The C10 statement names the "continuing conversion gap between a positive screen and timely specialist follow-up" | Oct 2026 | [2] |
 
 Screening volume is rising, and the rails to act on it now exist. What's missing is the **bridge** between them.

@@ -1,0 +1,45 @@
+name: Bug report
+description: Report a defect in the web app, API, rules, or evals
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include real patient data or secrets in any issue. All data in Jisr is synthetic.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - apps/web
+        - services/api
+        - packages/rules
+        - ai/evals
+        - deploy
+    validations:
+      required: true
+  - type: dropdown
+    id: safety
+    attributes:
+      label: Could this cause a missed crisis signal (Crisis Gate false negative)?
+      options:
+        - No
+        - Yes (report via .github/SECURITY.md instead of a public issue)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Clear description of the bug and expected behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true

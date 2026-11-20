@@ -22,7 +22,7 @@ IDs (F-xx, P-xx, E-xx, API-xx, M-xx, R-xx, levels L0–L4 and RED) come from [PR
 | Crisis lines: 999, 800-SAKINA (800 725462, Abu Dhabi), 800-HOPE (800 4673, national). | https://www.emirates247.com/uae-guide/uae-mental-health-helplines-2026-numbers-to-call-in-dubai-abu-dhabi-and-across-the-emirates/6178 |
 | Named barriers: stigma, not knowing where to go, fragmented pathways, uneven capacity. Named digital harms: covert monitoring, weak crisis handling, unvalidated advice, sensitive-data disclosure. | C10 statement (above) |
 
-**No public number exists** for the share of positive mental-health screens in Abu Dhabi that reach follow-up (searched 18 Nov 2026; `misc/research/A-organisers-judges.md` notes that growth figures were not found). The nearest local analogue is colorectal screening, where only 30.5% of FIT-positive people reached colonoscopy (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8343888/). We use that only as an illustration, never as a mental-health baseline.
+**No public number exists** for the share of positive mental-health screens in Abu Dhabi that reach follow-up (searched 18 Nov 2026; `docs/research/research/A-organisers-judges.md` notes that growth figures were not found). The nearest local analogue is colorectal screening, where only 30.5% of FIT-positive people reached colonoscopy (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8343888/). We use that only as an illustration, never as a mental-health baseline.
 
 **Why Jisr.** Competitors build the front of the funnel (a chatbot, a quiz). Every C10 KPI sits at the back: hand-off, follow-up within timeframe, waiting time, symptom change, crisis-response completion, adverse events, fairness. Jisr is a **measurement-based stepped-care ledger**: deterministic rules decide, a clinician confirms, AI only explains, and the crisis gate runs first.
 
@@ -69,7 +69,7 @@ Details: [PERSONAS.md](PERSONAS.md).
 |---|---|
 | **MVP (hackathon, 18–20 Nov 2026)** | All F-xx marked MVP = Yes in the brief, on synthetic data, Judge Mode login, Gemini API (synthetic data only) with template fallback, Vercel + Render hosting, in-app + SMS mock notifications, F-19 as a stub, F-20 if time |
 | **v1 (production pilot)** | In-country hosting (Azure UAE North or Core42), in-country LLM endpoint or `LLM_PROVIDER=none`, UAE PASS for citizens and facility SSO for staff, real provider directory from the DoH facility registry, IFHAS feed via Malaffi / IFHAS portal under DoH approval, Malaffi HL7 v2 REF referrals (Circular 144/2026), Sahatna module (Circular 170/2026), licensed SMS/WhatsApp provider, native-reviewed Arabic and Urdu, warm-transfer protocol with crisis-line operators |
-| **v2** | Perinatal depression pathway, opt-in wearable signals (sleep) as re-check prompts only, more languages (Hindi, Malayalam, Tagalog were considered in `misc/ideas.md`), capacity forecasting for planners |
+| **v2** | Perinatal depression pathway, opt-in wearable signals (sleep) as re-check prompts only, more languages (Hindi, Malayalam, Tagalog were considered in `docs/research/ideas.md`), capacity forecasting for planners |
 
 ## 6. Functional requirements
 
@@ -220,15 +220,15 @@ Priority = MoSCoW from the brief. Stories: [USER_STORIES.md](USER_STORIES.md). "
 | Languages | Arabic (RTL), English, Urdu (RTL); machine-assisted, **not native-reviewed** (R-04, disclosed) | Native clinical review of every string; validated Arabic instrument wording (Arabic PHQ-9/GAD-7 validation: https://read.qxmd.com/read/27031595/); Urdu wording validated |
 | Accessibility | WCAG 2.2 AA targets; 16 px min text; read-aloud if time (F-20); icons + text | Audited WCAG 2.2 AA; voice-first option |
 | Security | Signed JWT demo login; TLS; no secrets in repo; RBAC per role | UAE PASS + facility SSO; ADHICS controls; encryption at rest with managed keys; pen test |
-| Privacy | Synthetic data only; no real personal data anywhere | Federal Law 2/2019 (health data stays in the UAE, Art. 13: https://elaws.moj.gov.ae/UAE-MOJ_LC-En/00_Health/UAE-LC-En_2019-02-06_00002_Kait.html?val=EL1); DoH Circular 147/2022 (no third-party sharing without approval, per `misc/biblehackathon.md`, unverified text); UAE PDPL (Federal Decree-Law 45/2021) largely defers to sector law for health data (https://cms.law/en/int/expert-guides/cms-expert-guide-to-data-protection-and-cyber-security-laws/united-arab-emirates, status of executive regulations unverified) |
+| Privacy | Synthetic data only; no real personal data anywhere | Federal Law 2/2019 (health data stays in the UAE, Art. 13: https://elaws.moj.gov.ae/UAE-MOJ_LC-En/00_Health/UAE-LC-En_2019-02-06_00002_Kait.html?val=EL1); DoH Circular 147/2022 (no third-party sharing without approval, per `docs/research/biblehackathon.md`, unverified text); UAE PDPL (Federal Decree-Law 45/2021) largely defers to sector law for health data (https://cms.law/en/int/expert-guides/cms-expert-guide-to-data-protection-and-cyber-security-laws/united-arab-emirates, status of executive regulations unverified) |
 | Responsible AI | Deterministic engines decide; LLM explains only; validator; raise-only M-02; EVAL.md | Alignment with DoH Responsible AI Standard (DoH/ST/DDGO/RAI/V1/2025; clauses unverified — fetch failed: https://www.doh.gov.ae/-/media/B84FF5DD027846699C51F36C439A580F.ashx) and DoH AI Clinician Framework (https://www.wam.ae/en/article/17hh7ki-doh-publishes-clinician-framework-guide); DECIDE-AI reporting (https://www.nature.com/articles/s41591-022-01772-9) |
 | Auditability | Append-only EpisodeEvent and AuditLog; person sees own access log (API-23) | Same + retention per DoH policy (owner: Compliance lead, confirm by pilot contract) |
 
 ## 8. Assumptions
 | # | Assumption | Risk if wrong | Owner |
 |---|---|---|---|
-| A-01 | Synthetic data is acceptable for evaluation (confirmed in organiser sessions per `misc/research/01-facts.md`) | — | Product lead |
-| A-02 | PHQ-9 and GAD-7 are free to use and translate (Pfizer; `misc/research/B-context-and-data.md`, [K] knowledge-level) | Licence issue (R-05) | AI/Eval engineer |
+| A-01 | Synthetic data is acceptable for evaluation (confirmed in organiser sessions per `docs/research/research/01-facts.md`) | — | Product lead |
+| A-02 | PHQ-9 and GAD-7 are free to use and translate (Pfizer; `docs/research/research/B-context-and-data.md`, [K] knowledge-level) | Licence issue (R-05) | AI/Eval engineer |
 | A-03 | C-SSRS screener use in a prototype is permitted under Columbia's terms (https://cssrs.columbia.edu) — **unverified** | Remove C-SSRS items; keep item 9 + lexicon | AI/Eval engineer, check by 2026-11-19 H6 |
 | A-04 | Stepped-care thresholds follow standard PHQ-9/GAD-7 bands and NICE CG123; DoH standard [5] is compatible | Re-map rule file | Product lead |
 | A-05 | SLA defaults from `.env.example` (`SLA_RED_MINUTES=15`, `SLA_REFERRAL_ACCEPT_HOURS=48`, `SLA_FIRST_APPOINTMENT_DAYS=14`, `RECHECK_DAYS=14`; a per-level override of 28 days for L4 is proposed) are **proposals**, not DoH-mandated | Change config only | Product lead, verify against DoH standard by 2026-11-19 |

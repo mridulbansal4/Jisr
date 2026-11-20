@@ -1,6 +1,6 @@
 # Jisr — Project Brief (Single Source of Truth)
 > Project: Jisr (جسر, "bridge") · Owner: Product lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [PRD](../01-product/PRD.md) · [Architecture](../03-engineering/ARCHITECTURE.md) · [Hackathon plan](HACKATHON_PLAN.md) · [Source idea](../../misc/ideas.md)
+> Related: [PRD](../01-product/PRD.md) · [Architecture](../03-engineering/ARCHITECTURE.md) · [Hackathon plan](HACKATHON_PLAN.md) · [Source idea](../research/ideas.md)
 
 **Every other document must stay consistent with this file.** If something here is wrong, change it here first.
 
@@ -10,8 +10,8 @@
 | Name | **Jisr** (Arabic جسر, "bridge") |
 | One-liner | Jisr turns every positive mental-health screen into a completed, measured hand-off to the right level of care, with a deterministic crisis gate that no AI can override. |
 | Challenge | Future Health Digital Innovation Challenge 2026 — **C10 Earlier, Safer Mental Wellbeing Support** (DoH Abu Dhabi; co-creators Microsoft, Inception42, MBZUAI) |
-| Idea type | Doesn't exist in the public field: 0–1 public C10 repos at 18 Nov 2026 (one possible, unbranded: Flan-Backend; `misc/research/E-competition.md`) |
-| Statement text | Verbatim C10 text: `../../misc/research/00-source/statement-C10.md` |
+| Idea type | Doesn't exist in the public field: 0–1 public C10 repos at 18 Nov 2026 (one possible, unbranded: Flan-Backend; `docs/research/research/E-competition.md`) |
+| Statement text | Verbatim C10 text: `../research/research/00-source/statement-C10.md` |
 | Submission | 20 Nov 2026. Exact cut-off hour/time zone not published on the page → **internal deadline 20 Nov 10:00 GST** |
 | Currency | AED (USD in parentheses where useful) |
 | Region | Abu Dhabi, UAE |
@@ -167,7 +167,7 @@ E-01 Person · E-02 ConsentRecord · E-03 ScreeningSession · E-04 InstrumentSco
 | Auth | MVP: Judge Mode demo login (signed JWT) gated by a shared `JUDGE_PASSCODE` given in the submission form. v1: UAE PASS (citizen) + facility SSO (staff) |
 | Scope | Adults 18+ (IFHAS covers 18–75). Under-18s are out of scope for the MVP |
 
-Monorepo layout: `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `api/openapi.yaml`.
+Monorepo layout: `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `packages/contracts/openapi.yaml`.
 
 ## 10b. Regulatory frame (detail in COMPLIANCE.md)
 UAE Federal Law 2/2019 (ICT in health fields; Art. 13 data localisation) · UAE PDPL (Federal Decree-Law 45/2021, health carve-out) · Federal Law 10/2023 on Mental Health · DoH Patient Healthcare Data Privacy Standard + Circular 147/2022 (no third-party sharing without DoH approval) · ADHICS (Abu Dhabi Healthcare Information & Cyber Security Standard) · DoH Responsible AI Standard (2025) · DoH AI Clinician Framework (Oct 2026) · DoH Standard of Care for Depression & Anxiety (2025) · Emirates Drug Establishment medical-device rules (Federal Decree-Law 38/2024). The MVP intended use is non-diagnostic navigation and care coordination (see MEDICAL_DEVICE.md).

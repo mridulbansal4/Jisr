@@ -1,5 +1,5 @@
 # MVP API addendum (build contract, 2026-11-19)
-> Extends `api/openapi.yaml`. Where this file and openapi.yaml disagree, **this file wins for the MVP build**.
+> Extends `packages/contracts/openapi.yaml`. Where this file and openapi.yaml disagree, **this file wins for the MVP build**.
 > Base URL `http://localhost:8000`. Auth: `Authorization: Bearer <token>` from `POST /v1/auth/demo-login`.
 > Errors: RFC 9457 problem+json. CORS exposes `ETag`. `Idempotency-Key` is accepted on every POST but never required.
 > All AI endpoints work with no API key (`LLM_PROVIDER=none` or missing key → deterministic template, `content_type: "template"`, `provider: "none"`).
