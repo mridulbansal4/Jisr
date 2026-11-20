@@ -263,18 +263,64 @@ html, body { overflow-x: clip; }
   --sky-3: #dce8e5;
   --sky-opacity: 0.6;
   --spot: rgb(47 93 98 / 0.09);
+  /* Logo 03 (Orbital Bridge Arch) light-mode shader stops */
+  --logo-plinth-top: #ffffff;
+  --logo-plinth-mid: #f6f3ed;
+  --logo-plinth-bot: #e5dfd2;
+  --logo-plinth-rim: rgba(29, 27, 24, 0.22);
+  --logo-arch-l-out-a: #ffffff;
+  --logo-arch-l-out-b: #ded8cc;
+  --logo-arch-l-in-a: #cfc8ba;
+  --logo-arch-l-in-b: #968e80;
+  --logo-arch-r-out-a: #78acb0;
+  --logo-arch-r-out-b: #2b575b;
+  --logo-arch-r-in-a: #3f7176;
+  --logo-arch-r-in-b: #163033;
+  --logo-wing-a: #b8b0a2;
+  --logo-wing-b: #7a7265;
+  --logo-cable: #8c6b3f;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --dawn-a: #e2907a; --dawn-b: #e2b46f; --dawn-c: #8dbcbf;
     --sky-1: #6b3f2a; --sky-2: #4a3424; --sky-3: #22302f; --sky-opacity: 0.45;
     --spot: rgb(141 188 191 / 0.08);
+    --logo-plinth-top: #2a2824;
+    --logo-plinth-mid: #181714;
+    --logo-plinth-bot: #0d0c0a;
+    --logo-plinth-rim: rgba(238, 234, 226, 0.32);
+    --logo-arch-l-out-a: #ffffff;
+    --logo-arch-l-out-b: #cec7bb;
+    --logo-arch-l-in-a: #dbd4c8;
+    --logo-arch-l-in-b: #878073;
+    --logo-arch-r-out-a: #b8dcde;
+    --logo-arch-r-out-b: #3c6d71;
+    --logo-arch-r-in-a: #588a8e;
+    --logo-arch-r-in-b: #1b3a3d;
+    --logo-wing-a: #4a6c70;
+    --logo-wing-b: #1e3336;
+    --logo-cable: #d8b278;
   }
 }
 :root[data-theme="dark"] {
   --dawn-a: #e2907a; --dawn-b: #e2b46f; --dawn-c: #8dbcbf;
   --sky-1: #6b3f2a; --sky-2: #4a3424; --sky-3: #22302f; --sky-opacity: 0.45;
   --spot: rgb(141 188 191 / 0.08);
+  --logo-plinth-top: #2a2824;
+  --logo-plinth-mid: #181714;
+  --logo-plinth-bot: #0d0c0a;
+  --logo-plinth-rim: rgba(238, 234, 226, 0.32);
+  --logo-arch-l-out-a: #ffffff;
+  --logo-arch-l-out-b: #cec7bb;
+  --logo-arch-l-in-a: #dbd4c8;
+  --logo-arch-l-in-b: #878073;
+  --logo-arch-r-out-a: #b8dcde;
+  --logo-arch-r-out-b: #3c6d71;
+  --logo-arch-r-in-a: #588a8e;
+  --logo-arch-r-in-b: #1b3a3d;
+  --logo-wing-a: #4a6c70;
+  --logo-wing-b: #1e3336;
+  --logo-cable: #d8b278;
 }
 
 /* Gradient accent text: one phrase per page at most. */
