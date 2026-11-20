@@ -22,7 +22,7 @@ Jisr/ (repo root)
 │   ├── deploy.yml            CI + evals → Render (API) → Vercel (web) → smoke test
 │   ├── codeql.yml            Static analysis (JS/TS, Python, Actions)
 │   └── dependency-review.yml Blocks high/critical CVEs and GPL/AGPL deps
-├── api/openapi.yaml          OpenAPI 3.1 for API-01…API-29
+├── packages/contracts/openapi.yaml OpenAPI 3.1 for API-01…API-29
 ├── apps/web/                 Next.js 16 PWA: person app, staff console, programme dashboard, Judge Mode (to build)
 ├── services/api/             FastAPI: engines, routes, LLM provider + validator, jobs (to build)
 ├── packages/rules/           Versioned clinical rules (JSON) — the only place thresholds live
@@ -63,7 +63,7 @@ Jisr/ (repo root)
 | Arabic / Urdu / RTL handling | [LOCALIZATION](docs/02-design/LOCALIZATION.md) |
 | How the system fits together | [ARCHITECTURE](docs/03-engineering/ARCHITECTURE.md) |
 | Tables and fields | [DATA_MODEL](docs/03-engineering/DATA_MODEL.md) |
-| Endpoints and JSON | [API_SPEC](docs/03-engineering/API_SPEC.md) · [openapi.yaml](api/openapi.yaml) |
+| Endpoints and JSON | [API_SPEC](docs/03-engineering/API_SPEC.md) · [openapi.yaml](packages/contracts/openapi.yaml) |
 | Crisis Gate, step matcher, RCI, SLA engines | [BACKEND](docs/03-engineering/BACKEND.md) · [step_rules.v1.json](packages/rules/step_rules.v1.json) |
 | How to set up my machine | [ENVIRONMENT_SETUP](docs/03-engineering/ENVIRONMENT_SETUP.md) |
 | Prompts and the claim validator | [PROMPTS](docs/04-ai/PROMPTS.md) |

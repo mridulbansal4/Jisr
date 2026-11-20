@@ -64,7 +64,7 @@ gitGraph
 ## 5. Release tagging and versioning
 
 - Semantic Versioning 2.0 for the product: `v0.1.0` = hackathon submission (tag at the submitted commit, 2026-11-20). `CHANGELOG.md` (Keep a Changelog) updated in the release PR.
-- **API version** is separate: URL major (`/v1`); `info.version` in `api/openapi.yaml` follows semver for additive changes.
+- **API version** is separate: URL major (`/v1`); `info.version` in `packages/contracts/openapi.yaml` follows semver for additive changes.
 - **Rules version** is separate again: `packages/rules/manifest.json` semver; each change is a minor or patch; a change in clinical meaning (threshold, trigger) is at least a minor bump and needs a clinical sign-off line in the PR.
 - **Prompt versions** live in file names under `ai/prompts/` (`explain_result.v3`).
 - Tags are annotated: `git tag -a v0.1.0 -m "Hackathon submission"`.

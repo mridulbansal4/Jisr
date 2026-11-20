@@ -39,7 +39,7 @@ uv run uvicorn app.main:app --reload --port 8000
 # Web (new terminal)
 cd apps/web
 pnpm install
-pnpm gen:api                       # TS types from ../../api/openapi.yaml
+pnpm gen:api                       # TS types from ../../packages/contracts/openapi.yaml
 pnpm dev                           # http://localhost:3000/ar  -> Judge Mode at /ar/judge
 ```
 

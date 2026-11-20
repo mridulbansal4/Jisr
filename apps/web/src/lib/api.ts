@@ -1,7 +1,7 @@
 /**
  * Jisr API client: the ONLY place the web app talks HTTP.
  *
- * Every type below mirrors `api/openapi.yaml` (components.schemas) as amended
+ * Every type below mirrors `packages/contracts/openapi.yaml` (components.schemas) as amended
  * by `docs/03-engineering/MVP_API_ADDENDUM.md` (the addendum wins). If the
  * backend and the contract disagree, fix it here and nowhere else.
  */

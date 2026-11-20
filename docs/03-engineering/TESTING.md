@@ -22,7 +22,7 @@ flowchart TB
 | Property | Hypothesis | Invariants (below) | 8 properties |
 | Unit (TS) | Vitest 5.1.1, Testing Library 16.3.3, MSW 3.0.7 | Lexicon matcher (client), components, hooks | Safety components 100% |
 | Integration | pytest + Postgres 16 service container (CI) / docker compose (local); testcontainers 4.15.0 optional | Each API-xx happy path + main errors; RBAC matrix; consent effects; idempotency; append-only triggers; scheduler jobs | Every API-01..API-29 |
-| Contract | @redocly/cli 2.79.0, openapi-typescript 7.13.0, schema-diff test | `api/openapi.yaml` valid; FastAPI schema matches; TS types fresh | CI gate |
+| Contract | @redocly/cli 2.79.0, openapi-typescript 7.13.0, schema-diff test | `packages/contracts/openapi.yaml` valid; FastAPI schema matches; TS types fresh | CI gate |
 | Evals | `ai/evals/run_evals.py` (writes repo-root `EVAL.md`) | Crisis recall, step agreement, unsupported claims | F-18 targets |
 | E2E | Playwright 1.65.1, @axe-core/playwright 4.14.0 | Demo journeys, RTL, offline crisis, quick exit, accessibility | 12 specs |
 | Load | Locust 2.47.0 | [PERFORMANCE §4](PERFORMANCE.md#4-load-test-plan-locust-247) | 4 profiles |
@@ -96,7 +96,7 @@ Measured with pytest-cov 7.1.0 and Vitest coverage (v8).
 
 Required checks on `main` ([CICD §7](../05-ops/CICD.md)): `CI / web`, `CI / api`, `CI / rules`, `Evals / Offline suites (crisis recall must be 100%)`, CodeQL, dependency review. Additional failing conditions:
 - Any engine branch uncovered.
-- `api/openapi.yaml` lint error or schema drift from FastAPI.
+- `packages/contracts/openapi.yaml` lint error or schema drift from FastAPI.
 - Stale `lib/api/schema.d.ts`.
 - Rules file changed without a version bump in `manifest.json`.
 - Lighthouse budget exceeded on S-06 (other routes warn only during the hackathon).

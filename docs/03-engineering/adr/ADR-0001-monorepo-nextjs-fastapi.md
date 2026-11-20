@@ -12,7 +12,7 @@ A team of 2–4 people who know JavaScript and Python has about 36 hours to ship
 ## Decision drivers
 - 36-hour window; no time for cross-repo version drift
 - Clinical logic in one language with one test suite (the eval harness, F-18, calls the engines directly)
-- One contract between web and API (`api/openapi.yaml`)
+- One contract between web and API (`packages/contracts/openapi.yaml`)
 - Mobile-first web with strong i18n/RTL support
 - Simple deploy: Vercel for web, one Docker service on Render
 
@@ -23,7 +23,7 @@ A team of 2–4 people who know JavaScript and Python has about 36 hours to ship
 4. Django + HTMX server-rendered app
 
 ## Decision outcome
-Chosen option 1. Layout (from the brief): `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `api/openapi.yaml`. Python owns the engines and the LLM layer (`google-genai` is the brief's Python SDK); TypeScript owns the UI. Rules are JSON, so both sides can read them (the PWA reads the crisis lexicon for its offline safety screen).
+Chosen option 1. Layout (from the brief): `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `packages/contracts/openapi.yaml`. Python owns the engines and the LLM layer (`google-genai` is the brief's Python SDK); TypeScript owns the UI. Rules are JSON, so both sides can read them (the PWA reads the crisis lexicon for its offline safety screen).
 
 ### Consequences
 - Good: one PR can change rules, engine, API and UI together; one CI pipeline; TS types generated from OpenAPI (`openapi-typescript`).
@@ -33,7 +33,7 @@ Chosen option 1. Layout (from the brief): `apps/web`, `services/api`, `packages/
 - Follow-up: no workspace build tool (Turborepo/Nx) in the MVP; plain scripts are enough.
 
 ### Confirmation
-CI runs `ruff`, `mypy`, `pytest` on `services/api` and `eslint`, `tsc`, `vitest`, `playwright` on `apps/web` in one workflow; `redocly lint api/openapi.yaml` gates both.
+CI runs `ruff`, `mypy`, `pytest` on `services/api` and `eslint`, `tsc`, `vitest`, `playwright` on `apps/web` in one workflow; `redocly lint packages/contracts/openapi.yaml` gates both.
 
 ## Pros and cons of the options
 ### Next.js only

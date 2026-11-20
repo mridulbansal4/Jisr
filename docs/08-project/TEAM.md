@@ -23,7 +23,7 @@ With 2 people, apply the cut list in [BACKLOG.md](BACKLOG.md) §4 at the start, 
 
 ## 2. Responsibilities per role (hackathon)
 - **PL:** guards scope against the brief; answers clinical-content questions within 30 minutes; writes all user-facing copy into `messages/{en,ar,ur}.json`; runs the H12, H24 and H32 demo checks; owns the open questions in the PRD.
-- **BE:** merges to `main`; keeps the API contract (`api/openapi.yaml`) in sync; no clinical threshold outside `packages/rules`; owns live API uptime during judging.
+- **BE:** merges to `main`; keeps the API contract (`packages/contracts/openapi.yaml`) in sync; no clinical threshold outside `packages/rules`; owns live API uptime during judging.
 - **FE:** builds against the OpenAPI contract with mocks until endpoints land; owns RTL, accessibility basics and the "I need help now" button on every screen.
 - **AI:** keeps CI eval gate green (crisis recall 100%); adds a benchmark case for every lexicon change; never lets an LLM decide a score, step or crisis clearance.
 

@@ -134,7 +134,7 @@ Last-resort fallback (from `misc/ideas.md`): if by Checkpoint 2 the person app i
 - [ ] Live link (web) + API URL, both warmed and tested from a clean browser on 4G
 - [ ] Judge Mode credentials (per role) in the submission form **and** on README line 3
 - [ ] Repo access (public, or shared as the form requires); `v0.1.0` tag
-- [ ] Technical docs: README, MAP, ARCHITECTURE, API_SPEC + `api/openapi.yaml`, AI_EVALS + `EVAL.md`, RESPONSIBLE_AI, PRIVACY, COMPLIANCE, MEDICAL_DEVICE
+- [ ] Technical docs: README, MAP, ARCHITECTURE, API_SPEC + `packages/contracts/openapi.yaml`, AI_EVALS + `EVAL.md`, RESPONSIBLE_AI, PRIVACY, COMPLIANCE, MEDICAL_DEVICE
 - [ ] **Assumptions, dependencies, limitations** section in the README (copy §4 of this plan + risks R-01…R-12)
 - [ ] Data declaration: synthetic only, every source and licence listed (organisers provide no data)
 - [ ] "Built during the challenge" statement (no prior product)

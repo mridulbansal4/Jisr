@@ -1,8 +1,8 @@
 # API Specification
 > Project: Jisr · Owner: Backend lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [Architecture](ARCHITECTURE.md) · [Data model](DATA_MODEL.md) · [OpenAPI](../../api/openapi.yaml) · [Backend](BACKEND.md) · [ADR-0005](adr/ADR-0005-demo-auth-judge-mode-uae-pass-later.md)
+> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [Architecture](ARCHITECTURE.md) · [Data model](DATA_MODEL.md) · [OpenAPI](../../packages/contracts/openapi.yaml) · [Backend](BACKEND.md) · [ADR-0005](adr/ADR-0005-demo-auth-judge-mode-uae-pass-later.md)
 
-The machine-readable contract is [`api/openapi.yaml`](../../api/openapi.yaml) (OpenAPI 3.1). This document explains it and gives examples. If they disagree, fix the YAML first, then this file.
+The machine-readable contract is [`packages/contracts/openapi.yaml`](../../packages/contracts/openapi.yaml) (OpenAPI 3.1). This document explains it and gives examples. If they disagree, fix the YAML first, then this file.
 
 ## 1. Conventions
 

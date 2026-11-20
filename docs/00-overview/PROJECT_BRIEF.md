@@ -167,7 +167,7 @@ E-01 Person · E-02 ConsentRecord · E-03 ScreeningSession · E-04 InstrumentSco
 | Auth | MVP: Judge Mode demo login (signed JWT) gated by a shared `JUDGE_PASSCODE` given in the submission form. v1: UAE PASS (citizen) + facility SSO (staff) |
 | Scope | Adults 18+ (IFHAS covers 18–75). Under-18s are out of scope for the MVP |
 
-Monorepo layout: `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `api/openapi.yaml`.
+Monorepo layout: `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `packages/contracts/openapi.yaml`.
 
 ## 10b. Regulatory frame (detail in COMPLIANCE.md)
 UAE Federal Law 2/2019 (ICT in health fields; Art. 13 data localisation) · UAE PDPL (Federal Decree-Law 45/2021, health carve-out) · Federal Law 10/2023 on Mental Health · DoH Patient Healthcare Data Privacy Standard + Circular 147/2022 (no third-party sharing without DoH approval) · ADHICS (Abu Dhabi Healthcare Information & Cyber Security Standard) · DoH Responsible AI Standard (2025) · DoH AI Clinician Framework (Oct 2026) · DoH Standard of Care for Depression & Anxiety (2025) · Emirates Drug Establishment medical-device rules (Federal Decree-Law 38/2024). The MVP intended use is non-diagnostic navigation and care coordination (see MEDICAL_DEVICE.md).
