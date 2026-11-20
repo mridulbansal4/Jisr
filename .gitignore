@@ -41,5 +41,6 @@ apps/web/node_modules/
 .serena/
 *.log
 
-# Private working area (war room, drafts). Never pushed.
+# Private working area (war room, drafts, submission). Never pushed.
 tp/
+submission/
