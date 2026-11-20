@@ -112,7 +112,9 @@ def run_benchmark(path: str | Path | None = None) -> dict[str, Any]:
                 lang_stats["fn"] += 1
                 false_negatives.append(
                     {
-                        "id": case["id"], "lang": case["lang"], "category": case["category"],
+                        "id": case["id"],
+                        "lang": case["lang"],
+                        "category": case["category"],
                         "text": case["text"],
                     }
                 )
@@ -123,8 +125,12 @@ def run_benchmark(path: str | Path | None = None) -> dict[str, Any]:
                 lang_stats["fp"] += 1
                 false_positives.append(
                     {
-                        "id": case["id"], "lang": case["lang"], "category": case["category"],
-                        "text": case["text"], "fired_rules": result.fired_rules, "entry_ids": entry_ids,
+                        "id": case["id"],
+                        "lang": case["lang"],
+                        "category": case["category"],
+                        "text": case["text"],
+                        "fired_rules": result.fired_rules,
+                        "entry_ids": entry_ids,
                     }
                 )
             else:
@@ -171,7 +177,8 @@ def run_benchmark(path: str | Path | None = None) -> dict[str, Any]:
         "suite": "crisis",  # read by the independent CI check in .github/workflows/evals.yml
         "mode": "deterministic (lexicon + normaliser only, no LLM)",
         "dataset": {
-            "path": bench_path.relative_to(REPO_ROOT).as_posix() if bench_path.is_relative_to(REPO_ROOT)
+            "path": bench_path.relative_to(REPO_ROOT).as_posix()
+            if bench_path.is_relative_to(REPO_ROOT)
             else str(bench_path),
             "sha256": hashlib.sha256(bench_path.read_bytes()).hexdigest(),
         },
@@ -245,8 +252,8 @@ def render_markdown(res: dict[str, Any]) -> str:
         "## Limitations",
         "",
         "- Every utterance is synthetic and was written by the team; Arabic, Arabizi and Urdu items await "
-        "native-speaker clinical review (R-04). Labels mean \"a clinician would want crisis information "
-        "shown\", not a diagnosis.",
+        'native-speaker clinical review (R-04). Labels mean "a clinician would want crisis information '
+        'shown", not a diagnosis.',
         "- This is the dev split, written alongside lexicon v1.1.0, so recall/precision here are optimistic. "
         "A held-out set written by someone who has not seen the lexicon is still needed.",
         "- Policy choices that inflate RED on purpose: negations, third-person reports and "

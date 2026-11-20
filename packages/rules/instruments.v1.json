@@ -2,6 +2,7 @@
   "$schema_note": "Jisr instrument definitions. Loaded by services/api/app/engines/scoring.py. Deterministic: no AI touches scoring.",
   "id": "instruments",
   "version": "1.0.0",
+  "sources": ["https://www.phqscreeners.com/", "https://doi.org/10.1046/j.1525-1497.2001.016009606.x", "https://doi.org/10.1001/archinte.166.10.1092"],
   "status": "draft",
   "last_updated": "2026-11-18",
   "owner": "Clinical lead (to be named) + AI/rules engineer",

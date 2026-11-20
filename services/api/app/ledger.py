@@ -62,10 +62,14 @@ def append(
 
 
 def audit(db: Session, person_id: str | None, actor: str, action: str, resource: str, purpose: str) -> None:
-    db.add(AuditLog(person_id=person_id, actor_label=actor, action=action, resource=resource, purpose=purpose))
+    db.add(
+        AuditLog(person_id=person_id, actor_label=actor, action=action, resource=resource, purpose=purpose)
+    )
 
 
-def notify(db: Session, person_id: str, text: str, deep_link: str | None = None, channel: str = "in_app") -> None:
+def notify(
+    db: Session, person_id: str, text: str, deep_link: str | None = None, channel: str = "in_app"
+) -> None:
     db.add(Notification(person_id=person_id, text=text, deep_link=deep_link, channel=channel))
 
 
@@ -83,8 +87,13 @@ def score_dicts(ep: Episode) -> list[dict[str, Any]]:
     for s in ep.score_history:
         latest[s["instrument"]] = s
     return [
-        {"instrument": s["instrument"], "total": s["total"], "band": s.get("band", ""),
-         "item9": s.get("item9"), "scored_at": s.get("at")}
+        {
+            "instrument": s["instrument"],
+            "total": s["total"],
+            "band": s.get("band", ""),
+            "item9": s.get("item9"),
+            "scored_at": s.get("at"),
+        }
         for s in latest.values()
     ]
 
@@ -92,10 +101,19 @@ def score_dicts(ep: Episode) -> list[dict[str, Any]]:
 def provider_dict(p: Provider, extra: dict[str, Any] | None = None) -> dict[str, Any]:
     nxt = now() + timedelta(days=p.current_wait_days)
     d = {
-        "id": p.id, "display_name": p.display_name, "kind": p.kind, "steps_served": p.steps_served,
-        "languages": p.languages, "clinician_gender": p.clinician_gender, "modalities": p.modalities,
-        "networks": p.networks, "city": p.city, "area": p.area, "current_wait_days": p.current_wait_days,
-        "next_slot": iso(nxt.replace(hour=10, minute=0, second=0)), "accepting": p.accepting,
+        "id": p.id,
+        "display_name": p.display_name,
+        "kind": p.kind,
+        "steps_served": p.steps_served,
+        "languages": p.languages,
+        "clinician_gender": p.clinician_gender,
+        "modalities": p.modalities,
+        "networks": p.networks,
+        "city": p.city,
+        "area": p.area,
+        "current_wait_days": p.current_wait_days,
+        "next_slot": iso(nxt.replace(hour=10, minute=0, second=0)),
+        "accepting": p.accepting,
         "is_synthetic": True,
     }
     if extra:
@@ -158,7 +176,10 @@ def episode_dict(db: Session, ep: Episode, *, include_physical: bool) -> dict[st
     timeline = []
     for e in events:
         item: dict[str, Any] = {
-            "seq": e.seq, "type": e.type, "actor_type": e.actor_type, "occurred_at": iso(e.occurred_at),
+            "seq": e.seq,
+            "type": e.type,
+            "actor_type": e.actor_type,
+            "occurred_at": iso(e.occurred_at),
             "data": e.data,
         }
         if e.from_state:
@@ -174,10 +195,15 @@ def episode_dict(db: Session, ep: Episode, *, include_physical: bool) -> dict[st
         "is_red": ep.is_red,
         "red_severity": ep.red_severity,
         "person_label": person.label,
-        "person": {"sex": person.sex, "age": person.age, "nationality_group": person.nationality_group,
-                   "language": person.language, "area": person.area, "insurance_plan": person.insurance_plan,
-                   "conditions": person.conditions if consents.get("share_physical_context") == "granted"
-                   else []},
+        "person": {
+            "sex": person.sex,
+            "age": person.age,
+            "nationality_group": person.nationality_group,
+            "language": person.language,
+            "area": person.area,
+            "insurance_plan": person.insurance_plan,
+            "conditions": person.conditions if consents.get("share_physical_context") == "granted" else [],
+        },
         "language": person.language,
         "opened_at": iso(ep.opened_at),
         "reason": ep.reason,
@@ -191,10 +217,17 @@ def episode_dict(db: Session, ep: Episode, *, include_physical: bool) -> dict[st
         "recommendation_id": rec.id if rec else None,
         "active_referral_id": act.id if act else None,
         "referrals": [
-            {"id": r.id, "status": r.status, "provider_id": r.provider_id,
-             "provider_name": (db.get(Provider, r.provider_id).display_name  # type: ignore[union-attr]
-                               if db.get(Provider, r.provider_id) else ""),
-             "sla_due_at": iso(r.sla_due_at)}
+            {
+                "id": r.id,
+                "status": r.status,
+                "provider_id": r.provider_id,
+                "provider_name": (
+                    db.get(Provider, r.provider_id).display_name  # type: ignore[union-attr]
+                    if db.get(Provider, r.provider_id)
+                    else ""
+                ),
+                "sla_due_at": iso(r.sla_due_at),
+            }
             for r in refs
         ],
         "consents": consents,

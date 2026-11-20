@@ -2,6 +2,7 @@
   "$schema_note": "Jisr Crisis Gate + episode-opening + Step Matcher rules. Loaded by services/api/app/engines/{crisis_gate,step_matcher,rci,sla}.py. Stages run in order; inside a stage the first matching rule wins unless noted. Output is a SUGGESTION; a clinician confirms every step (API-12). Mirrors PROJECT_BRIEF.md §5–6 (revision of 2026-11-18).",
   "id": "step_rules",
   "version": "1.0.0",
+  "sources": ["https://www.doh.gov.ae/-/media/Feature/Resources/Standards/2025/Standard-of-Care-Depression--Anxiety.ashx", "https://www.nice.org.uk/guidance/cg123", "https://doi.org/10.1046/j.1525-1497.2001.016009606.x", "https://doi.org/10.1001/archinte.166.10.1092", "https://www.england.nhs.uk/publication/the-improving-access-to-psychological-therapies-manual/", "https://cssrs.columbia.edu/"],
   "status": "draft — requires clinical lead sign-off before any non-synthetic use",
   "last_updated": "2026-11-18",
   "depends_on": { "instruments": "instruments.v1.json@1.0.0", "crisis_lexicon": "crisis_lexicon.v1.json@1.0.0" },

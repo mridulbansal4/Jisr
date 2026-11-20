@@ -8,7 +8,10 @@ from typing import Any
 _NUM = re.compile(r"(?<![\w.])\d+(?:\.\d+)?")
 BANNED = [
     (re.compile(r"\bdiagnos(e|ed|is|ing)\b", re.I), "diagnosis claim"),
-    (re.compile(r"\byou (have|are suffering from) (depression|anxiety|a disorder)\b", re.I), "diagnosis claim"),
+    (
+        re.compile(r"\byou (have|are suffering from) (depression|anxiety|a disorder)\b", re.I),
+        "diagnosis claim",
+    ),
     (re.compile(r"\b(cure|cured|guarantee[ds]?)\b", re.I), "outcome guarantee"),
     (re.compile(r"\b(medication|dose|prescri\w+)\b", re.I), "medication advice"),
     (re.compile(r"\bemployer (will|can) (see|know)\b", re.I), "employer disclosure claim"),

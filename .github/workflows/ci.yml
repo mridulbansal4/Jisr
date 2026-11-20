@@ -115,8 +115,8 @@ jobs:
       - name: Mypy
         run: uv run mypy app
 
-      - name: Migrations apply cleanly
-        run: uv run alembic upgrade head
+      - name: Schema creates and seeds cleanly (Postgres 16)
+        run: uv run python -m app.seed
 
       - name: Pytest
         run: uv run pytest -q --maxfail=1

@@ -5,8 +5,21 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-REST = {"PHQ9_3": 1, "PHQ9_4": 2, "PHQ9_5": 1, "PHQ9_6": 1, "PHQ9_7": 1, "PHQ9_8": 1, "PHQ9_9": 0, "PHQ9_10": 1,
-        "GAD7_3": 2, "GAD7_4": 2, "GAD7_5": 2, "GAD7_6": 2, "GAD7_7": 1}
+REST = {
+    "PHQ9_3": 1,
+    "PHQ9_4": 2,
+    "PHQ9_5": 1,
+    "PHQ9_6": 1,
+    "PHQ9_7": 1,
+    "PHQ9_8": 1,
+    "PHQ9_9": 0,
+    "PHQ9_10": 1,
+    "GAD7_3": 2,
+    "GAD7_4": 2,
+    "GAD7_5": 2,
+    "GAD7_6": 2,
+    "GAD7_7": 1,
+}
 
 
 @pytest.fixture(scope="module")
@@ -32,8 +45,11 @@ def test_wrong_passcode_and_missing_token(c):
 def test_mariam_journey(c):
     m = login(c, "mariam")
     s = c.post("/v1/screenings", headers=m, json={"language": "en"}).json()
-    a = c.post(f"/v1/screenings/{s['id']}/answers", headers=m,
-               json={"answers": {"PHQ9_1": 2, "PHQ9_2": 2, "GAD7_1": 2, "GAD7_2": 2}}).json()
+    a = c.post(
+        f"/v1/screenings/{s['id']}/answers",
+        headers=m,
+        json={"answers": {"PHQ9_1": 2, "PHQ9_2": 2, "GAD7_1": 2, "GAD7_2": 2}},
+    ).json()
     assert a["stage"] == "full" and len(a["next_items"]) == 13
     c.post(f"/v1/screenings/{s['id']}/answers", headers=m, json={"answers": REST})
     done = c.post(f"/v1/screenings/{s['id']}/complete", headers=m, json={}).json()
@@ -44,12 +60,21 @@ def test_mariam_journey(c):
     rec = c.get(f"/v1/episodes/{eid}/recommendation", headers=m).json()
     top = rec["candidates"][0]
     assert "ar" in top["languages"] and top["clinician_gender"] == "female" and "thiqa" in top["networks"]
-    r = c.post(f"/v1/episodes/{eid}/referrals", headers=m, json={"provider_id": top["id"], "priority": "routine",
-                                                                  "consent_scopes": []})
+    r = c.post(
+        f"/v1/episodes/{eid}/referrals",
+        headers=m,
+        json={"provider_id": top["id"], "priority": "routine", "consent_scopes": []},
+    )
     assert r.status_code == 403 and r.json()["code"] == "CONSENT_REQUIRED"
-    r = c.post(f"/v1/episodes/{eid}/referrals", headers=m,
-               json={"provider_id": top["id"], "priority": "routine",
-                     "consent_scopes": ["share_with_receiving_provider"]})
+    r = c.post(
+        f"/v1/episodes/{eid}/referrals",
+        headers=m,
+        json={
+            "provider_id": top["id"],
+            "priority": "routine",
+            "consent_scopes": ["share_with_receiving_provider"],
+        },
+    )
     assert r.status_code == 201
     assert "physical_context" not in r.json()["packet_preview"]  # not consented
 
@@ -57,25 +82,40 @@ def test_mariam_journey(c):
     ep = c.get(f"/v1/episodes/{eid}", headers=d)
     body = ep.json()
     assert ep.headers["etag"] == f'"{body["last_event_seq"]}"' and body["active_referral_id"]
-    stale = c.post(f"/v1/episodes/{eid}/confirm-step", headers={**d, "If-Match": '"0"'},
-                   json={"recommendation_id": body["recommendation_id"], "step": "L2"})
+    stale = c.post(
+        f"/v1/episodes/{eid}/confirm-step",
+        headers={**d, "If-Match": '"0"'},
+        json={"recommendation_id": body["recommendation_id"], "step": "L2"},
+    )
     assert stale.status_code == 409
-    ok = c.post(f"/v1/episodes/{eid}/confirm-step", headers={**d, "If-Match": ep.headers["etag"]},
-                json={"recommendation_id": body["recommendation_id"], "step": "L2"})
+    ok = c.post(
+        f"/v1/episodes/{eid}/confirm-step",
+        headers={**d, "If-Match": ep.headers["etag"]},
+        json={"recommendation_id": body["recommendation_id"], "step": "L2"},
+    )
     assert ok.json()["current_step"] == "L2"
     h = c.post(f"/v1/episodes/{eid}/handoff-summary", headers=d).json()
     assert h["sentences"] and all(s["sources"] for s in h["sentences"])
     rid = body["active_referral_id"]
-    assert c.post(f"/v1/referrals/{rid}/decision", headers=d, json={"decision": "accept"}).json()["status"] == "accepted"
-    assert c.post(f"/v1/referrals/{rid}/appointment", headers=d, json={"action": "book"}).json()["status"] == "booked"
+    assert (
+        c.post(f"/v1/referrals/{rid}/decision", headers=d, json={"decision": "accept"}).json()["status"]
+        == "accepted"
+    )
+    assert (
+        c.post(f"/v1/referrals/{rid}/appointment", headers=d, json={"action": "book"}).json()["status"]
+        == "booked"
+    )
     k = login(c, "khalid")
     assert c.post(f"/v1/episodes/{eid}/confirm-step", headers=k, json={"step": "L3"}).status_code == 403
 
 
 def test_crisis_from_companion_opens_red_and_locks_ai(c):
     i = login(c, "imran")
-    r = c.post("/v1/companion/chat", headers=i,
-               json={"messages": [{"role": "user", "content": "jeene ka dil nahi karta"}], "language": "ur"}).json()
+    r = c.post(
+        "/v1/companion/chat",
+        headers=i,
+        json={"messages": [{"role": "user", "content": "jeene ka dil nahi karta"}], "language": "ur"},
+    ).json()
     assert r["llm_locked"] and r["gate"]["crisis"] and r["episode_id"]
     assert r["crisis_lines"][0]["number"] in ("800 725462", "999")
     k = login(c, "khalid")
@@ -85,7 +125,10 @@ def test_crisis_from_companion_opens_red_and_locks_ai(c):
     assert ack["within_sla"] is True
     # a clinician must resolve the crisis before stepping down
     d = login(c, "dr_salma")
-    assert c.post(f"/v1/episodes/{r['episode_id']}/confirm-step", headers=d, json={"step": "L2"}).status_code == 423
+    assert (
+        c.post(f"/v1/episodes/{r['episode_id']}/confirm-step", headers=d, json={"step": "L2"}).status_code
+        == 423
+    )
 
 
 def test_item9_positive_is_red(c):

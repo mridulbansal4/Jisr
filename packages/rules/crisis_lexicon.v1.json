@@ -2,6 +2,7 @@
   "$schema_note": "Jisr Crisis Gate phrase lexicon. Loaded by services/api/app/engines/crisis_gate.py. Deterministic matching on normalised text. Raise-only: a match can create a RED flag; nothing in this file can clear one.",
   "id": "crisis_lexicon",
   "version": "1.1.0",
+  "sources": ["Jisr team original phrase list (see licence and review_log); evaluated in docs/04-ai/AI_EVALS.md and data/synthetic/crisis_benchmark.v1.jsonl"],
   "status": "DRAFT — NOT CLINICALLY REVIEWED. Every entry needs review by a native-speaking mental-health clinician for each language (Gulf Arabic, MSA, Arabizi, Urdu, Roman Urdu, English) before any non-synthetic use. Owner: Clinical lead. Tracked as R-01 / R-04.",
   "last_updated": "2026-11-19",
   "licence": "Jisr original work (team). Entries are short common phrases, not taken from copyrighted lists.",

@@ -25,8 +25,7 @@ def get_episode(db: Session, episode_id: str, p: Principal, purpose: str = "care
     if p.role == "programme":
         raise Problem(403, "FORBIDDEN", "Programme role sees aggregates only")
     if p.role != "person":
-        audit(db, ep.person_id, p.label, "read", f"episode:{ep.id}",
-              "demo" if p.role == "judge" else purpose)
+        audit(db, ep.person_id, p.label, "read", f"episode:{ep.id}", "demo" if p.role == "judge" else purpose)
     return ep
 
 
@@ -58,31 +57,59 @@ def open_red(
         episode.red_opened_at = now()
         episode.red_acked_at = None
     rank = {"review": 1, "same_day_check": 2, "high": 3, "imminent": 4}
-    if episode.red_severity is None or rank.get(gate.severity or "review", 1) > rank.get(episode.red_severity, 0):
+    if episode.red_severity is None or rank.get(gate.severity or "review", 1) > rank.get(
+        episode.red_severity, 0
+    ):
         episode.red_severity = gate.severity
     episode.reason = reason
     episode.fired_rules = list(dict.fromkeys([*episode.fired_rules, *gate.fired_rules, "EO-01"]))
-    append(db, episode, "CRISIS_GATE_FIRED", to_state="RED_CRISIS", actor_type=actor_type,
-           data={"rules": gate.fired_rules, "severity": gate.severity,
-                 "categories": sorted({h.category for h in gate.hits}), "latency_ms": gate.latency_ms})
-    notify(db, person.id, "A member of the care team will contact you shortly. If you are in danger, call 999.",
-           "/help")
+    append(
+        db,
+        episode,
+        "CRISIS_GATE_FIRED",
+        to_state="RED_CRISIS",
+        actor_type=actor_type,
+        data={
+            "rules": gate.fired_rules,
+            "severity": gate.severity,
+            "categories": sorted({h.category for h in gate.hits}),
+            "latency_ms": gate.latency_ms,
+        },
+    )
+    notify(
+        db,
+        person.id,
+        "A member of the care team will contact you shortly. If you are in danger, call 999.",
+        "/help",
+    )
     return episode
 
 
 def person_prefs(person: Person) -> Prefs:
-    return Prefs(language=person.language, clinician_gender=person.clinician_gender, modality=person.modality,
-                 area=person.area, insurance_plan=person.insurance_plan)
+    return Prefs(
+        language=person.language,
+        clinician_gender=person.clinician_gender,
+        modality=person.modality,
+        area=person.area,
+        insurance_plan=person.insurance_plan,
+    )
 
 
-def build_recommendation(db: Session, ep: Episode, source: str = "initial",
-                         exclude: set[str] | None = None) -> Recommendation:
+def build_recommendation(
+    db: Session, ep: Episode, source: str = "initial", exclude: set[str] | None = None
+) -> Recommendation:
     step = ep.proposed_step or ep.current_step or "L1"
-    for old in db.query(Recommendation).filter(Recommendation.episode_id == ep.id,
-                                              Recommendation.status == "proposed"):
+    for old in db.query(Recommendation).filter(
+        Recommendation.episode_id == ep.id, Recommendation.status == "proposed"
+    ):
         old.status = "superseded"
-    rec = Recommendation(episode_id=ep.id, step=step, source=source, factors=list(ep.factors),
-                         excluded_provider_ids=sorted(exclude or []))
+    rec = Recommendation(
+        episode_id=ep.id,
+        step=step,
+        source=source,
+        factors=list(ep.factors),
+        excluded_provider_ids=sorted(exclude or []),
+    )
     db.add(rec)
     db.flush()
     return rec
@@ -92,11 +119,14 @@ def recommendation_dict(db: Session, ep: Episode, rec: Recommendation) -> dict[s
     person = db.get(Person, ep.person_id)
     assert person is not None
     providers = [provider_dict(p) for p in db.query(Provider).all()]
+    ranked: list[dict[str, Any]] = []
+    pm_factors: list[dict[str, str]] = []
     if rec.step == "RED":
-        ranked, pm_factors = [], []
+        pass
     else:
-        ranked, pm_factors = rank_providers(rec.step, person_prefs(person), providers,
-                                            set(rec.excluded_provider_ids))
+        ranked, pm_factors = rank_providers(
+            rec.step, person_prefs(person), providers, set(rec.excluded_provider_ids)
+        )
     return {
         "id": rec.id,
         "status": rec.status,
@@ -106,8 +136,13 @@ def recommendation_dict(db: Session, ep: Episode, rec: Recommendation) -> dict[s
         "candidates": ranked[:4],
         "rule_set_version": __import__("app.rules", fromlist=["rule_set_version"]).rule_set_version(),
         "needs_clinician_confirmation": True,
-        "preferences": {"language": person.language, "clinician_gender": person.clinician_gender,
-                        "modality": person.modality, "insurance_plan": person.insurance_plan, "area": person.area},
+        "preferences": {
+            "language": person.language,
+            "clinician_gender": person.clinician_gender,
+            "modality": person.modality,
+            "insurance_plan": person.insurance_plan,
+            "area": person.area,
+        },
         "privacy_note": "Nothing is shared with your employer. Your insurer sees claims data only.",
     }
 
@@ -119,15 +154,18 @@ def referral_packet(db: Session, ep: Episode, ref: Referral) -> dict[str, Any]:
     packet: dict[str, Any] = {
         "person": person.label,
         "language": person.language,
-        "scores": [{"instrument": s["instrument"], "total": s["total"], "band": s.get("band")}
-                   for s in ep.score_history[-2:]],
+        "scores": [
+            {"instrument": s["instrument"], "total": s["total"], "band": s.get("band")}
+            for s in ep.score_history[-2:]
+        ],
         "suggested_step": ep.current_step or ep.proposed_step,
         "priority": ref.priority,
     }
     if consents.get("share_physical_context") == "granted" and person.physical_context:
         packet["physical_context"] = person.physical_context
     packet["not_shared"] = ["employer", "free-text answers"] + (
-        [] if consents.get("share_physical_context") == "granted" else ["physical health context"])
+        [] if consents.get("share_physical_context") == "granted" else ["physical health context"]
+    )
     return packet
 
 

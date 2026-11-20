@@ -57,7 +57,9 @@ def _call(system: str, user: str, temperature: float) -> str:
     return resp.text or ""
 
 
-def generate_json(prompt_name: str, payload: dict[str, Any], temperature: float = 0.3) -> dict[str, Any] | None:
+def generate_json(
+    prompt_name: str, payload: dict[str, Any], temperature: float = 0.3
+) -> dict[str, Any] | None:
     """Return parsed JSON from the model, or None on any failure (caller falls back to template)."""
     if not settings.llm_active:
         return None
@@ -91,5 +93,5 @@ def _parse(text: str) -> Any:
     except json.JSONDecodeError:
         start, end = text.find("{"), text.rfind("}")
         if start != -1 and end > start:
-            return json.loads(text[start:end + 1])
+            return json.loads(text[start : end + 1])
         raise

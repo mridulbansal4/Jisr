@@ -101,17 +101,29 @@ def get_consents(p: Principal = Depends(require("person")), db: Session = Depend
 
 def _consent_set(db: Session, person_id: str) -> dict[str, Any]:
     m = consents_map(db, person_id)
-    rows = {r.scope: r for r in db.query(Consent).filter_by(person_id=person_id).order_by(Consent.recorded_at)}
-    return {"notice_version": NOTICE_VERSION,
-            "consents": [{"scope": s, "status": m[s], "version": 1,
-                          "recorded_at": iso(rows[s].recorded_at) if s in rows else None,
-                          "effect": EFFECTS[s]} for s in CONSENT_SCOPES],
-            "effects": [EFFECTS[s] for s in CONSENT_SCOPES if m[s] == "granted"]}
+    rows = {
+        r.scope: r for r in db.query(Consent).filter_by(person_id=person_id).order_by(Consent.recorded_at)
+    }
+    return {
+        "notice_version": NOTICE_VERSION,
+        "consents": [
+            {
+                "scope": s,
+                "status": m[s],
+                "version": 1,
+                "recorded_at": iso(rows[s].recorded_at) if s in rows else None,
+                "effect": EFFECTS[s],
+            }
+            for s in CONSENT_SCOPES
+        ],
+        "effects": [EFFECTS[s] for s in CONSENT_SCOPES if m[s] == "granted"],
+    }
 
 
 @router.put("/consents", tags=["consents"])
-def put_consents(body: ConsentUpdate, p: Principal = Depends(require("person")),
-                 db: Session = Depends(get_db)) -> dict[str, Any]:
+def put_consents(
+    body: ConsentUpdate, p: Principal = Depends(require("person")), db: Session = Depends(get_db)
+) -> dict[str, Any]:
     person = _person(db, p)
     for c in body.consents:
         if c.scope not in CONSENT_SCOPES:
@@ -123,10 +135,17 @@ def put_consents(body: ConsentUpdate, p: Principal = Depends(require("person")),
 
 
 @router.get("/providers", tags=["providers"])
-def providers(step: str | None = None, language: str | None = None, gender: str | None = None,
-              modality: str | None = None, network: str | None = None, city: str | None = None,
-              accepting: bool | None = None, p: Principal = Depends(current),
-              db: Session = Depends(get_db)) -> dict[str, Any]:
+def providers(
+    step: str | None = None,
+    language: str | None = None,
+    gender: str | None = None,
+    modality: str | None = None,
+    network: str | None = None,
+    city: str | None = None,
+    accepting: bool | None = None,
+    p: Principal = Depends(current),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
     out = []
     for pr in db.query(Provider).all():
         if step and step not in pr.steps_served:
@@ -149,16 +168,34 @@ def providers(step: str | None = None, language: str | None = None, gender: str 
 
 @router.get("/audit/me", tags=["audit"])
 def audit_me(p: Principal = Depends(require("person")), db: Session = Depends(get_db)) -> dict[str, Any]:
-    rows = db.query(AuditLog).filter_by(person_id=p.subject_id).order_by(AuditLog.occurred_at.desc()).limit(50)
-    return {"items": [{"occurred_at": iso(r.occurred_at), "actor_label": r.actor_label, "action": r.action,
-                       "resource": r.resource.split(":")[0], "purpose": r.purpose} for r in rows],
-            "next_cursor": None}
+    rows = (
+        db.query(AuditLog).filter_by(person_id=p.subject_id).order_by(AuditLog.occurred_at.desc()).limit(50)
+    )
+    return {
+        "items": [
+            {
+                "occurred_at": iso(r.occurred_at),
+                "actor_label": r.actor_label,
+                "action": r.action,
+                "resource": r.resource.split(":")[0],
+                "purpose": r.purpose,
+            }
+            for r in rows
+        ],
+        "next_cursor": None,
+    }
 
 
 def _prefs(person: Person) -> dict[str, Any]:
-    return {"language": person.language, "clinician_gender": person.clinician_gender, "modality": person.modality,
-            "area": person.area, "insurance_plan": person.insurance_plan, "discreet_mode": person.discreet_mode,
-            "read_aloud": person.read_aloud}
+    return {
+        "language": person.language,
+        "clinician_gender": person.clinician_gender,
+        "modality": person.modality,
+        "area": person.area,
+        "insurance_plan": person.insurance_plan,
+        "discreet_mode": person.discreet_mode,
+        "read_aloud": person.read_aloud,
+    }
 
 
 @router.get("/me/preferences", tags=["me"])
@@ -167,8 +204,9 @@ def get_prefs(p: Principal = Depends(require("person")), db: Session = Depends(g
 
 
 @router.put("/me/preferences", tags=["me"])
-def put_prefs(body: Preferences, p: Principal = Depends(require("person")),
-              db: Session = Depends(get_db)) -> dict[str, Any]:
+def put_prefs(
+    body: Preferences, p: Principal = Depends(require("person")), db: Session = Depends(get_db)
+) -> dict[str, Any]:
     person = _person(db, p)
     for k, v in body.model_dump(exclude_none=True).items():
         setattr(person, k, v)
@@ -177,12 +215,23 @@ def put_prefs(body: Preferences, p: Principal = Depends(require("person")),
 
 
 @router.get("/me/notifications", tags=["me"])
-def notifications(unread_only: bool = False, p: Principal = Depends(require("person")),
-                  db: Session = Depends(get_db)) -> dict[str, Any]:
+def notifications(
+    unread_only: bool = False, p: Principal = Depends(require("person")), db: Session = Depends(get_db)
+) -> dict[str, Any]:
     q = db.query(Notification).filter_by(person_id=p.subject_id)
     rows = q.order_by(Notification.created_at.desc()).all()
-    items = [{"id": n.id, "created_at": iso(n.created_at), "channel": n.channel, "text": n.text, "read": n.read,
-              "deep_link": n.deep_link} for n in rows if not (unread_only and n.read)]
+    items = [
+        {
+            "id": n.id,
+            "created_at": iso(n.created_at),
+            "channel": n.channel,
+            "text": n.text,
+            "read": n.read,
+            "deep_link": n.deep_link,
+        }
+        for n in rows
+        if not (unread_only and n.read)
+    ]
     return {"items": items, "unread_count": sum(1 for n in rows if not n.read), "next_cursor": None}
 
 
@@ -196,8 +245,9 @@ def mark_read(nid: str, p: Principal = Depends(require("person")), db: Session =
 
 
 @router.post("/demo/reset", tags=["demo"])
-def demo_reset(body: DemoReset | None = None, p: Principal = Depends(require("judge")),
-               db: Session = Depends(get_db)) -> dict[str, Any]:
+def demo_reset(
+    body: DemoReset | None = None, p: Principal = Depends(require("judge")), db: Session = Depends(get_db)
+) -> dict[str, Any]:
     if not settings.demo_mode:
         raise Problem(404, "NOT_FOUND", "Demo mode is off")
     from app.seed import reset
@@ -221,14 +271,19 @@ def events(body: dict[str, Any]) -> dict[str, Any]:
 
 
 @router.post("/companion/chat", tags=["ai"])
-def companion_chat(body: ChatRequest, p: Principal = Depends(require("person", "judge")),
-                   db: Session = Depends(get_db)) -> dict[str, Any]:
+def companion_chat(
+    body: ChatRequest, p: Principal = Depends(require("person", "judge")), db: Session = Depends(get_db)
+) -> dict[str, Any]:
     msgs = [m.model_dump() for m in body.messages]
     last_user = next((m["content"] for m in reversed(msgs) if m["role"] == "user"), "")
     gate = crisis_gate.evaluate(free_text=last_user)  # BEFORE any LLM call
-    gate_out = {"crisis": gate.red, "severity": gate.severity,
-                "matched_rule_ids": gate.fired_rules + [h.entry_id for h in gate.hits],
-                "categories": sorted({h.category for h in gate.hits}), "latency_ms": gate.latency_ms}
+    gate_out = {
+        "crisis": gate.red,
+        "severity": gate.severity,
+        "matched_rule_ids": gate.fired_rules + [h.entry_id for h in gate.hits],
+        "categories": sorted({h.category for h in gate.hits}),
+        "latency_ms": gate.latency_ms,
+    }
     if gate.red:
         episode_id = None
         if p.role == "person":
@@ -237,13 +292,21 @@ def companion_chat(body: ChatRequest, p: Principal = Depends(require("person", "
                 ep = db.get(Episode, body.episode_id) if body.episode_id else None
                 if ep is not None and ep.person_id != person.id:
                     ep = None
-                ep = open_red(db, person, gate, "Crisis Gate: Companion message", episode=ep, actor_type="person")
+                ep = open_red(
+                    db, person, gate, "Crisis Gate: Companion message", episode=ep, actor_type="person"
+                )
                 episode_id = ep.id
                 db.commit()
-        return {"reply": features.CRISIS_REPLY.get(body.language, features.CRISIS_REPLY["en"]),
-                "content_type": "template", "provider": "none", "gate": gate_out,
-                "validator": {"result": "skipped", "findings": ["crisis: AI locked"]},
-                "suggestions": [], "crisis_lines": crisis_gate.crisis_lines_for(gate.severity),
-                "episode_id": episode_id, "llm_locked": True}
+        return {
+            "reply": features.CRISIS_REPLY.get(body.language, features.CRISIS_REPLY["en"]),
+            "content_type": "template",
+            "provider": "none",
+            "gate": gate_out,
+            "validator": {"result": "skipped", "findings": ["crisis: AI locked"]},
+            "suggestions": [],
+            "crisis_lines": crisis_gate.crisis_lines_for(gate.severity),
+            "episode_id": episode_id,
+            "llm_locked": True,
+        }
     out = features.companion(msgs, body.language)
     return {**out, "gate": gate_out, "crisis_lines": [], "episode_id": body.episode_id, "llm_locked": False}

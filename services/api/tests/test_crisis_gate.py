@@ -117,8 +117,9 @@ def test_guard_never_suppresses_imminent_entry(monkeypatch: pytest.MonkeyPatch) 
     assert [h.entry_id for h in scan_text("saving up pills for later")] == ["EN-007"]
     # Control: the same setup with a non-imminent severity IS suppressed.
     entry_high = {**entry, "severity": "high"}
-    patched_high = crisis_gate._Compiled(entries=[(entry_high, re.compile(entry["pattern"]))],
-                                         guards=patched.guards)
+    patched_high = crisis_gate._Compiled(
+        entries=[(entry_high, re.compile(entry["pattern"]))], guards=patched.guards
+    )
     monkeypatch.setattr(crisis_gate, "_compiled", lambda: patched_high)
     assert scan_text("saving up pills for later") == []
 

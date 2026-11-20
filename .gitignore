@@ -40,3 +40,6 @@ apps/web/node_modules/
 .claude/
 .serena/
 *.log
+
+# Private working area (war room, drafts). Never pushed.
+tp/

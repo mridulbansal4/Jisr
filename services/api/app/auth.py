@@ -25,7 +25,14 @@ PERSONAS: dict[str, str] = {
 
 SCOPES: dict[str, list[str]] = {
     "person": ["screening:write", "episode:read:own", "consent:write", "me:read", "companion:chat"],
-    "clinician": ["queue:read", "episode:read", "step:confirm", "episode:close", "referral:decide", "red:ack"],
+    "clinician": [
+        "queue:read",
+        "episode:read",
+        "step:confirm",
+        "episode:close",
+        "referral:decide",
+        "red:ack",
+    ],
     "coordinator": ["queue:read", "episode:read", "referral:decide", "red:ack", "fhir:import"],
     "programme": ["programme:read", "evals:read"],
     "judge": ["programme:read", "evals:read", "demo:reset", "episode:read", "queue:read", "fhir:import"],

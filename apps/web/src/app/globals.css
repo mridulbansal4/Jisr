@@ -343,3 +343,6 @@ body {
 .marquee:hover .marquee-track { animation-play-state: paused; }
 [dir="rtl"] .marquee-track { animation-direction: reverse; }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* Decorative orbs extend past the viewport; never let them create a horizontal page scroll. */
+html, body { overflow-x: clip; }

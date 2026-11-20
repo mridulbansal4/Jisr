@@ -52,10 +52,16 @@ def test_below_threshold_no_episode_and_self_referral_opens():
 
 def test_modifiers_raise_only():
     assert match(StepInput(phq9_total=7, gad7_total=4, self_referral=True, phq9_difficulty=2)).level == "L2"
-    assert match(StepInput(phq9_total=7, gad7_total=4, self_referral=True, comorbidity_flag=True)).level == "L2"
+    assert (
+        match(StepInput(phq9_total=7, gad7_total=4, self_referral=True, comorbidity_flag=True)).level == "L2"
+    )
     assert match(StepInput(phq9_total=12, gad7_total=16, phq9_difficulty=3)).level == "L4"
-    assert match(StepInput(phq9_total=12, gad7_total=11, previous_step="L2",
-                           rci_status="no_reliable_change")).level == "L3"
+    assert (
+        match(
+            StepInput(phq9_total=12, gad7_total=11, previous_step="L2", rci_status="no_reliable_change")
+        ).level
+        == "L3"
+    )
 
 
 def test_crisis_short_circuits_to_red():
@@ -71,12 +77,39 @@ def test_rci():
 
 def test_provider_ranking_prefers_language_gender_network():
     provs = [
-        dict(id="a", steps_served=["L2"], accepting=True, networks=["thiqa"], languages=["ar"],
-             clinician_gender="female", modalities=["video"], current_wait_days=3, area="abu_dhabi_city"),
-        dict(id="b", steps_served=["L2"], accepting=True, networks=["thiqa"], languages=["en"],
-             clinician_gender="male", modalities=["in_person"], current_wait_days=1, area="abu_dhabi_city"),
-        dict(id="c", steps_served=["L2"], accepting=True, networks=["basic"], languages=["ar"],
-             clinician_gender="female", modalities=["video"], current_wait_days=0, area="abu_dhabi_city"),
+        dict(
+            id="a",
+            steps_served=["L2"],
+            accepting=True,
+            networks=["thiqa"],
+            languages=["ar"],
+            clinician_gender="female",
+            modalities=["video"],
+            current_wait_days=3,
+            area="abu_dhabi_city",
+        ),
+        dict(
+            id="b",
+            steps_served=["L2"],
+            accepting=True,
+            networks=["thiqa"],
+            languages=["en"],
+            clinician_gender="male",
+            modalities=["in_person"],
+            current_wait_days=1,
+            area="abu_dhabi_city",
+        ),
+        dict(
+            id="c",
+            steps_served=["L2"],
+            accepting=True,
+            networks=["basic"],
+            languages=["ar"],
+            clinician_gender="female",
+            modalities=["video"],
+            current_wait_days=0,
+            area="abu_dhabi_city",
+        ),
     ]
     ranked, _ = rank_providers("L2", Prefs("ar", "female", ["video"], "abu_dhabi_city", "thiqa"), provs)
     assert [p["id"] for p in ranked] == ["a", "b"]  # c is out of network

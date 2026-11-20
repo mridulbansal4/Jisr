@@ -63,8 +63,14 @@ def match(inp: StepInput) -> StepResult:
             "RED",
             "RED",
             ["EO-01"],
-            [{"factor": "crisis", "value": "Crisis Gate fired", "effect": "RED: human contact within 15 min",
-              "rule_id": "EO-01"}],
+            [
+                {
+                    "factor": "crisis",
+                    "value": "Crisis Gate fired",
+                    "effect": "RED: human contact within 15 min",
+                    "rule_id": "EO-01",
+                }
+            ],
         )
     opened, eo_rule = should_open_episode(inp)
     if not opened:
@@ -76,13 +82,25 @@ def match(inp: StepInput) -> StepResult:
     level = "L0"
     if inp.phq9_total is not None:
         lvl, band = _level_from(sev["phq9_to_level"], inp.phq9_total)
-        factors.append({"factor": "severity", "value": f"PHQ-9 {inp.phq9_total} ({band.replace('_', ' ')})",
-                        "effect": f"suggests {lvl}", "rule_id": "SEV-PHQ9"})
+        factors.append(
+            {
+                "factor": "severity",
+                "value": f"PHQ-9 {inp.phq9_total} ({band.replace('_', ' ')})",
+                "effect": f"suggests {lvl}",
+                "rule_id": "SEV-PHQ9",
+            }
+        )
         level = _max_level(level, lvl)
     if inp.gad7_total is not None:
         lvl, band = _level_from(sev["gad7_to_level"], inp.gad7_total)
-        factors.append({"factor": "severity", "value": f"GAD-7 {inp.gad7_total} ({band})",
-                        "effect": f"suggests {lvl}", "rule_id": "SEV-GAD7"})
+        factors.append(
+            {
+                "factor": "severity",
+                "value": f"GAD-7 {inp.gad7_total} ({band})",
+                "effect": f"suggests {lvl}",
+                "rule_id": "SEV-GAD7",
+            }
+        )
         level = _max_level(level, lvl)
     fired.append("SEV-MAX")
 
@@ -90,40 +108,77 @@ def match(inp: StepInput) -> StepResult:
     if level == "L1" and (inp.phq9_difficulty or 0) >= 2:
         level = "L2"
         fired.append("SM-01")
-        factors.append({"factor": "functional_impairment", "value": "daily life very difficult",
-                        "effect": "L1 → L2", "rule_id": "SM-01"})
+        factors.append(
+            {
+                "factor": "functional_impairment",
+                "value": "daily life very difficult",
+                "effect": "L1 → L2",
+                "rule_id": "SM-01",
+            }
+        )
     if level == "L1" and inp.comorbidity_flag:
         level = "L2"
         fired.append("SM-02")
-        factors.append({"factor": "comorbidity", "value": "physical health condition (consented)",
-                        "effect": "L1 → L2", "rule_id": "SM-02"})
+        factors.append(
+            {
+                "factor": "comorbidity",
+                "value": "physical health condition (consented)",
+                "effect": "L1 → L2",
+                "rule_id": "SM-02",
+            }
+        )
     complexity = list(inp.complexity_flags)
     if inp.phq9_difficulty == 3:
         complexity.append("functional_impairment_extreme")
     if (inp.gad7_total or 0) >= 15 and complexity:
         level = "L4"
         fired.append("SM-03")
-        factors.append({"factor": "severity", "value": "severe anxiety with complexity",
-                        "effect": "→ L4", "rule_id": "SM-03"})
+        factors.append(
+            {
+                "factor": "severity",
+                "value": "severe anxiety with complexity",
+                "effect": "→ L4",
+                "rule_id": "SM-03",
+            }
+        )
     if inp.previous_step == "L2" and inp.rci_status in ("no_reliable_change", "deteriorated"):
         level = _max_level(level, "L3")
         fired.append("SM-04")
-        factors.append({"factor": "rci", "value": inp.rci_status.replace("_", " "),
-                        "effect": "step up to L3 suggested", "rule_id": "SM-04"})
+        factors.append(
+            {
+                "factor": "rci",
+                "value": inp.rci_status.replace("_", " "),
+                "effect": "step up to L3 suggested",
+                "rule_id": "SM-04",
+            }
+        )
     if inp.previous_step == "L3" and inp.rci_status in ("no_reliable_change", "deteriorated"):
         level = "L4"
         fired.append("SM-05")
-        factors.append({"factor": "rci", "value": inp.rci_status.replace("_", " "),
-                        "effect": "step up to L4 suggested", "rule_id": "SM-05"})
+        factors.append(
+            {
+                "factor": "rci",
+                "value": inp.rci_status.replace("_", " "),
+                "effect": "step up to L4 suggested",
+                "rule_id": "SM-05",
+            }
+        )
     if level == "L0" and inp.wants_human_support:
         level = "L1"
         fired.append("SM-06")
-        factors.append({"factor": "preference", "value": "wants human support",
-                        "effect": "L0 → L1", "rule_id": "SM-06"})
+        factors.append(
+            {"factor": "preference", "value": "wants human support", "effect": "L0 → L1", "rule_id": "SM-06"}
+        )
     for flag in inp.clinician_review_flags:
         fired.append("SM-07")
-        factors.append({"factor": "preference", "value": flag.replace("_", " "),
-                        "effect": "clinician review recommended", "rule_id": "SM-07"})
+        factors.append(
+            {
+                "factor": "preference",
+                "value": flag.replace("_", " "),
+                "effect": "clinician review recommended",
+                "rule_id": "SM-07",
+            }
+        )
     return StepResult("SUGGESTED", level, fired, factors)
 
 
@@ -144,37 +199,68 @@ def rank_providers(
     w = sr["score_weights"]
     exclude = exclude or set()
     eligible = [
-        p for p in providers
-        if level in p["steps_served"] and p["accepting"] and p["id"] not in exclude
+        p for p in providers if level in p["steps_served"] and p["accepting"] and p["id"] not in exclude
     ]
     in_net = [p for p in eligible if not prefs.insurance_plan or prefs.insurance_plan in p["networks"]]
     pool = in_net or eligible
     ranked = []
     for p in pool:
         lang = 1.0 if prefs.language in p["languages"] else 0.0
-        gender = 1.0 if prefs.clinician_gender in ("none", None) or p["clinician_gender"] == prefs.clinician_gender \
+        gender = (
+            1.0
+            if prefs.clinician_gender in ("none", None) or p["clinician_gender"] == prefs.clinician_gender
             else 0.0
+        )
         modality = 1.0 if not prefs.modality or set(prefs.modality) & set(p["modalities"]) else 0.0
         wait = max(0.0, 1 - p["current_wait_days"] / 14)
         area = 1.0 if not prefs.area or p.get("area") == prefs.area else 0.0
-        score = (w["language_match"] * lang + w["clinician_gender_match"] * gender
-                 + w["modality_match"] * modality + w["wait_days"] * wait + w["area_match"] * area)
+        score = (
+            w["language_match"] * lang
+            + w["clinician_gender_match"] * gender
+            + w["modality_match"] * modality
+            + w["wait_days"] * wait
+            + w["area_match"] * area
+        )
         ranked.append({**p, "match_score": round(score, 3), "out_of_network": p not in in_net})
     ranked.sort(key=lambda p: (-p["match_score"], p["current_wait_days"], p["id"]))
     factors = []
     if prefs.language:
-        factors.append({"factor": "language", "value": prefs.language, "effect": "weight 0.30",
-                        "rule_id": "PM-LANG"})
+        factors.append(
+            {"factor": "language", "value": prefs.language, "effect": "weight 0.30", "rule_id": "PM-LANG"}
+        )
     if prefs.clinician_gender and prefs.clinician_gender != "none":
-        factors.append({"factor": "clinician_gender", "value": prefs.clinician_gender, "effect": "weight 0.20",
-                        "rule_id": "PM-GENDER"})
+        factors.append(
+            {
+                "factor": "clinician_gender",
+                "value": prefs.clinician_gender,
+                "effect": "weight 0.20",
+                "rule_id": "PM-GENDER",
+            }
+        )
     if prefs.modality:
-        factors.append({"factor": "modality", "value": ", ".join(prefs.modality), "effect": "weight 0.20",
-                        "rule_id": "PM-MODALITY"})
+        factors.append(
+            {
+                "factor": "modality",
+                "value": ", ".join(prefs.modality),
+                "effect": "weight 0.20",
+                "rule_id": "PM-MODALITY",
+            }
+        )
     if prefs.insurance_plan:
-        factors.append({"factor": "insurance_network", "value": prefs.insurance_plan,
-                        "effect": "hard filter" if in_net else "no in-network match: warning shown",
-                        "rule_id": "PM-NETWORK"})
-    factors.append({"factor": "capacity", "value": f"{len(pool)} providers accepting at {level}",
-                    "effect": "wait time weight 0.20", "rule_id": "PM-CAPACITY"})
+        factors.append(
+            {
+                "factor": "insurance_network",
+                "value": prefs.insurance_plan,
+                "effect": "hard filter" if in_net else "no in-network match: warning shown",
+                "rule_id": "PM-NETWORK",
+            }
+        )
+    factors.append(
+        {
+            "factor": "capacity",
+            "value": f"{len(pool)} providers accepting at {level}",
+            "effect": "wait time weight 0.20",
+            "rule_id": "PM-CAPACITY",
+        }
+    )
     return ranked, factors

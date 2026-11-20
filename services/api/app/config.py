@@ -9,7 +9,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[3]
-load_dotenv(ROOT / ".env", override=os.getenv("JISR_DOTENV_OVERRIDE", "1") == "1")  # project .env wins (tests opt out)
+load_dotenv(
+    ROOT / ".env", override=os.getenv("JISR_DOTENV_OVERRIDE", "1") == "1"
+)  # project .env wins (tests opt out)
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 
@@ -26,7 +28,8 @@ class Settings:
     jwt_secret: str = os.getenv("JWT_SECRET", "dev-only-secret-change-me-32-bytes!!")
     jwt_ttl_minutes: int = int(os.getenv("JWT_TTL_MINUTES", "240"))
     cors_origins: tuple[str, ...] = tuple(
-        o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+        o.strip()
+        for o in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
         if o.strip()
     )
     demo_mode: bool = _bool("DEMO_MODE", True)

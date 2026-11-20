@@ -32,10 +32,26 @@ _LETTER_FOLD = str.maketrans(
         "ۓ": "ي",
         "ے": "ي",
         # Eastern Arabic and Urdu digits -> ASCII
-        "٠": "0", "١": "1", "٢": "2", "٣": "3", "٤": "4",
-        "٥": "5", "٦": "6", "٧": "7", "٨": "8", "٩": "9",
-        "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4",
-        "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9",
+        "٠": "0",
+        "١": "1",
+        "٢": "2",
+        "٣": "3",
+        "٤": "4",
+        "٥": "5",
+        "٦": "6",
+        "٧": "7",
+        "٨": "8",
+        "٩": "9",
+        "۰": "0",
+        "۱": "1",
+        "۲": "2",
+        "۳": "3",
+        "۴": "4",
+        "۵": "5",
+        "۶": "6",
+        "۷": "7",
+        "۸": "8",
+        "۹": "9",
     }
 )
 _REPEATS = re.compile(r"(.)\1{2,}")
@@ -54,8 +70,6 @@ def normalise(text: str) -> str:
     """Full normalisation for input text."""
     text = fold_script(text).lower()
     text = text.replace("’", "'").replace("‘", "'")
-    text = "".join(
-        " " if unicodedata.category(ch).startswith("P") and ch != "'" else ch for ch in text
-    )
+    text = "".join(" " if unicodedata.category(ch).startswith("P") and ch != "'" else ch for ch in text)
     text = _REPEATS.sub(r"\1\1", text)
     return _WS.sub(" ", text).strip()

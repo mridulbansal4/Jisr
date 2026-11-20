@@ -36,3 +36,6 @@ jobs:
       - uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
+          # Private repos without GitHub Advanced Security cannot receive code-scanning uploads.
+          # Analysis still runs (and fails on errors); results upload automatically once the repo is public.
+          upload: ${{ github.event.repository.private && 'never' || 'always' }}
