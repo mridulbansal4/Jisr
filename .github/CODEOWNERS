@@ -1,0 +1,12 @@
+# Code owners for Jisr
+# TODO: Replace the commented lines below with actual GitHub handles (@username or @org/team).
+
+# Default repository owners
+# * @TODO-owner
+
+# Safety-critical paths (require clinical safety lead / tech lead review per docs/03-engineering/GIT_WORKFLOW.md)
+# /packages/rules/** @TODO-clinical-safety-lead @TODO-tech-lead
+# /services/api/app/engines/crisis_gate.py @TODO-clinical-safety-lead @TODO-tech-lead
+# /services/api/app/llm/** @TODO-ai-lead @TODO-tech-lead
+# /ai/prompts/** @TODO-ai-lead @TODO-clinical-safety-lead
+# /services/api/app/auth.py @TODO-tech-lead
