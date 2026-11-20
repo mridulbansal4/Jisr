@@ -11,6 +11,9 @@ permissions:
 
 jobs:
   dependency-review:
+    # GitHub only supports dependency review on public repos (or private repos with Advanced Security).
+    # Skip while the repo is private; it runs automatically once the repo is public.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
