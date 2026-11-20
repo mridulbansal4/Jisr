@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-11-20T07:13:34+00:00",
+  "ran_at": "2026-11-19T13:20:50+00:00",
   "n": 157,
   "positives": 117,
   "negatives": 40,
@@ -14,8 +14,8 @@
   },
   "false_negatives": [],
   "false_positives": [],
-  "latency_p95_ms": 0.189,
-  "latency_max_ms": 14.929,
+  "latency_p95_ms": 0.091,
+  "latency_max_ms": 7.393,
   "latency_budget_ms": 50,
   "by_language": [
     {
@@ -147,7 +147,7 @@
   "mode": "deterministic (lexicon + normaliser only, no LLM)",
   "dataset": {
     "path": "data/synthetic/crisis_benchmark.v1.jsonl",
-    "sha256": "d57905138764491e2bd29a30388d5f320525d94459b6852d695444ff7cfd5ae6"
+    "sha256": "9d585a35c32bedc58eac69029f6592100a88a71f6c89f4a67ce8e46b9cc04ad2"
   },
   "caveat": "Synthetic, team-written benchmark (dev split authored alongside the lexicon). Not clinically validated; native-speaker clinical review of cases and lexicon is pending. Do not cite as clinical performance."
 }
