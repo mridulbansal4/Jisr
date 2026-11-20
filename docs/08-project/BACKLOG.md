@@ -107,7 +107,7 @@ Each block below is one GitHub Issue: the heading is the title, the rest is the 
 #### JIS-001 Monorepo scaffold
 `labels: epic:foundation, owner:BE, block:B1, prio:must, mvp` · Est 1.5 h
 Create `apps/web`, `services/api`, `packages/rules`, `ai/prompts`, `ai/evals`, `data/synthetic`, `infra`, `packages/contracts/openapi.yaml` (brief §10). Docker compose for Postgres 16.
-- [ ] `docker compose up -d db` works; `uv sync` and `pnpm install` succeed
+- [ ] `docker compose -f deploy/compose.dev.yml up -d db` works; `uv sync` and `pnpm install` succeed
 - [ ] Commands in CLAUDE.md run without error
 
 #### JIS-002 CI skeleton

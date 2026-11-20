@@ -6,7 +6,7 @@ Jisr turns a positive mental-health screen (PHQ-9 / GAD-7) into a measured hand-
 ## Commands
 | Task | Command |
 |---|---|
-| DB | `docker compose up -d db` |
+| DB | `docker compose -f deploy/compose.dev.yml up -d db` |
 | API install | `cd services/api && uv sync` |
 | API dev | `uv run uvicorn app.main:app --reload --port 8000` |
 | Seed / reseed | `uv run python -m app.seed` (tables are created and seeded automatically on first start; SQLite by default, set `DATABASE_URL` for Postgres) |

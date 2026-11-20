@@ -23,7 +23,7 @@ Abu Dhabi screens more people for anxiety and depression every year. But the cha
 ```bash
 git clone https://github.com/mridulbansal4/Jisr.git && cd Jisr
 cp .env.example .env            # add GEMINI_API_KEY (optional: LLM_PROVIDER=none works fully offline)
-docker compose up -d db         # Postgres 16
+docker compose -f deploy/compose.dev.yml up -d db  # Postgres 16
 cd services/api && uv sync && uv run uvicorn app.main:app --reload --port 8000   # SQLite by default; seeds synthetic data on first start (reseed: uv run python -m app.seed)
 cd ../../apps/web && pnpm install && pnpm dev   # http://localhost:3000  → "Judge Mode"
 ```

@@ -110,7 +110,7 @@ Owner: presenter + tech lead. Rehearse every fallback at least once (hour 33–3
 `NEXT_PUBLIC_OFFLINE_DEMO=true` (or the Judge Mode toggle) makes the web app use a bundled, read-only snapshot (`apps/web/public/demo-snapshot.json`) of the seeded personas, episodes, dashboard numbers and a **client-side copy of the deterministic Crisis Gate lexicon** (the same `packages/rules` JSON), so the crisis demo still fires locally. The PWA service worker pre-caches the routes in the tour. LLM panels show template text. A visible "Offline demo — seeded data" badge stays on screen (honesty with judges).
 
 ### 7.4 Local fallback
-`docker compose up -d db && cd services/api && uv run alembic upgrade head && uv run python -m app.seed --reset && uv run uvicorn app.main:app --port 8000` + `cd apps/web && pnpm build && pnpm start`, with `LLM_PROVIDER=none`. Pre-built and tested on the presenter's laptop the night before.
+`docker compose -f deploy/compose.dev.yml up -d db && cd services/api && uv run alembic upgrade head && uv run python -m app.seed --reset && uv run uvicorn app.main:app --port 8000` + `cd apps/web && pnpm build && pnpm start`, with `LLM_PROVIDER=none`. Pre-built and tested on the presenter's laptop the night before.
 
 ### 7.5 Backup video
 3:00 max, 1080p, Arabic + English captions, recorded at hour 32 from the live link following the [PITCH](../00-overview/PITCH.md) demo script; the same file is the submission demo video.
