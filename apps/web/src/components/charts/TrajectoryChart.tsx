@@ -94,8 +94,8 @@ export function TrajectoryChart({ episodeId, compact = false }: { episodeId: str
             <XAxis dataKey="label" tickLine={false} axisLine={false} />
             <YAxis domain={[0, 27]} ticks={[0, 5, 10, 15, 20, 27]} tickLine={false} axisLine={false} />
             <Tooltip />
-            <Line type="monotone" dataKey="phq9" name={t("phq")} stroke={PHQ_COLOR} strokeWidth={3} dot={makeDot(PHQ_COLOR, phqRc)} activeDot={{ r: 6 }} isAnimationActive={!reduce} animationDuration={1200} connectNulls />
-            <Line type="monotone" dataKey="gad7" name={t("gad")} stroke={GAD_COLOR} strokeWidth={3} dot={makeDot(GAD_COLOR, gadRc)} activeDot={{ r: 6 }} isAnimationActive={!reduce} animationDuration={1200} animationBegin={200} connectNulls />
+            <Line type="monotone" dataKey="phq9" name={t("phq")} stroke={PHQ_COLOR} strokeWidth={2.25} dot={makeDot(PHQ_COLOR, phqRc)} activeDot={{ r: 6 }} isAnimationActive={!reduce} animationDuration={500} connectNulls />
+            <Line type="monotone" dataKey="gad7" name={t("gad")} stroke={GAD_COLOR} strokeWidth={2.25} dot={makeDot(GAD_COLOR, gadRc)} activeDot={{ r: 6 }} isAnimationActive={!reduce} animationDuration={500} connectNulls />
           </LineChart>
         </ResponsiveContainer>
       </div>

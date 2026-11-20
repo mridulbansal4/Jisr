@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { api, problemMessage, type SimResult } from "@/lib/api";
-import { CountUp, useReducedMotion } from "../motion";
+import { useReducedMotion } from "../motion";
 import { PALETTE, Panel, tooltipStyle } from "../charts/common";
-import { Icon } from "../ui";
+
 
 interface Scenario {
   capacity_multiplier: number;
@@ -22,7 +22,7 @@ function Slider({ id, label, value, min, max, step, display, onChange }: { id: s
         <label htmlFor={id} className="text-sm font-medium">
           {label}
         </label>
-        <output htmlFor={id} className="rounded-full bg-primary-soft px-2.5 py-0.5 text-sm font-semibold tabular text-primary">
+        <output htmlFor={id} className="text-sm font-semibold tabular text-ink">
           <bdi dir="ltr">{display}</bdi>
         </output>
       </div>
@@ -71,7 +71,7 @@ export function WhatIf() {
   const curve = res?.curve ? res.curve.days.map((d, i) => ({ d, baseline: res.curve!.baseline_cum_pct[i], jisr: res.curve!.jisr_cum_pct[i] })) : [];
 
   return (
-    <Panel title={t("whatIf")} sub={t("whatIfSub")} extra={busy ? <span className="text-xs text-ink-muted">{tp("sim.running")}</span> : null}>
+    <Panel title={t("whatIf")} sub={t("whatIfSub")} extra={busy ? <span className="text-sm text-ink-muted">{tp("sim.running")}</span> : null}>
       <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
         <div className="space-y-5">
           <Slider id="sim-cap" label={t("capacity")} value={sc.capacity_multiplier} min={0.5} max={2} step={0.1} display={`× ${sc.capacity_multiplier.toFixed(1)}`} onChange={(v) => setSc((s) => ({ ...s, capacity_multiplier: v }))} />
@@ -79,49 +79,38 @@ export function WhatIf() {
           <Slider id="sim-base" label={t("baselineConv")} value={sc.baseline_conversion} min={0.1} max={0.6} step={0.05} display={`${Math.round(sc.baseline_conversion * 100)}%`} onChange={(v) => setSc((s) => ({ ...s, baseline_conversion: v }))} />
           {res ? (
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-2xl bg-surface-muted p-3">
-                <p className="text-xs text-ink-muted">{tp("sim.conversion")}</p>
+              <div className="rounded-lg bg-surface-muted p-3">
+                <p className="text-sm text-ink-muted">{tp("sim.conversion")}</p>
                 <p className="mt-1 text-sm tabular">
                   <bdi dir="ltr">
                     <span className="text-ink-faint">{res.baseline.conversion_pct.toFixed(1)}</span>
                     {" → "}
-                    <span className="text-xl font-bold text-primary">
-                      <CountUp value={res.jisr.conversion_pct} decimals={1} duration={0.6} />
-                    </span>
+                    <span className="text-xl font-semibold text-ink">{res.jisr.conversion_pct.toFixed(1)}</span>
                   </bdi>
                 </p>
               </div>
-              <div className="rounded-2xl bg-surface-muted p-3">
-                <p className="text-xs text-ink-muted">{tp("sim.days")}</p>
+              <div className="rounded-lg bg-surface-muted p-3">
+                <p className="text-sm text-ink-muted">{tp("sim.days")}</p>
                 <p className="mt-1 text-sm tabular">
                   <bdi dir="ltr">
                     <span className="text-ink-faint">{res.baseline.median_days_to_care.toFixed(1)}</span>
                     {" → "}
-                    <span className="text-xl font-bold text-primary">
-                      <CountUp value={res.jisr.median_days_to_care} decimals={1} duration={0.6} />
-                    </span>
+                    <span className="text-xl font-semibold text-ink">{res.jisr.median_days_to_care.toFixed(1)}</span>
                   </bdi>
                 </p>
               </div>
               {res.waiting_list ? (
-                <div className="col-span-2 rounded-2xl border border-line p-3">
-                  <p className="flex items-center gap-1.5 text-xs text-ink-muted">
-                    <Icon name="users" className="size-3.5" />
-                    {t("waiting")}
-                  </p>
+                <div className="col-span-2 rounded-lg border border-line p-3">
+                  <p className="text-sm text-ink-muted">{t("waiting")}</p>
                   <div className="mt-1 flex items-end gap-4 tabular">
                     <span>
-                      <span className="block text-[11px] text-ink-faint">{tp("sim.baseline")}</span>
-                      <span className="text-2xl font-bold text-ink-muted">
-                        <CountUp value={res.waiting_list.baseline} duration={0.6} />
-                      </span>
+                      <span className="block text-xs text-ink-muted">{tp("sim.baseline")}</span>
+                      <span className="text-2xl font-semibold text-ink-muted">{Math.round(res.waiting_list.baseline)}</span>
                     </span>
                     <span className="pb-1 text-ink-faint">→</span>
                     <span>
-                      <span className="block text-[11px] text-ink-faint">{tp("sim.jisr")}</span>
-                      <span className="text-2xl font-bold text-primary">
-                        <CountUp value={res.waiting_list.jisr} duration={0.6} />
-                      </span>
+                      <span className="block text-xs text-ink-muted">{tp("sim.jisr")}</span>
+                      <span className="text-2xl font-semibold text-ink">{Math.round(res.waiting_list.jisr)}</span>
                     </span>
                   </div>
                 </div>
@@ -138,11 +127,11 @@ export function WhatIf() {
                 <AreaChart data={curve} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
                   <defs>
                     <linearGradient id="wi-jisr" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={PALETTE.jisr} stopOpacity={0.35} />
+                      <stop offset="0%" stopColor={PALETTE.jisr} stopOpacity={0.16} />
                       <stop offset="100%" stopColor={PALETTE.jisr} stopOpacity={0.02} />
                     </linearGradient>
                     <linearGradient id="wi-base" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={PALETTE.baseline} stopOpacity={0.25} />
+                      <stop offset="0%" stopColor={PALETTE.baseline} stopOpacity={0.12} />
                       <stop offset="100%" stopColor={PALETTE.baseline} stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
@@ -152,7 +141,7 @@ export function WhatIf() {
                   <Tooltip {...tooltipStyle} labelFormatter={(d) => t("dayN", { d: Number(d) })} formatter={(v) => `${Number(v).toFixed(1)}%`} />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
                   <Area type="monotone" dataKey="baseline" name={tp("sim.baseline")} stroke={PALETTE.baseline} strokeDasharray="5 4" strokeWidth={2} fill="url(#wi-base)" isAnimationActive={!reduce} animationDuration={700} />
-                  <Area type="monotone" dataKey="jisr" name={tp("sim.jisr")} stroke={PALETTE.jisr} strokeWidth={3} fill="url(#wi-jisr)" isAnimationActive={!reduce} animationDuration={700} />
+                  <Area type="monotone" dataKey="jisr" name={tp("sim.jisr")} stroke={PALETTE.jisr} strokeWidth={2.5} fill="url(#wi-jisr)" isAnimationActive={!reduce} animationDuration={700} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (

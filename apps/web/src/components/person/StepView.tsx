@@ -48,8 +48,8 @@ export function ProviderCard({ p, rank, onChoose }: { p: Provider; rank: number;
   return (
     <article className="card lift p-5">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold text-primary">{t("rank", { n: rank })}</span>
-        {p.is_synthetic ? <span className="text-xs text-ink-muted">{t("synthetic")}</span> : null}
+        <span className="label-quiet text-ink">{t("rank", { n: rank })}</span>
+        {p.is_synthetic ? <span className="label-quiet">{t("synthetic")}</span> : null}
       </div>
       <h3 className="mt-1 text-lg font-semibold">
         <bdi>{p.display_name}</bdi>
@@ -112,7 +112,7 @@ export function StepView() {
   if (!episodeId) {
     return (
       <div className="space-y-4">
-        <h1 className="headline text-3xl">{t("title")}</h1>
+        <h1 className="display text-4xl">{t("title")}</h1>
         <Alert>{t("loadFailed")}</Alert>
         <Link href="/me" className={btn.primary}>{tc("continue")}</Link>
       </div>
@@ -122,7 +122,7 @@ export function StepView() {
   if (episode?.is_red) {
     return (
       <div className="space-y-4">
-        <h1 className="headline text-3xl">{t("title")}</h1>
+        <h1 className="display text-4xl">{t("title")}</h1>
         <p className="text-lg">{t("redLocked")}</p>
         <Link href="/help?alerted=1" className={btn.help}>{tc("continue")}</Link>
       </div>
@@ -136,7 +136,7 @@ export function StepView() {
 
   return (
     <div className="space-y-4">
-      <h1 className="headline text-3xl">{t("title")}</h1>
+      <h1 className="display text-4xl">{t("title")}</h1>
       {error ? (
         <div className="space-y-2">
           <Alert tone="error">{`${t("loadFailed")} (${error})`}</Alert>

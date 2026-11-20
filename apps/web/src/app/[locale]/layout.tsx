@@ -6,6 +6,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { dirFor, routing } from "@/i18n/routing";
 import { SyntheticBanner } from "@/components/SyntheticBanner";
 import { MotionProvider } from "@/components/motion";
+import { Spotlight } from "@/components/Spotlight";
 import "../globals.css";
 
 const manrope = Manrope({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-manrope", display: "swap" });
@@ -32,8 +33,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAF7F2" },
-    { media: "(prefers-color-scheme: dark)", color: "#0D0D12" },
+    { media: "(prefers-color-scheme: light)", color: "#F6F3ED" },
+    { media: "(prefers-color-scheme: dark)", color: "#151412" },
   ],
 };
 
@@ -46,6 +47,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   return (
     <html lang={locale} dir={dirFor(locale)} className={`${manrope.variable} ${serif.variable} ${plexAr.variable} ${plexMono.variable}`}>
       <body className="min-h-dvh antialiased">
+        <Spotlight />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:rounded focus:bg-surface focus:px-4 focus:py-2"

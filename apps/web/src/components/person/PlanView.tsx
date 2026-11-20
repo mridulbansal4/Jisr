@@ -47,7 +47,7 @@ export function PlanView({ justSent }: { justSent: boolean }) {
   if (!episodeId) {
     return (
       <div className="space-y-4">
-        <h1 className="headline text-3xl">{t("title")}</h1>
+        <h1 className="display text-4xl">{t("title")}</h1>
         <Alert>{t("noEpisode")}</Alert>
         <Link href="/me" className={btn.primary}>{t("startAgain")}</Link>
       </div>
@@ -58,7 +58,7 @@ export function PlanView({ justSent }: { justSent: boolean }) {
 
   return (
     <div className="space-y-5">
-      <h1 className="headline text-3xl sm:text-4xl">{t("title")}</h1>
+      <h1 className="display text-4xl sm:text-5xl">{t("title")}</h1>
       {justSent ? <Alert tone="success">{t("sent")}</Alert> : null}
       {error ? <Alert tone="error">{`${t("loadFailed")} (${error})`}</Alert> : null}
       {!episode && !error ? <div className="skeleton h-40" /> : null}
@@ -99,7 +99,7 @@ export function PlanView({ justSent }: { justSent: boolean }) {
           </ContentBlock>
           <ContentBlock type="observed" title={t("timeline")}>
             <Timeline events={episode.timeline} />
-            <p className="mt-3 text-xs text-ink-muted">{t("refreshing")}</p>
+            <p className="mt-3 text-sm text-ink-muted">{t("refreshing")}</p>
           </ContentBlock>
         </>
       ) : null}

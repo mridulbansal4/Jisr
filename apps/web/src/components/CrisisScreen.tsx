@@ -94,7 +94,7 @@ export function CrisisScreen({
   return (
     <div className="space-y-5">
       {failClosed ? (
-        <p className="rounded-2xl border border-help/40 bg-surface px-4 py-3 text-help">{t("failClosed")}</p>
+        <p className="rounded-lg border border-help/40 bg-surface px-4 py-3 text-help">{t("failClosed")}</p>
       ) : null}
       <div>
         <h1 ref={h1} tabIndex={-1} className="headline text-4xl leading-tight outline-none">
@@ -115,7 +115,7 @@ export function CrisisScreen({
             <a
               href={line.tel}
               aria-label={t("callLabel", { name: t(`names.${line.id}`), number: line.number })}
-              className="flex min-h-16 flex-1 items-center gap-3 rounded-[20px] bg-help px-5 py-3.5 text-on-help"
+              className="flex min-h-16 flex-1 items-center gap-3 rounded-xl bg-help px-5 py-3.5 text-on-help"
             >
               <Icon name="phone" className="size-6 shrink-0" />
               <span className="flex min-w-0 flex-col">
@@ -138,7 +138,7 @@ export function CrisisScreen({
         ))}
       </ul>
 
-      <div className="rounded-[24px] border border-line bg-surface p-5">
+      <div className="rounded-xl border border-line bg-surface p-5">
         <p className="text-lg font-semibold">{t("clinician")}</p>
         {english ? (
           <p lang="en" dir="ltr" className="text-sm text-ink-muted">
@@ -146,7 +146,7 @@ export function CrisisScreen({
           </p>
         ) : null}
         <p className="mt-2 flex items-center gap-2" role="status">
-          <span aria-hidden className={`size-2.5 rounded-full ${status === "ok" ? "bg-primary" : status === "failed" ? "bg-help" : "bg-line-strong"}`} />
+          <span aria-hidden className={`size-2.5 rounded-full ${status === "ok" ? "bg-green" : status === "failed" ? "bg-help" : "bg-line-strong"}`} />
           {statusText}
         </p>
         <p className="mt-2 text-sm text-ink-muted">{t("demoNote")}</p>
@@ -154,7 +154,7 @@ export function CrisisScreen({
 
       <p className="text-lg">{t("trust")}</p>
 
-      <div className="flex flex-wrap items-center gap-2 border-s-4 border-dashed border-ai/60 ps-3">
+      <div className="flex flex-wrap items-center gap-2">
         <GateBadge tone="locked" icon="lock">
           {tg("aiLocked")}
         </GateBadge>

@@ -175,7 +175,7 @@ export function ScreeningFlow() {
           void submitNote(note);
         }}
       >
-        <h1 ref={heading} tabIndex={-1} className="headline text-3xl outline-none">
+        <h1 ref={heading} tabIndex={-1} className="display text-4xl outline-none">
           {tn("title")}
         </h1>
         <label htmlFor="note" className="block text-lg">
@@ -189,7 +189,7 @@ export function ScreeningFlow() {
           value={note}
           onChange={(e) => setNote(e.target.value)}
           aria-describedby="note-help"
-          className="block w-full rounded-[20px] border border-line-strong/60 bg-surface p-4 text-lg"
+          className="block w-full rounded-lg border border-line-strong/70 bg-surface p-4 text-lg"
           disabled={busy}
         />
         <div id="note-help" className="flex flex-wrap justify-between gap-2 text-sm text-ink-muted">
@@ -226,12 +226,12 @@ export function ScreeningFlow() {
           {t("progress", { n: index + 1, total })}
         </p>
       </div>
-      <div aria-hidden className="h-1.5 w-full overflow-hidden rounded-full bg-surface-muted">
-        <div className="h-full rounded-full bg-gradient-to-r from-coral to-indigo transition-all duration-500 rtl:bg-gradient-to-l" style={{ width: `${((index + 1) / Math.max(total, 1)) * 100}%` }} />
+      <div aria-hidden className="h-1 w-full overflow-hidden rounded-full bg-surface-muted">
+        <div className="h-full rounded-full bg-primary transition-[width] duration-300" style={{ width: `${((index + 1) / Math.max(total, 1)) * 100}%` }} />
       </div>
 
       {locale !== "en" ? (
-        <p role="note" className="rounded-2xl border border-observed/30 bg-observed-bg px-4 py-2 text-sm text-observed">
+        <p role="note" className="rounded-lg border border-line bg-surface-muted px-4 py-2 text-sm text-ink-muted">
           {t("arPending")}
         </p>
       ) : null}
@@ -260,8 +260,8 @@ export function ScreeningFlow() {
                 disabled={saving}
                 onClick={() => void answer(item, o.value)}
                 lang={o.labelEn ? "en" : undefined}
-                className={`flex min-h-14 w-full items-center gap-3 rounded-2xl border px-5 py-3 text-start text-lg transition-all duration-200 ${
-                  isSel ? "border-primary bg-primary-soft shadow-[var(--shadow-card)]" : "border-line bg-surface hover:-translate-y-0.5 hover:border-line-strong hover:shadow-[var(--shadow-card)]"
+                className={`flex min-h-14 w-full items-center gap-3 rounded-lg border px-5 py-3 text-start text-lg transition-colors duration-200 ${
+                  isSel ? "border-primary bg-primary-soft" : "border-line bg-surface hover:border-line-strong"
                 }`}
               >
                 <span aria-hidden className={`size-5 shrink-0 rounded-full border-2 ${isSel ? "border-primary bg-primary" : "border-line-strong"}`} />

@@ -47,7 +47,7 @@ export function ScoreBar({ score }: { score: Score }) {
       <div
         role="img"
         aria-label={`${score.instrument} ${score.total}/${max} ${band}`}
-        className="h-3 w-full overflow-hidden rounded-full bg-surface-muted"
+        className="h-2 w-full overflow-hidden rounded-full bg-surface-muted"
       >
         <div className="h-full rounded-full bg-calc" style={{ width: `${pct}%` }} />
       </div>
@@ -114,7 +114,7 @@ export function ResultView() {
   if (!completion) {
     return (
       <div className="space-y-4">
-        <h1 className="headline text-3xl">{t("title")}</h1>
+        <h1 className="display text-4xl">{t("title")}</h1>
         <Alert>{t("noResult")}</Alert>
         <Link href="/me" className={btn.primary}>
           {tc("continue")}
@@ -149,7 +149,7 @@ export function ResultView() {
 
   return (
     <div className="space-y-4">
-      <h1 className="headline text-3xl">{t("title")}</h1>
+      <h1 className="display text-4xl">{t("title")}</h1>
       <div className="flex flex-wrap gap-2">
         {locked ? (
           <GateBadge tone="locked" icon="lock">
@@ -162,7 +162,7 @@ export function ResultView() {
         )}
       </div>
       {locked ? (
-        <Link href="/help?alerted=1" className="flex min-h-11 items-center rounded-xl border border-help/40 bg-surface px-4 font-medium text-help">
+        <Link href="/help?alerted=1" className="flex min-h-11 items-center rounded-lg border border-help/40 bg-surface px-4 font-medium text-help">
           {t("redBanner")}
         </Link>
       ) : null}

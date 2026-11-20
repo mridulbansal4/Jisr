@@ -37,7 +37,7 @@ type Flash = { tone: "success" | "error"; text: string } | null;
 
 function ActionCard({ title, children, tone }: { title: string; children: ReactNode; tone?: "red" }) {
   return (
-    <Card className={`p-5 ${tone === "red" ? "border-red/40 bg-red-bg/40" : ""}`}>
+    <Card className={`p-5 ${tone === "red" ? "border-red/50" : ""}`}>
       <h2 className="mb-3 text-base font-semibold tracking-tight">{title}</h2>
       {children}
     </Card>
@@ -145,10 +145,10 @@ export function EpisodeConsole({ episodeId, label }: { episodeId: string; label:
           <span aria-hidden className="rtl:rotate-180">‹</span> {te("back")}
         </Link>
         <div className="min-w-0 flex-1">
-          <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight">
-            {episode.is_red ? <span className="rounded-full bg-red px-2.5 py-0.5 text-sm text-white">{t("red")}</span> : null}
+          <h1 className="flex flex-wrap items-center gap-x-3 gap-y-1 font-display text-3xl">
+            {episode.is_red ? <span className="rounded-full bg-help px-2.5 py-0.5 text-sm text-on-help">{t("red")}</span> : null}
             <bdi>{label ?? episode.person_label ?? te("title")}</bdi>
-            {episode.language ? <span className="rounded-full border border-line px-2 text-xs font-semibold text-ink-muted">{episode.language.toUpperCase()}</span> : null}
+            {episode.language ? <span className="label-quiet">{episode.language.toUpperCase()}</span> : null}
           </h1>
           <p className="mt-1 text-sm text-ink-muted">
             {ts(episode.state)} · {te("currentStep", { step: episode.current_step ?? "n/a" })}
@@ -174,7 +174,7 @@ export function EpisodeConsole({ episodeId, label }: { episodeId: string; label:
       {/* ---------------- AI hand-off with provenance ---------------- */}
       <HandoffSummary episodeId={episode.id} />
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_22rem] lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_22rem]">
         {/* ---------------- column 1: summary ---------------- */}
         <div className="space-y-5">
           <ContentBlock type="calculated" title={te("scores")}>
@@ -194,16 +194,16 @@ export function EpisodeConsole({ episodeId, label }: { episodeId: string; label:
           <ContentBlock type="observed" title={te("physical")}>
             {episode.physical_context ? (
               <dl className="grid grid-cols-3 gap-3">
-                <div className="rounded-2xl bg-surface-muted p-3">
-                  <dt className="text-xs text-ink-muted">{te("hba1c")}</dt>
+                <div className="rounded-lg bg-surface-muted p-3">
+                  <dt className="text-sm text-ink-muted">{te("hba1c")}</dt>
                   <dd className="text-lg font-semibold tabular">{episode.physical_context.hba1c_pct ?? "n/a"}%</dd>
                 </div>
-                <div className="rounded-2xl bg-surface-muted p-3">
-                  <dt className="text-xs text-ink-muted">{te("bmi")}</dt>
+                <div className="rounded-lg bg-surface-muted p-3">
+                  <dt className="text-sm text-ink-muted">{te("bmi")}</dt>
                   <dd className="text-lg font-semibold tabular">{episode.physical_context.bmi ?? "n/a"}</dd>
                 </div>
-                <div className="rounded-2xl bg-surface-muted p-3">
-                  <dt className="text-xs text-ink-muted">{te("bp")}</dt>
+                <div className="rounded-lg bg-surface-muted p-3">
+                  <dt className="text-sm text-ink-muted">{te("bp")}</dt>
                   <dd className="text-lg font-semibold tabular">
                     <bdi dir="ltr">
                       {episode.physical_context.bp_systolic ?? "n/a"}/{episode.physical_context.bp_diastolic ?? "n/a"}
@@ -211,7 +211,7 @@ export function EpisodeConsole({ episodeId, label }: { episodeId: string; label:
                   </dd>
                 </div>
                 {episode.physical_context.observed_at ? (
-                  <p className="col-span-3 text-xs text-ink-muted">{te("observedAt", { date: fmt(episode.physical_context.observed_at) })}</p>
+                  <p className="col-span-3 text-sm text-ink-muted">{te("observedAt", { date: fmt(episode.physical_context.observed_at) })}</p>
                 ) : null}
               </dl>
             ) : (
@@ -234,7 +234,7 @@ export function EpisodeConsole({ episodeId, label }: { episodeId: string; label:
             {episode.fired_rules && episode.fired_rules.length > 0 ? (
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {episode.fired_rules.map((r) => (
-                  <span key={r} className="rounded-full border border-line bg-surface-muted px-2 py-0.5 font-mono text-[11px]">
+                  <span key={r} className="rounded-md bg-surface-muted px-2 py-0.5 font-mono text-xs">
                     <bdi dir="ltr">{r}</bdi>
                   </span>
                 ))}
@@ -372,7 +372,7 @@ export function EpisodeConsole({ episodeId, label }: { episodeId: string; label:
           <ActionCard title={t("simulate.title")}>
             <p className="mb-2 text-sm text-ink-muted">{t("simulate.note")}</p>
             {referralId ? (
-              <p className="mb-3 rounded-2xl bg-surface-muted px-3 py-2 text-sm">
+              <p className="mb-3 rounded-lg bg-surface-muted px-3 py-2 text-sm">
                 {t("simulate.referral")}: <strong>{activeReferral?.provider_name ?? "n/a"}</strong>
                 {activeReferral?.status ? <span className="text-ink-muted"> · {activeReferral.status}</span> : null}
                 <span className="block truncate font-mono text-[11px] text-ink-faint">

@@ -29,33 +29,21 @@ function GateStrip({ gate }: { gate: Gate }) {
     <div
       role="status"
       aria-live="polite"
-      className={`relative overflow-hidden rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors duration-300 ${
+      className={`rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors duration-300 ${
         hit ? "border-help bg-help text-on-help" : gate.kind === "clear" ? "border-green/30 bg-green-bg text-green" : "border-line bg-surface text-ink-muted"
       }`}
     >
-      {gate.kind === "checking" && !reduce ? (
-        <motion.span
-          aria-hidden
-          className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary/15 to-transparent"
-          initial={{ left: "-35%" }}
-          animate={{ left: "105%" }}
-          transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
-        />
-      ) : null}
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={key}
-          className="relative flex items-center gap-2"
-          initial={reduce ? false : { opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
+          className="flex items-center gap-2"
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: EASE }}
         >
           <Icon name={hit ? "lock" : gate.kind === "clear" ? "check" : "shield"} className="size-4 shrink-0" />
           <span>{label}</span>
-          {gate.kind === "clear" && !reduce ? (
-            <motion.span aria-hidden className="ms-auto size-2 rounded-full bg-green" initial={{ scale: 2.2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} />
-          ) : null}
         </motion.span>
       </AnimatePresence>
     </div>
@@ -67,7 +55,7 @@ function CrisisPanel({ sameDay, ms, rules }: { sameDay: boolean; ms: number; rul
   const tcr = useTranslations("crisis");
   const lines = orderCrisisLines(sameDay ? "same_day_check" : "emergency");
   return (
-    <div className="rounded-[24px] border-2 border-help/50 bg-surface p-5">
+    <div className="rounded-xl border-2 border-help/50 bg-surface p-5">
       <p className="flex items-center gap-2 text-lg font-semibold text-help">
         <Icon name="lock" className="size-5" />
         {t("gateHit")}
@@ -76,7 +64,7 @@ function CrisisPanel({ sameDay, ms, rules }: { sameDay: boolean; ms: number; rul
       <ul className="mt-4 grid gap-2 sm:grid-cols-3">
         {lines.map((l) => (
           <li key={l.id}>
-            <a href={l.tel} aria-label={tcr("callLabel", { name: tcr(`names.${l.id}`), number: l.number })} className="flex min-h-14 flex-col justify-center rounded-2xl bg-help px-4 py-2 text-on-help">
+            <a href={l.tel} aria-label={tcr("callLabel", { name: tcr(`names.${l.id}`), number: l.number })} className="flex min-h-14 flex-col justify-center rounded-lg bg-help px-4 py-2 text-on-help">
               <span className="text-sm font-semibold">{tcr(`names.${l.id}`)}</span>
               <bdi dir="ltr" className="tabular text-xl font-bold">
                 {l.number}
@@ -168,7 +156,7 @@ export function CompanionChat() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="headline text-3xl sm:text-4xl">{t("title")}</h1>
+        <h1 className="display text-4xl sm:text-5xl">{t("title")}</h1>
         <p className="mt-2 text-ink-muted">{t("subtitle")}</p>
       </div>
 
@@ -180,7 +168,7 @@ export function CompanionChat() {
         <Bubble role="assistant" content={t("welcome")} label={t("bot")} />
         <AnimatePresence initial={false}>
           {msgs.map((m) => (
-            <motion.div key={m.id} initial={reduce ? false : { opacity: 0, y: 10, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.3, ease: EASE }}>
+            <motion.div key={m.id} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, ease: EASE }}>
               <Bubble
                 role={m.role}
                 content={m.content}
@@ -194,7 +182,7 @@ export function CompanionChat() {
                           {t("aiBadge")}
                         </Badge>
                       ) : (
-                        <Badge tone="neutral">{t("templateBadge")}</Badge>
+                        <span className="inline-flex items-center rounded-full bg-calc-bg px-2.5 py-0.5 text-xs font-semibold text-calc">{t("templateBadge")}</span>
                       )}
                       {m.meta.validator?.result === "pass" ? (
                         <Badge tone="ok">
@@ -218,7 +206,7 @@ export function CompanionChat() {
           </div>
         ) : null}
         {gate.kind === "hit" ? (
-          <motion.div initial={reduce ? false : { opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
+          <motion.div initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }}>
             <CrisisPanel sameDay={gate.sameDay} ms={gate.ms} rules={gate.rules} />
           </motion.div>
         ) : null}
@@ -226,7 +214,7 @@ export function CompanionChat() {
       </div>
 
       {locked ? (
-        <p className="flex items-center gap-2 rounded-2xl border border-help/30 bg-surface px-4 py-3 text-sm text-help">
+        <p className="flex items-center gap-2 rounded-lg border border-help/30 bg-surface px-4 py-3 text-sm text-help">
           <Icon name="lock" />
           {t("lockedNote")}
           <Link href="/help?alerted=1" className="ms-auto font-semibold underline">
@@ -236,7 +224,7 @@ export function CompanionChat() {
       ) : (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-ink-faint">{suggestions ? t("suggestionsLabel") : t("tryLabel")}</span>
+            <span className="label-quiet">{suggestions ? t("suggestionsLabel") : t("tryLabel")}</span>
             {chips.map((c) => (
               <button key={c} type="button" dir="auto" className={btn.chip} onClick={() => void send(c)} disabled={busy}>
                 {c}
@@ -245,7 +233,7 @@ export function CompanionChat() {
           </div>
           {showDemoChip ? (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-ink-faint">{t("demoLabel")}</span>
+              <span className="label-quiet">{t("demoLabel")}</span>
               {[t("exCrisis"), t("exCrisis2")].map((c) => (
                 <button key={c} type="button" dir="ltr" className={`${btn.chip} border-dashed border-help/40 text-help`} onClick={() => void send(c)} disabled={busy}>
                   <Icon name="shield" className="size-3.5" />
@@ -254,7 +242,7 @@ export function CompanionChat() {
               ))}
             </div>
           ) : null}
-          <form onSubmit={onSubmit} className="card-glass flex items-end gap-2 p-2">
+          <form onSubmit={onSubmit} className="card flex items-end gap-2 p-2">
             <label htmlFor="companion-input" className="sr-only">
               {t("inputLabel")}
             </label>
@@ -280,7 +268,7 @@ export function CompanionChat() {
               <span className="sr-only sm:not-sr-only">{busy ? t("sending") : t("send")}</span>
             </button>
           </form>
-          <p className="text-xs text-ink-faint">{tb("aiHint")}</p>
+          <p className="text-sm text-ink-muted">{tb("aiHint")}</p>
         </>
       )}
     </div>
@@ -291,11 +279,11 @@ function Bubble({ role, content, label, badges }: { role: "user" | "assistant"; 
   const mine = role === "user";
   return (
     <div className={`flex flex-col gap-1 ${mine ? "items-end" : "items-start"}`}>
-      <span className="px-2 text-[11px] font-semibold uppercase tracking-wide text-ink-faint">{label}</span>
+      <span className="label-quiet px-1">{label}</span>
       <p
         dir="auto"
-        className={`max-w-[85%] whitespace-pre-wrap rounded-3xl px-4 py-2.5 text-[15px] leading-relaxed ${
-          mine ? "rounded-ee-md bg-pill text-on-pill" : "rounded-es-md border border-line bg-surface-muted text-ink"
+        className={`max-w-[85%] whitespace-pre-wrap rounded-xl px-4 py-2.5 text-[15px] leading-relaxed ${
+          mine ? "rounded-ee-sm bg-pill text-on-pill" : "rounded-es-sm bg-surface-muted text-ink"
         }`}
       >
         {content}

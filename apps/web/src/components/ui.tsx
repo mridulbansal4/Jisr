@@ -3,38 +3,46 @@ import type { ReactNode } from "react";
 /** Shared class strings: every interactive control is >= 44px (SC 2.5.8 / ACCESSIBILITY.md). */
 export const btn = {
   primary:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pill px-6 py-3 text-base font-semibold text-on-pill shadow-[0_8px_24px_-12px_rgba(22,22,29,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-12px_rgba(59,53,181,0.55)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-pill btn-depth px-6 py-3 text-base font-semibold text-on-pill transition-opacity duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50",
   secondary:
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line-strong bg-surface px-5 py-2 text-base font-medium text-ink transition-all duration-300 hover:-translate-y-0.5 hover:border-ink hover:shadow-[var(--shadow-card)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0",
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-line-strong bg-surface btn-soft px-5 py-2 text-base font-medium text-ink transition-colors duration-200 hover:border-ink disabled:cursor-not-allowed disabled:opacity-50",
   ghost:
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-3 py-2 text-base font-medium text-primary underline-offset-4 hover:underline disabled:opacity-60",
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-primary underline-offset-4 hover:underline disabled:opacity-60",
   accent:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-base font-semibold text-on-primary transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] disabled:cursor-not-allowed disabled:opacity-50",
-  help: "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-help px-5 py-3 text-base font-semibold text-on-help shadow-lg",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-on-primary transition-opacity duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50",
+  help: "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-help px-5 py-3 text-base font-semibold text-on-help shadow-[var(--shadow-card)]",
   danger:
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-red px-5 py-2 font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60",
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-help px-5 py-2 font-semibold text-on-help transition-opacity hover:opacity-90 disabled:opacity-60",
   chip:
-    "inline-flex min-h-10 items-center gap-1.5 rounded-full border border-line bg-surface px-4 py-1.5 text-sm font-medium text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-primary-soft hover:text-primary disabled:opacity-50",
+    "inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-line bg-surface px-4 py-1.5 text-sm font-medium text-ink transition-colors duration-200 hover:border-line-strong hover:bg-surface-muted disabled:opacity-50",
 };
 
 export const input =
-  "block min-h-11 w-full rounded-2xl border border-line-strong/60 bg-surface px-4 py-2 text-base text-ink placeholder:text-ink-faint transition-colors focus:border-primary";
+  "block min-h-11 w-full rounded-lg border border-line-strong/70 bg-surface px-4 py-2 text-base text-ink placeholder:text-ink-faint transition-colors focus:border-primary";
 
 export function Card({ children, className = "", lift = false }: { children: ReactNode; className?: string; lift?: boolean }) {
   return <section className={`card p-5 sm:p-6 ${lift ? "lift" : ""} ${className}`}>{children}</section>;
 }
 
-export function Badge({ children, tone = "neutral", className = "" }: { children: ReactNode; tone?: "neutral" | "sim" | "ai" | "ok" | "red" | "primary" | "coral"; className?: string }) {
+/**
+ * Status label. Informational tones (neutral, sim, primary, ok) render as quiet
+ * small-caps text. Pills are kept only for state a user acts on: red (crisis)
+ * and ai (AI-drafted).
+ */
+export function Badge({ children, tone = "neutral", className = "" }: { children: ReactNode; tone?: "neutral" | "sim" | "ai" | "ok" | "red" | "primary"; className?: string }) {
+  if (tone === "red") {
+    return <span className={`inline-flex items-center gap-1.5 rounded-full bg-red-bg px-2.5 py-0.5 text-xs font-semibold text-red ${className}`}>{children}</span>;
+  }
+  if (tone === "ai") {
+    return <span className={`inline-flex items-center gap-1.5 rounded-full bg-ai-bg px-2.5 py-0.5 text-xs font-semibold text-ai ${className}`}>{children}</span>;
+  }
   const tones = {
-    neutral: "bg-surface-muted text-ink-muted border-line",
-    sim: "bg-amber-bg text-amber border-amber/20",
-    ai: "bg-ai-bg text-ai border-ai/20",
-    ok: "bg-green-bg text-green border-green/20",
-    red: "bg-red-bg text-red border-red/20",
-    primary: "bg-primary-soft text-primary border-primary/20",
-    coral: "bg-coral-soft text-coral border-coral/20",
+    neutral: "text-ink-muted",
+    sim: "text-ink-muted",
+    ok: "text-green",
+    primary: "text-ink-muted",
   } as const;
-  return <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${tones[tone]} ${className}`}>{children}</span>;
+  return <span className={`label-quiet inline-flex items-center gap-1.5 ${tones[tone]} ${className}`}>{children}</span>;
 }
 
 export function Alert({
@@ -48,12 +56,12 @@ export function Alert({
 }) {
   const tones = {
     info: "border-line bg-surface-muted text-ink",
-    error: "border-red bg-red-bg text-red",
-    success: "border-green bg-green-bg text-green",
-    warn: "border-amber bg-amber-bg text-amber",
+    error: "border-red/40 bg-red-bg text-red",
+    success: "border-green/40 bg-green-bg text-green",
+    warn: "border-amber/40 bg-amber-bg text-amber",
   } as const;
   return (
-    <div role={role ?? (tone === "error" ? "alert" : "status")} className={`rounded-2xl border px-4 py-3 text-sm ${tones[tone]}`}>
+    <div role={role ?? (tone === "error" ? "alert" : "status")} className={`rounded-lg border px-4 py-3 text-sm ${tones[tone]}`}>
       {children}
     </div>
   );
@@ -71,7 +79,7 @@ export function Spinner({ label }: { label: string }) {
 /** Icons (inline SVG, lucide-like strokes): decorative unless labelled by text. */
 export function Icon({ name, className = "size-4" }: { name: keyof typeof paths; className?: string }) {
   return (
-    <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className={className}>
       {paths[name]}
     </svg>
   );

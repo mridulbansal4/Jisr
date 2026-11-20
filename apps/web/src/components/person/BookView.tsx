@@ -82,7 +82,7 @@ export function BookView() {
   if (!provider || !episodeId) {
     return (
       <div className="space-y-4">
-        <h1 className="headline text-3xl">{t("title")}</h1>
+        <h1 className="display text-4xl">{t("title")}</h1>
         <Alert>{t("noProvider")}</Alert>
         <Link href="/me/step" className={btn.primary}>{tc("back")}</Link>
       </div>
@@ -94,7 +94,7 @@ export function BookView() {
 
   return (
     <div className="space-y-4">
-      <h1 className="headline text-3xl">{t("title")}</h1>
+      <h1 className="display text-4xl">{t("title")}</h1>
       <h2 className="text-lg font-semibold">{t("chosen")}</h2>
       <ProviderCard p={provider} rank={1} />
 
@@ -123,7 +123,7 @@ export function BookView() {
                     onClick={() => toggle(scope, !on)}
                     className={`relative inline-flex h-11 w-16 shrink-0 items-center rounded-full border-2 transition-colors ${on ? "border-primary bg-primary" : "border-line-strong bg-surface-muted"}`}
                   >
-                    <span aria-hidden className={`absolute top-1/2 size-7 -translate-y-1/2 rounded-full bg-surface shadow transition-all ${on ? "start-[calc(100%-2rem)]" : "start-1"}`} />
+                    <span aria-hidden className={`absolute top-1/2 size-7 -translate-y-1/2 rounded-full bg-surface shadow-sm transition-all ${on ? "start-[calc(100%-2rem)]" : "start-1"}`} />
                   </button>
                 </li>
               );
@@ -131,7 +131,7 @@ export function BookView() {
           </ul>
         ) : null}
         {consents?.effects && consents.effects.length > 0 ? (
-          <div className="mt-3 rounded-xl bg-surface-muted p-3 text-sm" aria-live="polite">
+          <div className="mt-3 rounded-lg bg-surface-muted p-3 text-sm" aria-live="polite">
             <p className="font-medium">{t("effectsTitle")}</p>
             <ul className="list-disc ps-5">
               {consents.effects.map((e) => <li key={e}>{e}</li>)}

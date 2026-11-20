@@ -6,8 +6,8 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { api, problemMessage, type Persona } from "@/lib/api";
 import { currentPasscode } from "@/lib/judge";
 import { K, clearPersonFlow, getAuth, setAuthFromToken, writeJson } from "@/lib/session";
-import { Alert, Badge, Icon, btn } from "./ui";
-import { Aurora, Reveal } from "./motion";
+import { Alert, Icon, btn } from "./ui";
+import { Reveal } from "./motion";
 
 type Href = "/me/screen" | "/me/companion" | "/staff" | "/programme" | "/safety";
 
@@ -50,32 +50,29 @@ export function TourView() {
   }
 
   return (
-    <main id="main" className="relative isolate overflow-hidden">
-      <Aurora variant="soft" />
-      <div className="relative z-10 mx-auto max-w-3xl px-4 pb-20 pt-14">
+    <main id="main">
+      <div className="mx-auto max-w-3xl px-4 pb-24 pt-14">
         <Link href="/" className={`${btn.ghost} px-0`}>
           <span aria-hidden className="rtl:rotate-180">←</span> {t("back")}
         </Link>
-        <h1 className="headline mt-4 text-4xl sm:text-6xl">{t("title")}</h1>
-        <p className="mt-4 text-lg text-ink-muted">{t("intro")}</p>
-        <p className="mt-2 text-sm text-ink-faint">{t("tip")}</p>
+        <h1 className="display mt-4 text-[2.75rem] sm:text-6xl">{t("title")}</h1>
+        <p className="mt-5 text-lg leading-relaxed text-ink-muted">{t("intro")}</p>
+        <p className="mt-2 text-sm text-ink-muted">{t("tip")}</p>
         <div aria-live="polite" className="mt-4">
           {error ? <Alert tone="error">{error}</Alert> : null}
         </div>
-        <ol className="relative mt-8 space-y-4 border-s border-dashed border-line-strong ps-8">
+        <ol className="mt-10 space-y-3">
           {STOPS.map((s, i) => (
-            <Reveal as="li" key={s.id} delay={i * 0.05} className="relative">
-              <span aria-hidden className="absolute -start-[2.85rem] top-6 flex size-7 items-center justify-center rounded-full bg-pill text-xs font-bold text-on-pill tabular">
-                {i + 1}
-              </span>
+            <Reveal as="li" key={s.id}>
               <div className="card lift flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
+                <span aria-hidden className="hidden w-8 shrink-0 font-mono text-sm tabular text-ink-muted sm:block">{String(i + 1).padStart(2, "0")}</span>
                 <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-semibold text-ink-faint">{t("stop", { n: i + 1 })}</span>
-                    <Badge tone="primary">{t(`stops.${s.id}.who`)}</Badge>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="label-quiet sm:sr-only">{t("stop", { n: i + 1 })}</span>
+                    <span className="label-quiet text-ink">{t(`stops.${s.id}.who`)}</span>
                   </div>
-                  <h2 className="mt-1 text-lg font-semibold tracking-tight">{t(`stops.${s.id}.title`)}</h2>
-                  <p className="mt-1 text-sm text-ink-muted">{t(`stops.${s.id}.body`)}</p>
+                  <h2 className="mt-1.5 text-lg font-semibold tracking-tight">{t(`stops.${s.id}.title`)}</h2>
+                  <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-muted">{t(`stops.${s.id}.body`)}</p>
                 </div>
                 <button type="button" className={`${btn.primary} shrink-0`} disabled={busy !== null} onClick={() => void go(s)}>
                   {busy === s.id ? t("going") : t("go")}

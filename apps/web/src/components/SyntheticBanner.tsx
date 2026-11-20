@@ -48,7 +48,7 @@ function ThemeToggle() {
       onClick={toggle}
       aria-label={t("theme")}
       title={t("theme")}
-      className="inline-flex size-11 items-center justify-center rounded-full border border-line bg-surface/70 text-ink transition hover:border-line-strong"
+      className="inline-flex size-11 items-center justify-center rounded-lg border border-line bg-surface text-ink transition-colors hover:border-line-strong"
     >
       <svg aria-hidden viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
         <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
@@ -69,15 +69,14 @@ export function SyntheticBanner() {
   const personaName = personaKey && (PERSONAS as readonly string[]).includes(personaKey) ? tp(`${personaKey}.name`) : auth?.persona;
 
   return (
-    <div className="relative z-40 border-b border-line bg-bg/80 text-sm text-ink backdrop-blur-xl">
+    <div className="relative z-40 border-b border-line bg-bg text-sm text-ink">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5">
         <Link href="/" className="inline-flex min-h-11 items-center gap-2 font-bold tracking-tight" aria-label={t("toJudge")}>
           <LogoMark className="size-6" />
           <span className="hidden sm:inline">{t("appName")}</span>
         </Link>
-        <span className="hidden rounded-full border border-line bg-surface px-2.5 py-0.5 text-xs font-semibold text-ink-muted md:inline">{t("judgeMode")}</span>
-        <span role="note" className="inline-flex items-center gap-1.5 text-xs font-semibold text-help">
-          <span aria-hidden className="size-1.5 rounded-full bg-help" />
+        <span className="label-quiet hidden md:inline">{t("judgeMode")}</span>
+        <span role="note" className="label-quiet text-help">
           {t("syntheticBanner")}
         </span>
         {auth ? <span className="hidden text-xs text-ink-muted lg:inline">{t("signedInAs", { persona: personaName ?? "" })}</span> : null}
@@ -89,7 +88,7 @@ export function SyntheticBanner() {
             id="locale-select"
             value={locale}
             onChange={(e) => router.replace(pathname, { locale: e.target.value })}
-            className="min-h-11 rounded-full border border-line bg-surface/70 px-3 text-sm"
+            className="min-h-11 rounded-lg border border-line bg-surface px-3 text-sm"
           >
             {routing.locales.map((l) => (
               <option key={l} value={l} lang={l}>
@@ -99,7 +98,7 @@ export function SyntheticBanner() {
           </select>
           <ThemeToggle />
           {pathname !== "/" ? (
-            <Link href="/" className="inline-flex min-h-11 items-center rounded-full px-3 font-semibold text-primary underline-offset-4 hover:underline">
+            <Link href="/" className="inline-flex min-h-11 items-center rounded-lg px-3 font-semibold text-primary underline-offset-4 hover:underline">
               {t("switchRole")}
             </Link>
           ) : null}

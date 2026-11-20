@@ -12,7 +12,7 @@ export function Timeline({ events, showType = false }: { events: TimelineEvent[]
     <ol className="space-y-3 border-s-2 border-line ps-4">
       {sorted.map((ev) => (
         <li key={ev.seq} className="relative">
-          <span aria-hidden className="absolute -start-[1.4rem] top-1.5 size-3 rounded-full border-2 border-primary bg-surface" />
+          <span aria-hidden className="absolute -start-[1.4rem] top-1.5 size-2.5 rounded-full border-2 border-ink-muted bg-surface" />
           <p className="font-medium">
             {ev.to_state && ts.has(ev.to_state as never) ? ts(ev.to_state as never) : ev.type.replaceAll("_", " ").toLowerCase()}
           </p>

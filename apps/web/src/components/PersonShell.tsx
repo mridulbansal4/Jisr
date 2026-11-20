@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { K, clearSession, writeJson } from "@/lib/session";
 import { useSessionJson } from "@/lib/hooks";
-import { Aurora, PageFade } from "./motion";
+import { PageFade } from "./motion";
 import { Icon, btn } from "./ui";
 
 const EXIT_URL = process.env.NEXT_PUBLIC_QUICK_EXIT_URL || "https://www.ncm.gov.ae";
@@ -57,13 +57,11 @@ export function PersonShell({ title, children, showHelp = true, wide = false }: 
   const max = wide ? "max-w-3xl" : "max-w-2xl";
 
   return (
-    <div className="relative isolate min-h-[calc(100dvh-3.5rem)] pb-28">
-      {/* No decorative glow on the crisis screen: calm and maximally clear. */}
-      {onHelp ? null : <Aurora variant="corner" className="h-[420px] opacity-50" />}
-      <header className="sticky top-0 z-20 border-b border-line bg-bg/80 backdrop-blur-xl">
+    <div className="min-h-[calc(100dvh-3.5rem)] pb-28">
+      <header className="glass-nav sticky top-0 z-20 border-b border-line">
         <div className={`mx-auto flex ${max} items-center gap-2 px-4 py-2`}>
           <span className="text-base font-bold tracking-tight">{discreet ? t("discreetTitle") : tc("appName")}</span>
-          <label className="ms-auto inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full px-2 text-sm">
+          <label className="ms-auto inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg px-2 text-sm">
             <input
               type="checkbox"
               className="size-5 accent-[var(--primary)]"
@@ -78,8 +76,8 @@ export function PersonShell({ title, children, showHelp = true, wide = false }: 
           </button>
         </div>
         {onHelp ? null : (
-          <nav aria-label={tc("appName")} className={`mx-auto ${max} px-4 pb-2`}>
-            <ul className="flex gap-1 overflow-x-auto rounded-full border border-line bg-surface/70 p-1">
+          <nav aria-label={tc("appName")} className={`mx-auto ${max} px-4`}>
+            <ul className="-mb-px flex gap-1 overflow-x-auto [scrollbar-width:none]">
               {NAV.map((n) => {
                 const active = n.href === "/me" ? pathname === "/me" : pathname.startsWith(n.href);
                 return (
@@ -87,8 +85,8 @@ export function PersonShell({ title, children, showHelp = true, wide = false }: 
                     <Link
                       href={n.href}
                       aria-current={active ? "page" : undefined}
-                      className={`flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-medium transition-colors ${
-                        active ? "bg-pill text-on-pill" : "text-ink-muted hover:bg-surface-muted hover:text-ink"
+                      className={`flex min-h-11 items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-3 text-sm font-medium transition-colors ${
+                        active ? "border-ink text-ink" : "border-transparent text-ink-muted hover:text-ink"
                       }`}
                     >
                       <Icon name={n.icon} className="size-4" />
@@ -103,13 +101,13 @@ export function PersonShell({ title, children, showHelp = true, wide = false }: 
       </header>
       {locked && !onHelp ? (
         <div className={`mx-auto ${max} px-4 pt-3`}>
-          <Link href="/help?alerted=1" className="flex min-h-11 items-center gap-2 rounded-full border border-help/40 bg-surface px-4 text-help">
+          <Link href="/help?alerted=1" className="flex min-h-11 items-center gap-2 rounded-lg border border-help/40 bg-surface px-4 text-help">
             <Icon name="phone" />
             <span className="font-medium">{t("helpNumbers")}</span>
           </Link>
         </div>
       ) : null}
-      <main id="main" className={`relative z-10 mx-auto ${max} px-4 pt-6`}>
+      <main id="main" className={`mx-auto ${max} px-4 pt-8`}>
         {onHelp ? children : <PageFade>{children}</PageFade>}
       </main>
       {showHelp ? (

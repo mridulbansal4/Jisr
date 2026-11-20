@@ -16,9 +16,9 @@ import {
   type Timeseries,
 } from "@/lib/api";
 import { formatMetric } from "@/lib/fairness";
-import { CountUp, Reveal, motion, useReducedMotion } from "../motion";
+import { useReducedMotion } from "../motion";
 import { PALETTE, Panel, SimLabel, Sparkline, tooltipStyle } from "../charts/common";
-import { Alert, Icon, input } from "../ui";
+import { Alert, input } from "../ui";
 import { Copilot } from "./Copilot";
 import { WhatIf } from "./WhatIf";
 
@@ -42,27 +42,24 @@ function Kpis({ m, ts }: { m: ProgrammeMetrics | null; ts: Timeseries | null }) 
   const ack = m?.kpis.red_ack_median_min ?? (ts ? last(ts.series.red_ack_p50_min) : null);
   const cards = [
     { key: "screens", label: t("kpiScreens"), value: screens, fmt: (n: number) => Math.round(n).toLocaleString("en"), spark: ts?.series.screens, color: PALETTE.jisr, base: null },
-    { key: "conv", label: t("kpiConversion"), value: conv, fmt: (n: number) => `${n.toFixed(1)}%`, spark: ts?.series.conversion_pct, color: PALETTE.teal, base: m?.baseline?.conversion_pct != null ? `${m.baseline.conversion_pct}%` : null },
-    { key: "days", label: t("kpiDays"), value: days, fmt: (n: number) => t("days", { n: n.toFixed(1) }), spark: ts?.series.median_days_to_care, color: PALETTE.coral, base: m?.baseline?.median_days_to_care != null ? t("days", { n: m.baseline.median_days_to_care }) : null },
-    { key: "ack", label: t("kpiRedAck"), value: ack, fmt: (n: number) => t("minutes", { n: n.toFixed(1) }), spark: ts?.series.red_ack_p50_min, color: PALETTE.amber, base: null },
+    { key: "conv", label: t("kpiConversion"), value: conv, fmt: (n: number) => `${n.toFixed(1)}%`, spark: ts?.series.conversion_pct, color: PALETTE.jisr, base: m?.baseline?.conversion_pct != null ? `${m.baseline.conversion_pct}%` : null },
+    { key: "days", label: t("kpiDays"), value: days, fmt: (n: number) => t("days", { n: n.toFixed(1) }), spark: ts?.series.median_days_to_care, color: PALETTE.jisr, base: m?.baseline?.median_days_to_care != null ? t("days", { n: m.baseline.median_days_to_care }) : null },
+    { key: "ack", label: t("kpiRedAck"), value: ack, fmt: (n: number) => t("minutes", { n: n.toFixed(1) }), spark: ts?.series.red_ack_p50_min, color: PALETTE.jisr, base: null },
   ];
   const tp = useTranslations("programme");
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((c, i) => (
-        <Reveal key={c.key} delay={i * 0.06} className="card lift flex flex-col p-5">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium text-ink-muted">{c.label}</p>
-            <SimLabel />
-          </div>
-          <p className="headline mt-2 text-3xl sm:text-4xl">{c.value === null || c.value === undefined ? "n/a" : <CountUp value={c.value} format={c.fmt} />}</p>
-          {c.base ? <p className="text-xs text-ink-faint">{`${tp("sim.baseline")}: ${c.base}`}</p> : <p className="text-xs">&nbsp;</p>}
+      {cards.map((c) => (
+        <div key={c.key} className="card flex flex-col p-5">
+          <p className="text-sm font-medium text-ink-muted">{c.label}</p>
+          <p className="headline tabular mt-3 text-3xl sm:text-4xl">{c.value === null || c.value === undefined ? "n/a" : c.fmt(c.value)}</p>
+          {c.base ? <p className="mt-1 text-sm text-ink-muted">{`${tp("sim.baseline")}: ${c.base}`}</p> : <p className="mt-1 text-sm">&nbsp;</p>}
           {c.spark ? (
             <div className="mt-3">
               <Sparkline values={c.spark} color={c.color} id={c.key} />
             </div>
           ) : null}
-        </Reveal>
+        </div>
       ))}
     </div>
   );
@@ -82,9 +79,9 @@ function TrendPanel({ ts }: { ts: Timeseries }) {
   }));
   const lines = [
     { k: "screens", c: PALETTE.baseline },
-    { k: "positive", c: PALETTE.coral },
+    { k: "positive", c: PALETTE.mid },
     { k: "referred", c: PALETTE.jisr },
-    { k: "attended", c: PALETTE.teal },
+    { k: "attended", c: PALETTE.light },
   ] as const;
   return (
     <Panel title={t("trend")} sub={t("trendSub")} className="lg:col-span-2">
@@ -96,8 +93,8 @@ function TrendPanel({ ts }: { ts: Timeseries }) {
             <YAxis tickLine={false} axisLine={false} />
             <Tooltip {...tooltipStyle} />
             <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
-            {lines.map((l, i) => (
-              <Line key={l.k} type="monotone" dataKey={l.k} name={t(`series.${l.k}`)} stroke={l.c} strokeWidth={l.k === "screens" ? 2 : 3} strokeDasharray={l.k === "screens" ? "4 4" : undefined} dot={false} activeDot={{ r: 5 }} isAnimationActive={!reduce} animationDuration={1300} animationBegin={i * 150} />
+            {lines.map((l) => (
+              <Line key={l.k} type="monotone" dataKey={l.k} name={t(`series.${l.k}`)} stroke={l.c} strokeWidth={l.k === "referred" ? 2.5 : 1.75} strokeDasharray={l.k === "screens" ? "4 4" : undefined} dot={false} activeDot={{ r: 4 }} isAnimationActive={!reduce} animationDuration={500} />
             ))}
           </LineChart>
         </ResponsiveContainer>
@@ -110,7 +107,6 @@ function TrendPanel({ ts }: { ts: Timeseries }) {
 function FunnelPanel({ m }: { m: ProgrammeMetrics }) {
   const t = useTranslations("dash");
   const tp = useTranslations("programme");
-  const reduce = useReducedMotion();
   const entries = Object.entries(m.funnel);
   const first = entries[0]?.[1] || 1;
   return (
@@ -128,15 +124,8 @@ function FunnelPanel({ m }: { m: ProgrammeMetrics }) {
                   <span className="ms-1.5 text-ink-muted">{Math.round(pct)}%</span>
                 </span>
               </div>
-              <div className="h-7 w-full overflow-hidden rounded-xl bg-surface-muted" aria-hidden>
-                <motion.div
-                  className="h-full rounded-xl bg-gradient-to-r from-coral via-[#d9467a] to-indigo rtl:bg-gradient-to-l"
-                  style={{ opacity: 1 - i * 0.1 }}
-                  initial={reduce ? false : { width: 0 }}
-                  whileInView={{ width: `${pct}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: i * 0.12, ease: [0.2, 0.8, 0.2, 1] }}
-                />
+              <div className="h-2 w-full overflow-hidden rounded-full bg-surface-muted" aria-hidden>
+                <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%`, opacity: 1 - i * 0.12 }} />
               </div>
             </li>
           );
@@ -145,9 +134,9 @@ function FunnelPanel({ m }: { m: ProgrammeMetrics }) {
       {m.drop_off_reasons && m.drop_off_reasons.length > 0 ? (
         <div className="mt-5">
           <h3 className="mb-2 text-sm font-semibold">{tp("dropOff")}</h3>
-          <ul className="flex flex-wrap gap-1.5 text-xs">
+          <ul className="flex flex-wrap gap-1.5 text-sm">
             {m.drop_off_reasons.map((d, i) => (
-              <li key={`${d.reason}-${i}`} className="rounded-full border border-line bg-surface-muted px-2.5 py-1">
+              <li key={`${d.reason}-${i}`} className="rounded-md bg-surface-muted px-2.5 py-1">
                 {humanize(d.reason ?? "n/a")}{" "}
                 {d.n === null || d.n === undefined ? <span className="hatch rounded px-1">{"<10"}</span> : <strong className="tabular">{d.n}</strong>}
               </li>
@@ -181,8 +170,8 @@ function TimeToCarePanel({ ts, baselineDays }: { ts: Timeseries; baselineDays?: 
             <Tooltip {...tooltipStyle} />
             <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
             {baselineDays ? <ReferenceLine yAxisId="d" y={baselineDays} stroke={PALETTE.baseline} strokeDasharray="5 4" label={{ value: `baseline ${baselineDays} d`, position: "insideTopLeft", fontSize: 11, fill: "var(--text-muted)" }} /> : null}
-            <Bar yAxisId="c" dataKey="conv" name={t("series.conversion")} fill={PALETTE.teal} fillOpacity={0.22} radius={[6, 6, 0, 0]} isAnimationActive={!reduce} />
-            <Line yAxisId="d" type="monotone" dataKey="days" name={t("series.median_days")} stroke={PALETTE.coral} strokeWidth={3} dot={{ r: 3 }} connectNulls isAnimationActive={!reduce} animationDuration={1300} />
+            <Bar yAxisId="c" dataKey="conv" name={t("series.conversion")} fill={PALETTE.baseline} fillOpacity={0.45} radius={[4, 4, 0, 0]} isAnimationActive={!reduce} />
+            <Line yAxisId="d" type="monotone" dataKey="days" name={t("series.median_days")} stroke={PALETTE.jisr} strokeWidth={2.5} dot={{ r: 3 }} connectNulls isAnimationActive={!reduce} animationDuration={500} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -193,38 +182,23 @@ function TimeToCarePanel({ ts, baselineDays }: { ts: Timeseries; baselineDays?: 
 /* ------------------------------------------------------------------ */
 function Gauge({ item }: { item: SlaItem }) {
   const t = useTranslations("dash");
-  const reduce = useReducedMotion();
   const pct = item.met_pct ?? 0;
   const R = 46;
   const C = Math.PI * R;
   const color = pct >= 95 ? "var(--status-green-fg)" : pct >= 75 ? "var(--status-amber-fg)" : "var(--status-red-fg)";
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-line bg-bg-elevated p-3 text-center">
+    <div className="flex flex-col items-center rounded-lg border border-line p-3 text-center">
       <svg viewBox="0 0 110 62" className="w-full max-w-36" aria-hidden>
-        <path d="M9 56 A46 46 0 0 1 101 56" fill="none" stroke="var(--surface-muted)" strokeWidth={10} strokeLinecap="round" />
-        <motion.path
-          d="M9 56 A46 46 0 0 1 101 56"
-          fill="none"
-          stroke={color}
-          strokeWidth={10}
-          strokeLinecap="round"
-          strokeDasharray={C}
-          initial={reduce ? false : { strokeDashoffset: C }}
-          whileInView={{ strokeDashoffset: C * (1 - pct / 100) }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}
-          style={reduce ? { strokeDashoffset: C * (1 - pct / 100) } : undefined}
-        />
+        <path d="M9 56 A46 46 0 0 1 101 56" fill="none" stroke="var(--surface-muted)" strokeWidth={6} strokeLinecap="round" />
+        <path d="M9 56 A46 46 0 0 1 101 56" fill="none" stroke={color} strokeWidth={6} strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - pct / 100)} />
       </svg>
-      <p className="-mt-6 text-2xl font-bold tabular" style={{ color }}>
-        {item.met_pct === null ? "n/a" : <CountUp value={pct} decimals={pct % 1 ? 1 : 0} format={(n) => `${n.toFixed(pct % 1 ? 1 : 0)}%`} />}
-      </p>
+      <p className="-mt-6 text-2xl font-semibold tabular text-ink">{item.met_pct === null ? "n/a" : `${pct.toFixed(pct % 1 ? 1 : 0)}%`}</p>
       <p className="mt-1 text-sm font-semibold">{t(`slaKinds.${item.kind}`)}</p>
-      <p className="text-xs text-ink-muted">{t("target", { t: item.target })}</p>
-      <p className="text-xs text-ink-muted">
+      <p className="text-sm text-ink-muted">{t("target", { t: item.target })}</p>
+      <p className="text-sm text-ink-muted">
         <bdi dir="ltr">{t("p50p90", { p50: item.p50, p90: item.p90 })}</bdi>
       </p>
-      <p className={`mt-1 text-xs font-semibold ${item.breaches > 0 ? "text-red" : "text-green"}`}>{t("breaches", { n: item.breaches })}</p>
+      <p className={`mt-1 text-sm font-semibold ${item.breaches > 0 ? "text-red" : "text-green"}`}>{t("breaches", { n: item.breaches })}</p>
     </div>
   );
 }
@@ -286,7 +260,7 @@ function HeatmapPanel() {
     <Panel title={td("heatmap")} sub={t("fairness")} className="lg:col-span-3">
       <div className="mb-4 flex flex-wrap gap-3">
         <div>
-          <label htmlFor="f-by" className="mb-1 block text-xs font-semibold">
+          <label htmlFor="f-by" className="mb-1 block text-sm font-semibold">
             {t("by")}
           </label>
           <select id="f-by" className={`${input} min-w-44`} value={by} onChange={(e) => setBy(e.target.value as FairnessBy)}>
@@ -298,7 +272,7 @@ function HeatmapPanel() {
           </select>
         </div>
         <div>
-          <label htmlFor="f-metric" className="mb-1 block text-xs font-semibold">
+          <label htmlFor="f-metric" className="mb-1 block text-sm font-semibold">
             {t("metric")}
           </label>
           <select id="f-metric" className={`${input} min-w-44`} value={focus} onChange={(e) => setFocus(e.target.value as FairnessMetric)}>
@@ -318,11 +292,11 @@ function HeatmapPanel() {
             <caption className="sr-only">{`${td("heatmap")} · ${t(`byOptions.${by}`)}`}</caption>
             <thead>
               <tr>
-                <th scope="col" className="text-start text-xs font-semibold text-ink-muted">
+                <th scope="col" className="text-start text-sm font-semibold text-ink-muted">
                   {t("group")}
                 </th>
                 {METRICS.map((m) => (
-                  <th key={m} scope="col" className={`px-2 text-center text-xs font-semibold ${m === focus ? "text-primary" : "text-ink-muted"}`}>
+                  <th key={m} scope="col" className={`px-2 text-center text-sm font-semibold ${m === focus ? "text-ink" : "text-ink-muted"}`}>
                     {t(`metrics.${m}`)}
                   </th>
                 ))}
@@ -336,10 +310,10 @@ function HeatmapPanel() {
                   </th>
                   {METRICS.map((m) => {
                     const row = tables[m]?.rows.find((r) => r.group === g.id);
-                    if (!row) return <td key={m} className="rounded-xl bg-surface-muted p-3 text-center text-ink-faint">n/a</td>;
+                    if (!row) return <td key={m} className="rounded-md bg-surface-muted p-3 text-center text-ink-muted">n/a</td>;
                     if (row.suppressed || row.suppression)
                       return (
-                        <td key={m} className="hatch rounded-xl p-3 text-center text-xs font-semibold" title={t("suppressed")}>
+                        <td key={m} className="hatch rounded-md p-3 text-center text-sm font-semibold" title={t("suppressed")}>
                           {"<10"}
                         </td>
                       );
@@ -348,12 +322,12 @@ function HeatmapPanel() {
                     return (
                       <td
                         key={m}
-                        className={`rounded-xl p-3 text-center font-semibold tabular transition-transform hover:scale-105 ${m === focus ? "ring-2 ring-primary/40" : ""}`}
-                        style={{ background: `color-mix(in oklab, var(--chart-jisr) ${Math.round(12 + a * 70)}%, var(--surface))`, color: a > 0.55 ? "white" : "var(--text)" }}
+                        className={`rounded-md p-3 text-center font-semibold tabular ${m === focus ? "ring-1 ring-ink/30" : ""}`}
+                        style={{ background: `color-mix(in oklab, var(--chart-jisr) ${Math.round(12 + a * 70)}%, var(--surface))`, color: a > 0.55 ? "var(--on-primary)" : "var(--text)" }}
                         title={row.ci95 ? `95% CI ${row.ci95[0]} to ${row.ci95[1]} · n ${row.n}` : `n ${row.n}`}
                       >
                         {formatMetric(v, m)}
-                        <span className="block text-[10px] font-normal opacity-80">n {row.n}</span>
+                        <span className="block text-xs font-normal opacity-80">n {row.n}</span>
                       </td>
                     );
                   })}
@@ -363,7 +337,7 @@ function HeatmapPanel() {
           </table>
         </div>
       ) : null}
-      <div className="mt-3 space-y-1 text-xs text-ink-muted">
+      <div className="mt-3 space-y-1 text-sm text-ink-muted">
         {focusTable ? <p>{t("suppressionNote", { k: focusTable.k })}</p> : null}
         {focusTable?.max_gap_pp != null ? <p className="text-sm font-semibold text-ink">{t("maxGap", { gap: focusTable.max_gap_pp.toFixed(1) })}</p> : null}
       </div>
@@ -382,7 +356,6 @@ const REGION_SHAPES: Record<GeoRegion["id"], { d: string; lx: number; ly: number
 
 function GeoPanel({ geo }: { geo: Geo }) {
   const t = useTranslations("dash");
-  const reduce = useReducedMotion();
   const [hover, setHover] = useState<string | null>(null);
   const vals = geo.regions.filter((r) => !r.suppressed && r.conversion_pct != null).map((r) => r.conversion_pct as number);
   const lo = Math.min(...vals, 100);
@@ -398,7 +371,7 @@ function GeoPanel({ geo }: { geo: Geo }) {
             </pattern>
           </defs>
           <path d="M0 40 Q 120 20 240 10 T 380 30" fill="none" stroke="var(--chart-grid)" strokeWidth={14} strokeLinecap="round" opacity={0.8} />
-          {geo.regions.map((r, i) => {
+          {geo.regions.map((r) => {
             const s = REGION_SHAPES[r.id];
             if (!s) return null;
             const a = r.suppressed || r.conversion_pct == null ? null : hi === lo ? 0.6 : (r.conversion_pct - lo) / (hi - lo);
@@ -406,21 +379,11 @@ function GeoPanel({ geo }: { geo: Geo }) {
             const on = hover === r.id;
             return (
               <g key={r.id} onMouseEnter={() => setHover(r.id)} onMouseLeave={() => setHover(null)} className="cursor-default">
-                <motion.path
-                  d={s.d}
-                  fill={fill}
-                  stroke="var(--surface)"
-                  strokeWidth={on ? 4 : 2.5}
-                  initial={reduce ? false : { opacity: 0, scale: 0.96 }}
-                  whileInView={{ opacity: 1, scale: on ? 1.02 : 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.12 }}
-                  style={{ transformOrigin: `${s.lx}px ${s.ly}px`, filter: on ? "drop-shadow(0 6px 12px rgba(59,53,181,0.35))" : undefined }}
-                />
-                <text x={s.lx} y={s.ly - 4} textAnchor="middle" fontSize={12} fontWeight={600} fill={a !== null && a > 0.55 ? "white" : "var(--text)"}>
+                <path d={s.d} fill={fill} stroke={on ? "var(--text)" : "var(--surface)"} strokeWidth={on ? 2 : 2.5} style={{ transition: "stroke 0.2s" }} />
+                <text x={s.lx} y={s.ly - 4} textAnchor="middle" fontSize={12} fontWeight={600} fill={a !== null && a > 0.55 ? "var(--on-primary)" : "var(--text)"}>
                   {r.name}
                 </text>
-                <text x={s.lx} y={s.ly + 12} textAnchor="middle" fontSize={16} fontWeight={800} fill={a !== null && a > 0.55 ? "white" : "var(--text)"}>
+                <text x={s.lx} y={s.ly + 12} textAnchor="middle" fontSize={16} fontWeight={700} fill={a !== null && a > 0.55 ? "var(--on-primary)" : "var(--text)"}>
                   {r.suppressed || r.conversion_pct == null ? "<10" : `${r.conversion_pct.toFixed(0)}%`}
                 </text>
               </g>
@@ -433,16 +396,13 @@ function GeoPanel({ geo }: { geo: Geo }) {
               key={r.id}
               onMouseEnter={() => setHover(r.id)}
               onMouseLeave={() => setHover(null)}
-              className={`rounded-2xl border p-3 transition-all ${hover === r.id ? "border-primary bg-primary-soft" : "border-line"}`}
+              className={`rounded-lg border p-3 transition-colors ${hover === r.id ? "border-line-strong bg-surface-muted" : "border-line"}`}
             >
               <p className="flex items-center justify-between gap-2 text-sm font-semibold">
-                <span className="flex items-center gap-1.5">
-                  <Icon name="map" className="size-3.5 text-ink-faint" />
-                  {r.name}
-                </span>
+                <span>{r.name}</span>
                 <span className="tabular">{r.suppressed || r.conversion_pct == null ? <span className="hatch rounded px-1.5 text-xs">{"<10"}</span> : `${r.conversion_pct.toFixed(1)}%`}</span>
               </p>
-              <p className="text-xs text-ink-muted">
+              <p className="text-sm text-ink-muted">
                 {t("geoScreens", { n: r.screens })}
                 {r.median_days_to_care != null ? ` · ${t("days", { n: r.median_days_to_care })}` : ""}
               </p>
@@ -480,8 +440,8 @@ export function ProgrammeDashboard() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex-1">
-          <h1 className="headline text-3xl sm:text-5xl">{t("title")}</h1>
-          <p className="mt-2 text-ink-muted">{td("aggregateNote")}</p>
+          <h1 className="display text-4xl sm:text-5xl">{t("title")}</h1>
+          <p className="mt-3 text-ink-muted">{td("aggregateNote")}</p>
         </div>
         <SimLabel />
       </div>
@@ -490,17 +450,17 @@ export function ProgrammeDashboard() {
       <Kpis m={m} ts={ts} />
       <Copilot />
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         {ts ? <TrendPanel ts={ts} /> : <div className="skeleton h-80 lg:col-span-2" />}
         {m ? <FunnelPanel m={m} /> : <div className="skeleton h-80" />}
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {ts ? <TimeToCarePanel ts={ts} baselineDays={m?.baseline?.median_days_to_care} /> : <div className="skeleton h-72" />}
         {sla ? <SlaPanel items={sla} /> : <div className="skeleton h-72" />}
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
         <HeatmapPanel />
         {geo ? <GeoPanel geo={geo} /> : <div className="skeleton h-72 lg:col-span-2" />}
       </div>
