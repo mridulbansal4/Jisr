@@ -1,0 +1,30 @@
+# Jisr on a shared VM. Ports bind to 127.0.0.1 only; nginx on the host is the public entry point.
+# Usage (from the repo root on the VM):  docker compose -p jisr -f deploy/docker-compose.yml up -d --build
+name: jisr
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: services/api/Dockerfile
+    env_file: ./.env            # created on the VM only (never committed); see deploy/.env.example
+    environment:
+      DATABASE_URL: sqlite:////data/jisr.db
+    volumes:
+      - jisr-data:/data
+    ports:
+      - "127.0.0.1:8120:8000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ../apps/web
+      args:
+        NEXT_PUBLIC_API_URL: ${PUBLIC_URL:-https://jisr.duckdns.org}
+    depends_on:
+      - api
+    ports:
+      - "127.0.0.1:3120:3000"
+    restart: unless-stopped
+
+volumes:
+  jisr-data:

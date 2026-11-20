@@ -1,0 +1,18 @@
+# API image build context = repo root. Keep it small and never ship secrets.
+.git
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/.next
+**/.venv
+**/__pycache__
+**/*.db
+**/*.log
+tp
+submission
+misc
+apps
+docs
+.claude
+.serena
