@@ -98,5 +98,5 @@ Cheaper path: if the team stays at 2–3 people and part-time through the pilot,
 
 ## Sources
 - AED/USD peg: Central Bank of the UAE (fixed at 3.6725).
-- Prize amounts: challenge page (`misc/biblehackathon.md` [S1]).
+- Prize amounts: challenge page (`docs/research/biblehackathon.md` [S1]).
 - Hub71, HealthX, ADIO: see the links in [GTM §3](GTM.md#3-channels-gary-vee-for-attention-hoffman-for-networks); all `UNVERIFIED`.

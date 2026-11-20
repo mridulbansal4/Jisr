@@ -37,13 +37,13 @@ Definitions are short working definitions for the team. Where a fact matters, th
 | **Basic plan** | Entry-level employer-provided health insurance for lower-income expatriates in Abu Dhabi (exact benefits **unverified**) | same as above |
 | **Enhanced plan** | Employer-provided expat insurance above Basic, with wider networks (details **unverified**) | same as above |
 | **Daman** | National Health Insurance Company; administers Thiqa | u.ae link above |
-| **SEHA** | Abu Dhabi Health Services Company; public provider operating hospitals and PHC centres; runs the SAKINA platform | `misc/research/A-organisers-judges.md` |
+| **SEHA** | Abu Dhabi Health Services Company; public provider operating hospitals and PHC centres; runs the SAKINA platform | `docs/research/research/A-organisers-judges.md` |
 | **SAKINA / 800-SAKINA** | SEHA mental-health platform (screens depression, anxiety, perinatal depression, autism, dementia) and the Abu Dhabi helpline 800 725462 | https://www.emirates247.com/uae-guide/uae-mental-health-helplines-2026-numbers-to-call-in-dubai-abu-dhabi-and-across-the-emirates/6178 |
 | **800-HOPE** | National mental-health support line, 800 4673 | same |
 | **999** | UAE emergency (police/ambulance) | same |
 | **Sahatna** | DoH patient app (UAE PASS sign-in; appointments, teleconsult, Malaffi records, IFHAS). Circular 170/2026: all facilities integrated by 30 Nov 2026 | https://www.wam.ae/en/article/b5p217f-department-health-abu-dhabi-launches-sahatna · https://www.doh.gov.ae/-/media/73037D74C0A441AA8C69CF8E233FFE3E.ashx |
 | **Malaffi** | Abu Dhabi Health Information Exchange. Circular 144/2026: all referrals sent as HL7 v2 REF messages (due 31 Aug 2026). No public FHIR API found | https://www.doh.gov.ae/-/media/C01533BB56EE4A7D9B75107C89656941.ashx |
-| **UAE PASS** | National digital identity used to sign in to government services, including Sahatna. Jisr v1 citizen auth | `misc/research/B-context-and-data.md` |
+| **UAE PASS** | National digital identity used to sign in to government services, including Sahatna. Jisr v1 citizen auth | `docs/research/research/B-context-and-data.md` |
 | **TAMM** | Abu Dhabi government services platform; hosts "Sahatna Space" | https://www.doh.gov.ae/en/news/abu-dhabi-advances-smart-and-intelligent-health-system-with-launch-of-sahatna-space-on-tamm |
 | **PHC** | Primary health care centre; DoH positions the family physician as its focal point (180+ centres) | https://www.doh.gov.ae/en/news/doh-primary-healthcare-model-elevates-the-patient-experience-enhances-quality-of-healthcare-services |
 | **Family physician** | Primary-care doctor; Abu Dhabi aims for every resident to have an assigned one. 1,930 trained in common mental-health conditions | https://gulfnews.com/uae/health/abu-dhabi-advances-proactive-mental-healthcare-across-emirate-1.500629143 |
@@ -59,7 +59,7 @@ Definitions are short working definitions for the team. Where a fact matters, th
 | **DoH Responsible AI Standard** | DoH/ST/DDGO/RAI/V1/2025, effective Oct 2025; applies to DoH and licensed entities (transparency, privacy, technical requirements). Clause detail **unverified** (fetch failed) | https://www.doh.gov.ae/-/media/B84FF5DD027846699C51F36C439A580F.ashx |
 | **DoH AI Clinician Framework** | DoH guide for clinicians using AI, published Oct 2026 | https://www.wam.ae/en/article/17hh7ki-doh-publishes-clinician-framework-guide |
 | **ADHICS** | Abu Dhabi Healthcare Information and Cyber Security Standard; audited by DoH | https://www.tamimi.com/news/the-doh-audit-program-regarding-abu-dhabi-healthcare-information-and-cyber-security-standards |
-| **DoH Circular 147/2022** | Referenced in our research as prohibiting third-party sharing of health data without approval (**text unverified**) | `misc/biblehackathon.md` |
+| **DoH Circular 147/2022** | Referenced in our research as prohibiting third-party sharing of health data without approval (**text unverified**) | `docs/research/biblehackathon.md` |
 | **SaMD** | Software as a Medical Device. Whether Jisr qualifies under UAE rules, and which authority classifies it, is an open question (R-10) | — |
 | **DECIDE-AI** | Reporting guideline for early-stage clinical evaluation of AI decision support | https://www.nature.com/articles/s41591-022-01772-9 |
 | **TRIPOD+AI** | Reporting guideline for prediction models using AI | https://www.bmj.com/content/385/bmj-2023-078378 |
@@ -101,7 +101,7 @@ Definitions are short working definitions for the team. Where a fact matters, th
 | **SMART on FHIR / SMART App Launch** | OAuth2-based standard for launching apps from an EHR or portal context; basis for the F-19 stub | https://hl7.org/fhir/smart-app-launch/ |
 | **IHE mCSD** | Mobile Care Services Discovery: IHE profile for provider/facility directories (v1 directory option) | IHE |
 | **LOINC** | Coding system for observations and instruments | — |
-| **SNOMED CT** | Clinical terminology; mandated in Malaffi for coded data | `misc/research/B-context-and-data.md` |
+| **SNOMED CT** | Clinical terminology; mandated in Malaffi for coded data | `docs/research/research/B-context-and-data.md` |
 | **SLA** | Service-level agreement: here, a deadline for a transition (e.g. RED acknowledgement 15 min) | `.env.example` |
 | **LLM** | Large language model (here Gemini via `google-genai` in MVP) | brief §9 |
 | **M-01 / M-02 / M-03** | Jisr model slots: explanation, raise-only crisis signal, no-LLM templates | brief §9 |

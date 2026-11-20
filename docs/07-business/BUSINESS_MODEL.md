@@ -13,7 +13,7 @@
 | **Early adopters** | IFHAS positive screens at 2–3 ADPHC-nominated PHC centres; their family physicians and coordinators |
 | **Unique value proposition** | *"Every positive screen becomes a completed, measured hand-off to the right level of care, with a crisis gate no AI can override."* For programmes: the statement's KPIs, live, with fairness. For people: the right care, in my language and network, in three taps, with nothing shared with my employer |
 | **Solution** | Deterministic crisis gate → stepped-care matcher (L0–L4) → warm hand-off with owner + SLA → measurement-based step changes (RCI) confirmed by a clinician → programme dashboard with small-cell suppression. AI only explains, behind a validator |
-| **Channels** | Future Health pathway (readiness assessment → incubation → pilot) [S29 in `misc/biblehackathon.md`]; GITEX 2026 (finalists); Sahatna module (citizen distribution); ADPHC programme channels; DoH innovation programmes (HealthX with startAD; to verify) |
+| **Channels** | Future Health pathway (readiness assessment → incubation → pilot) [S29 in `docs/research/biblehackathon.md`]; GITEX 2026 (finalists); Sahatna module (citizen distribution); ADPHC programme channels; DoH innovation programmes (HealthX with startAD; to verify) |
 | **Revenue streams** | B2G per-enrolled-episode SaaS + site platform fee after a free pilot; later B2B provider-network licences; payer outcome-linked contracts (only after evidence) |
 | **Cost structure** | In-country hosting (Azure UAE North / Core42), LLM inference (optional; can be zero), clinical governance (advisor, native-language clinical review), security and compliance, integration engineering (Sahatna, Malaffi HL7 v2), support |
 | **Key metrics** | North star: completed hand-off within timeframe. Plus time to first appointment, reliable improvement, RED acknowledged within SLA, adverse events, subgroup gaps (k ≥ 10), clinician minutes per hand-off ([METRICS](../01-product/METRICS.md)) |
@@ -30,7 +30,7 @@
 | Individuals | Mariam, Imran | Know what my result means; get the right care; stay private | **Never** (free at point of use) | Users, not buyers |
 
 ### The employer channel (read before selling)
-The C10 statement names disclosure of sensitive data as a harm [2], and employer access is a landmine for this jury (`misc/biblehackathon.md`). If we ever sell to employers:
+The C10 statement names disclosure of sensitive data as a harm [2], and employer access is a landmine for this jury (`docs/research/biblehackathon.md`). If we ever sell to employers:
 - they sponsor access only;
 - they never get a role in the data model;
 - they see k-suppressed aggregate uptake at most, never symptom scores, never per-team numbers below k = 10;
@@ -88,4 +88,4 @@ Jisr moves no money and stores no payment data. The relevant hooks are payer wor
 | Regulation classifies it as SaMD | Readiness assessment | Budget for the conformity route ([MEDICAL_DEVICE](../06-security-compliance/MEDICAL_DEVICE.md)) |
 
 ## Sources
-Numbered sources follow [PROJECT_BRIEF.md § Sources](../00-overview/PROJECT_BRIEF.md#sources). The challenge pathway (readiness assessment → incubation/pilot/scale) comes from the challenge page and press release (`misc/biblehackathon.md` [S1][S29]). HealthX (startAD × DoH, regulatory sandbox and pilot proposals; details from secondary sources, **unverified for 2026**): https://www.mediaoffice.abudhabi/en/health/startad-and-department-of-health-abu-dhabi-launch-healthx-to-advance-abu-dhabi-as-global-biotech-and-life-sciences-hub/
+Numbered sources follow [PROJECT_BRIEF.md § Sources](../00-overview/PROJECT_BRIEF.md#sources). The challenge pathway (readiness assessment → incubation/pilot/scale) comes from the challenge page and press release (`docs/research/biblehackathon.md` [S1][S29]). HealthX (startAD × DoH, regulatory sandbox and pilot proposals; details from secondary sources, **unverified for 2026**): https://www.mediaoffice.abudhabi/en/health/startad-and-department-of-health-abu-dhabi-launch-healthx-to-advance-abu-dhabi-as-global-biotech-and-life-sciences-hub/

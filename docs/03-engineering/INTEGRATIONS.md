@@ -2,7 +2,7 @@
 > Project: Jisr · Owner: Backend lead · Status: Draft v0.1 · Last updated: 2026-11-18
 > Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [Architecture](ARCHITECTURE.md) · [API spec](API_SPEC.md) · [Data model](DATA_MODEL.md) · [Compliance](../06-security-compliance/COMPLIANCE.md) · [ADR-0004](adr/ADR-0004-gemini-mvp-llmprovider-in-country-v1.md) · [ADR-0005](adr/ADR-0005-demo-auth-judge-mode-uae-pass-later.md)
 
-Source tags: **[V]** confirmed in a primary source · **[S]** secondary (press, vendor, law firm) · **[K]** well-known reference · **[U]** unverified. Most UAE facts come from `misc/research/B-context-and-data.md` (researched 2026-11-18).
+Source tags: **[V]** confirmed in a primary source · **[S]** secondary (press, vendor, law firm) · **[K]** well-known reference · **[U]** unverified. Most UAE facts come from `docs/research/research/B-context-and-data.md` (researched 2026-11-18).
 
 ## Summary
 

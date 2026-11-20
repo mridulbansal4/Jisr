@@ -127,7 +127,7 @@ flowchart LR
 | 12 | M-01 Gemini narration | Templates only (`LLM_PROVIDER=none`); pitch it as "runs with no AI" |
 | **Never cut** | F-03 Crisis Gate · F-05 Step Matcher · F-07/F-08 hand-off + ledger + SLA · F-11 clinician console + RED queue · F-15 dashboard with fairness suppression · F-17 Judge Mode · F-18 `EVAL.md` · live link + credentials · backup video | These *are* the submission |
 
-Last-resort fallback (from `misc/ideas.md`): if by Checkpoint 2 the person app is broken, ship **Sakina Loop**: console + ledger + dashboard + crisis gate API demo, and drive Mariam's journey from the coordinator side.
+Last-resort fallback (from `docs/research/ideas.md`): if by Checkpoint 2 the person app is broken, ship **Sakina Loop**: console + ledger + dashboard + crisis gate API demo, and drive Mariam's journey from the coordinator side.
 
 ## 6. Submission checklist
 ### 6.1 Deliverables (brief §13)
@@ -153,7 +153,7 @@ Last-resort fallback (from `misc/ideas.md`): if by Checkpoint 2 the person app i
 | Commercial viability & path to pilot | Buyer, pricing hypothesis in AED, pilot ask (cohort, sites, 12 weeks, KPIs, what DoH provides) | [BUSINESS_MODEL](../07-business/BUSINESS_MODEL.md); [GTM](../07-business/GTM.md); PITCH S9 | D | [ ] |
 
 ### 6.3 Mapped to the C10 "Your solution should" bullets
-> Verbatim C10 bullets are saved in `../../misc/research/00-source/statement-C10.md` (captured from the live page on 18 Nov). Rows 1–6 below match bullets 1–6 one-to-one: **(1) Validated early identification · (2) Stepped, local support navigation · (3) Human-led high-risk escalation · (4) Privacy, consent, and autonomy · (5) Coordinated physical and mental care · (6) Outcome and safety monitoring.**
+> Verbatim C10 bullets are saved in `../research/research/00-source/statement-C10.md` (captured from the live page on 18 Nov). Rows 1–6 below match bullets 1–6 one-to-one: **(1) Validated early identification · (2) Stepped, local support navigation · (3) Human-led high-risk escalation · (4) Privacy, consent, and autonomy · (5) Coordinated physical and mental care · (6) Outcome and safety monitoring.**
 
 | C10 bullet | Jisr evidence | Demo beat | ✔ |
 |---|---|---|---|
@@ -165,7 +165,7 @@ Last-resort fallback (from `misc/ideas.md`): if by Checkpoint 2 the person app i
 | 6. Demonstrable outcomes (hand-off, follow-up within timeframe, waiting time, symptom change, crisis-response completion, adverse events, fairness) | Programme dashboard + simulation + fairness table with suppression + `EVAL.md` | D7–D8 | [ ] |
 | Named digital harms: weak crisis handling, unvalidated advice, sensitive-data disclosure | Gate benchmark; claim validator + templates; consent + residency plan | D4, D8 | [ ] |
 
-### 6.4 Universal winning layer (from `misc/ideas.md`)
+### 6.4 Universal winning layer (from `docs/research/ideas.md`)
 - [ ] README line 1: "We help … complete … using …" + the one-sentence test
 - [ ] `EVAL.md`: N cases, expected vs actual, error source, easy/adversarial/missing/contradictory, failure log
 - [ ] Observed / Calculated / AI-drafted badges visible in the UI

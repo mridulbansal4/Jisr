@@ -409,12 +409,12 @@ Five steps = brief §14 demo moments.
 
 #### JIS-082 Crisis benchmark dataset
 `labels: epic:eval, F-18, owner:AI, block:B3, prio:must, mvp, safety` · Est 3 h
-Adversarial utterances (direct, indirect, negated, quoted, misspelt, Arabizi, Roman Urdu, mixed script) plus clear negatives; target ≥ 150 cases (size from `misc/ideas.md`); labelled by the team, not clinicians (disclosed).
+Adversarial utterances (direct, indirect, negated, quoted, misspelt, Arabizi, Roman Urdu, mixed script) plus clear negatives; target ≥ 150 cases (size from `docs/research/ideas.md`); labelled by the team, not clinicians (disclosed).
 - [ ] Each case: id, text, language, expected, category
 
 #### JIS-083 Step-matcher test cases
 `labels: epic:eval, F-18, owner:AI, block:B5, prio:must, mvp` · Est 2 h
-Target ≥ 60 cases (size from `misc/ideas.md`) covering every band, RED override, preference/network edge cases.
+Target ≥ 60 cases (size from `docs/research/ideas.md`) covering every band, RED override, preference/network edge cases.
 - [ ] 100% agreement required
 
 #### JIS-084 Validator test suite

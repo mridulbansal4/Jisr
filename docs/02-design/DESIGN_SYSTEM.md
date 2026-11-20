@@ -72,7 +72,7 @@ Contrast ratios were calculated with the WCAG 2.x relative-luminance formula (sc
 
 ### 2.3 Content-type tokens (the three content types)
 
-Judges (Inception reviewer, `misc/research/A-organisers-judges.md`) explicitly penalise "mixing recorded observations, calculated findings and AI text". Each type has a colour **and** an icon **and** a text label, so colour is never the only cue (SC 1.4.1).
+Judges (Inception reviewer, `docs/research/research/A-organisers-judges.md`) explicitly penalise "mixing recorded observations, calculated findings and AI text". Each type has a colour **and** an icon **and** a text label, so colour is never the only cue (SC 1.4.1).
 
 | Type | Meaning | Icon (lucide) | Light fg / bg | Ratio | Dark fg / bg | Ratio | Border |
 |---|---|---|---|---|---|---|---|

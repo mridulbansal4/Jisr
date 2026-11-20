@@ -1,6 +1,6 @@
 # Jisr — Project Brief (Single Source of Truth)
 > Project: Jisr (جسر, "bridge") · Owner: Product lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [PRD](../01-product/PRD.md) · [Architecture](../03-engineering/ARCHITECTURE.md) · [Hackathon plan](HACKATHON_PLAN.md) · [Source idea](../../misc/ideas.md)
+> Related: [PRD](../01-product/PRD.md) · [Architecture](../03-engineering/ARCHITECTURE.md) · [Hackathon plan](HACKATHON_PLAN.md) · [Source idea](../research/ideas.md)
 
 **Every other document must stay consistent with this file.** If something here is wrong, change it here first.
 
@@ -10,8 +10,8 @@
 | Name | **Jisr** (Arabic جسر, "bridge") |
 | One-liner | Jisr turns every positive mental-health screen into a completed, measured hand-off to the right level of care, with a deterministic crisis gate that no AI can override. |
 | Challenge | Future Health Digital Innovation Challenge 2026 — **C10 Earlier, Safer Mental Wellbeing Support** (DoH Abu Dhabi; co-creators Microsoft, Inception42, MBZUAI) |
-| Idea type | Doesn't exist in the public field: 0–1 public C10 repos at 18 Nov 2026 (one possible, unbranded: Flan-Backend; `misc/research/E-competition.md`) |
-| Statement text | Verbatim C10 text: `../../misc/research/00-source/statement-C10.md` |
+| Idea type | Doesn't exist in the public field: 0–1 public C10 repos at 18 Nov 2026 (one possible, unbranded: Flan-Backend; `docs/research/research/E-competition.md`) |
+| Statement text | Verbatim C10 text: `../research/research/00-source/statement-C10.md` |
 | Submission | 20 Nov 2026. Exact cut-off hour/time zone not published on the page → **internal deadline 20 Nov 10:00 GST** |
 | Currency | AED (USD in parentheses where useful) |
 | Region | Abu Dhabi, UAE |

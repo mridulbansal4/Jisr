@@ -105,7 +105,7 @@ Facts marked **unverified** have no source in our research files and must not be
 **Current workarounds.** Free-text referral letters; telling patients to "call the hospital".
 
 **Quotes.**
-- [Sourced] Inception's speaker asked for deterministic scoring kept separate from LLM narration, and for clinician-in-the-loop approval (`misc/research/01-facts.md`, organiser sessions).
+- [Sourced] Inception's speaker asked for deterministic scoring kept separate from LLM narration, and for clinician-in-the-loop approval (`docs/research/research/01-facts.md`, organiser sessions).
 - [Illustrative] "Give me the score, the trend and the risk on one page. I'll decide the step."
 
 **What would make her stop.** AI text that sounds like a diagnosis; extra logins outside her EMR (v1 must launch from facility systems); alerts without owners.
@@ -126,7 +126,7 @@ Facts marked **unverified** have no source in our research files and must not be
 **Goals.** One queue ordered RED → overdue → declined → unassigned; a visible 15-minute clock for RED; one place to document contact and disposition; automatic re-match when a provider declines.
 
 **Quotes.**
-- [Sourced] C05 owners asked for overdue / rejected / unassigned referrals to be visible and for ownership at every transition (`misc/research/A-organisers-judges.md`, Head of Screening row). Jisr applies the same discipline to C10.
+- [Sourced] C05 owners asked for overdue / rejected / unassigned referrals to be visible and for ownership at every transition (`docs/research/research/A-organisers-judges.md`, Head of Screening row). Jisr applies the same discipline to C10.
 - [Illustrative] "If someone tells the app they want to disappear, I need to know in minutes, not tomorrow."
 
 **What would make him stop.** False alarms with no context; alerts he cannot act on; no way to record that he called the person.
@@ -147,7 +147,7 @@ Facts marked **unverified** have no source in our research files and must not be
 
 **Quotes.**
 - [Sourced] C10 asks for outcomes including adverse events and fairness across nationality and language (C10 statement).
-- [Sourced, C04 session] ADPHC expert on the insurance-card-blocking lever: "Is this what we want going forward? The answer is no" (`misc/research/01-facts.md`). It shows the programme wants participant-driven engagement, not coercion.
+- [Sourced, C04 session] ADPHC expert on the insurance-card-blocking lever: "Is this what we want going forward? The answer is no" (`docs/research/research/01-facts.md`). It shows the programme wants participant-driven engagement, not coercion.
 - [Illustrative] "Tell me how many positive screens reached care within two weeks, and for whom it didn't work."
 
 **What would make them stop.** Numbers that could identify individuals; dashboards without definitions; simulated numbers presented as real.
