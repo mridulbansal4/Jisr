@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" width="1600" height="400" role="img" aria-label="Jisr: from a positive screen to the right care, on time">
+  <defs>
+    <linearGradient id="bn-dawn" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#A84B34"/><stop offset="0.45" stop-color="#C58A3E"/><stop offset="1" stop-color="#2F5D62"/>
+    </linearGradient>
+    <radialGradient id="bn-glow" cx="0.72" cy="-0.2" r="0.9">
+      <stop offset="0" stop-color="#C58A3E" stop-opacity="0.22"/><stop offset="0.5" stop-color="#A84B34" stop-opacity="0.08"/><stop offset="1" stop-color="#F6F3ED" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="400" rx="28" fill="#F6F3ED"/>
+  <rect width="1600" height="400" rx="28" fill="url(#bn-glow)"/>
+  <path d="M900 150 Q1230 10 1560 128" fill="none" stroke="url(#bn-dawn)" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+  <path d="M900 150 Q1230 10 1560 128" fill="none" stroke="#1D1B18" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="10 12" transform="translate(0 26)"/>
+  <svg x="96" y="88" width="224" height="224" viewBox="0 0 128 128">
+  <defs>
+    <!-- Subtle Alabaster Stone Micro-Grain Texture -->
+    <filter id="grain-lt" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="7" result="noise"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.48 0 0 0 0.045 0" in="noise" result="cn"/>
+      <feComposite operator="in" in="cn" in2="SourceGraphic" result="clip"/>
+      <feBlend mode="overlay" in="clip" in2="SourceGraphic"/>
+    </filter>
+
+    <!-- Physical 3D Contact Shadow -->
+    <filter id="shadow-lt" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0.9" dy="3.2" stdDeviation="2.8" flood-color="#1d1b18" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="0.8" stdDeviation="0.6" flood-color="#1d1b18" flood-opacity="0.28"/>
+    </filter>
+
+    <!-- Apple Squircle Plinth Gradients (Light #F6F3ED) -->
+    <linearGradient id="plinth-lt" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="55%" stop-color="#f7f4ee"/>
+      <stop offset="100%" stop-color="#e7e1d5"/>
+    </linearGradient>
+    <radialGradient id="plinth-glow-lt" cx="37%" cy="8%" r="78%">
+      <stop offset="0%" stop-color="#2f5d62" stop-opacity="0.14"/>
+      <stop offset="45%" stop-color="#c58a3e" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#f6f3ed" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="plinth-rim-lt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d1b18" stop-opacity="0.18"/>
+      <stop offset="40%" stop-color="#2f5d62" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#1d1b18" stop-opacity="0.08"/>
+    </linearGradient>
+
+    <!-- Left Arch: Brushed Pearlescent Stone / Ivory -->
+    <linearGradient id="arch-l-out-lt" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#f4f0e8"/>
+      <stop offset="100%" stop-color="#d2cbc0"/>
+    </linearGradient>
+    <linearGradient id="arch-l-in-lt" x1="0.2" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#d8d1c5"/>
+      <stop offset="55%" stop-color="#b2aa9c"/>
+      <stop offset="100%" stop-color="#8a8275"/>
+    </linearGradient>
+
+    <!-- Right Arch: Deep Anodized Slate Sea-Teal -->
+    <linearGradient id="arch-r-out-lt" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#7baeb2"/>
+      <stop offset="48%" stop-color="#43787d"/>
+      <stop offset="100%" stop-color="#254c50"/>
+    </linearGradient>
+    <linearGradient id="arch-r-in-lt" x1="0.1" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#3c6e73"/>
+      <stop offset="55%" stop-color="#24494d"/>
+      <stop offset="100%" stop-color="#132a2d"/>
+    </linearGradient>
+
+    <!-- Left V-Chevron: Deep Architectural Obsidian -->
+    <linearGradient id="chev-l-up-lt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#384046"/>
+      <stop offset="50%" stop-color="#202529"/>
+      <stop offset="100%" stop-color="#111417"/>
+    </linearGradient>
+    <linearGradient id="chev-l-lo-lt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d2226"/>
+      <stop offset="100%" stop-color="#090b0d"/>
+    </linearGradient>
+
+    <!-- Right V-Chevron: Specular Mineral Teal -->
+    <linearGradient id="chev-r-up-lt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c4e3e5"/>
+      <stop offset="48%" stop-color="#85b5b8"/>
+      <stop offset="100%" stop-color="#528286"/>
+    </linearGradient>
+    <linearGradient id="chev-r-lo-lt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#609094"/>
+      <stop offset="55%" stop-color="#3a676b"/>
+      <stop offset="100%" stop-color="#1f3f42"/>
+    </linearGradient>
+
+    <!-- Outer Buttress Wings -->
+    <linearGradient id="wing-l-lt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b8b0a2"/>
+      <stop offset="100%" stop-color="#7d7568"/>
+    </linearGradient>
+    <linearGradient id="wing-r-lt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a8a093"/>
+      <stop offset="100%" stop-color="#6e675b"/>
+    </linearGradient>
+
+    <!-- Central Orbital Sphere: Brushed Dawn-Gold & Bounce Light -->
+    <radialGradient id="orb-lt" cx="50%" cy="50%" r="52%" fx="37%" fy="23%">
+      <stop offset="0%" stop-color="#fffdf7"/>
+      <stop offset="16%" stop-color="#fae5b2"/>
+      <stop offset="42%" stop-color="#dfb26c"/>
+      <stop offset="72%" stop-color="#9e6d36"/>
+      <stop offset="92%" stop-color="#523418"/>
+      <stop offset="100%" stop-color="#2e1b0b"/>
+    </radialGradient>
+    <linearGradient id="orb-bounce-lt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8dbcbf" stop-opacity="0"/>
+      <stop offset="70%" stop-color="#8dbcbf" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#8dbcbf" stop-opacity="0.35"/>
+    </linearGradient>
+    <linearGradient id="cable-lt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8c6b3f" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#a84b34" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#2f5d62" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Apple G2 Continuous-Curvature Squircle Plinth -->
+  <path d="M 42 6 L 86 6 C 104 6, 113 6, 117.5 10.5 C 122 15, 122 24, 122 42 L 122 86 C 122 104, 122 113, 117.5 117.5 C 113 122, 104 122, 86 122 L 42 122 C 24 122, 15 122, 10.5 117.5 C 6 113, 6 104, 6 86 L 6 42 C 6 24, 6 15, 10.5 10.5 C 15 6, 24 6, 42 6 Z" fill="url(#plinth-lt)" filter="url(#grain-lt)"/>
+  <path d="M 42 6 L 86 6 C 104 6, 113 6, 117.5 10.5 C 122 15, 122 24, 122 42 L 122 86 C 122 104, 122 113, 117.5 117.5 C 113 122, 104 122, 86 122 L 42 122 C 24 122, 15 122, 10.5 117.5 C 6 113, 6 104, 6 86 L 6 42 C 6 24, 6 15, 10.5 10.5 C 15 6, 24 6, 42 6 Z" fill="url(#plinth-glow-lt)"/>
+  <path d="M 42 6 L 86 6 C 104 6, 113 6, 117.5 10.5 C 122 15, 122 24, 122 42 L 122 86 C 122 104, 122 113, 117.5 117.5 C 113 122, 104 122, 86 122 L 42 122 C 24 122, 15 122, 10.5 117.5 C 6 113, 6 104, 6 86 L 6 42 C 6 24, 6 15, 10.5 10.5 C 15 6, 24 6, 42 6 Z" fill="none" stroke="url(#plinth-rim-lt)" stroke-width="1.25"/>
+
+  <!-- 5 Golden Suspension Harp Filaments -->
+  <g stroke="url(#cable-lt)" stroke-width="0.85" stroke-linecap="round">
+    <line x1="54" y1="35" x2="54" y2="83"/>
+    <line x1="59" y1="34" x2="59" y2="88"/>
+    <line x1="64" y1="33.5" x2="64" y2="92"/>
+    <line x1="69" y1="34" x2="69" y2="88"/>
+    <line x1="74" y1="35" x2="74" y2="83"/>
+  </g>
+
+  <!-- 3D Architectural Emblem -->
+  <g filter="url(#shadow-lt)">
+    <!-- Upper Concentric Split-Bevel Bridge Arch -->
+    <path d="M 21 62 A 43 43 0 0 1 64 19 L 64 26.5 A 35.5 35.5 0 0 0 28.5 62 Z" fill="url(#arch-l-out-lt)"/>
+    <path d="M 28.5 62 A 35.5 35.5 0 0 1 64 26.5 L 64 34.5 A 27.5 27.5 0 0 0 36.5 62 Z" fill="url(#arch-l-in-lt)"/>
+    <path d="M 64 19 A 43 43 0 0 1 107 62 L 99.5 62 A 35.5 35.5 0 0 0 64 26.5 Z" fill="url(#arch-r-out-lt)"/>
+    <path d="M 64 26.5 A 35.5 35.5 0 0 1 99.5 62 L 91.5 62 A 27.5 27.5 0 0 0 64 34.5 Z" fill="url(#arch-r-in-lt)"/>
+
+    <!-- Specular Ridge Hairlines on Upper Arch -->
+    <path d="M 28.5 62 A 35.5 35.5 0 0 1 64 26.5" fill="none" stroke="#ffffff" stroke-opacity="0.7" stroke-width="0.7"/>
+    <path d="M 64 26.5 A 35.5 35.5 0 0 1 99.5 62" fill="none" stroke="#d4f0f2" stroke-opacity="0.45" stroke-width="0.7"/>
+    <line x1="64" y1="19" x2="64" y2="34.5" stroke="#000000" stroke-opacity="0.3" stroke-width="0.8"/>
+
+    <!-- Outer Buttress Wings -->
+    <polygon points="24.5,71 34.5,91.5 49,94 40,85" fill="url(#wing-l-lt)"/>
+    <polyline points="24.5,71 34.5,91.5 49,94" fill="none" stroke="#ffffff" stroke-opacity="0.4" stroke-width="0.6"/>
+    <polygon points="103.5,71 93.5,91.5 79,94 88,85" fill="url(#wing-r-lt)"/>
+    <polyline points="103.5,71 93.5,91.5 79,94" fill="none" stroke="#ffffff" stroke-opacity="0.4" stroke-width="0.6"/>
+
+    <!-- Lower Multi-Faceted V-Chevron Base -->
+    <polygon points="29.8,65.5 39.2,65.5 64,90.3 64,99.7" fill="url(#chev-l-up-lt)"/>
+    <polygon points="20.5,65.5 29.8,65.5 64,99.7 64,109" fill="url(#chev-l-lo-lt)"/>
+    <polygon points="64,90.3 88.8,65.5 98.2,65.5 64,99.7" fill="url(#chev-r-up-lt)"/>
+    <polygon points="64,99.7 98.2,65.5 107.5,65.5 64,109" fill="url(#chev-r-lo-lt)"/>
+
+    <!-- Specular Chamfer Ridge Lines on V-Chevron -->
+    <line x1="29.8" y1="65.5" x2="64" y2="99.7" stroke="#ffffff" stroke-opacity="0.22" stroke-width="0.65"/>
+    <line x1="98.2" y1="65.5" x2="64" y2="99.7" stroke="#ffffff" stroke-opacity="0.55" stroke-width="0.7"/>
+    <line x1="20.5" y1="65.5" x2="39.2" y2="65.5" stroke="#ffffff" stroke-opacity="0.35" stroke-width="0.65"/>
+    <line x1="88.8" y1="65.5" x2="107.5" y2="65.5" stroke="#ffffff" stroke-opacity="0.6" stroke-width="0.65"/>
+
+    <!-- Central Brushed Dawn-Gold Orbital Sphere -->
+    <circle cx="64" cy="62.5" r="14.8" fill="url(#orb-lt)"/>
+    <circle cx="64" cy="62.5" r="14.8" fill="url(#orb-bounce-lt)"/>
+    <circle cx="64" cy="62.5" r="14.5" fill="none" stroke="#fff6df" stroke-opacity="0.32" stroke-width="0.55"/>
+  </g>
+</svg>
+  <text x="372" y="214" font-family="'Instrument Serif', Georgia, 'Times New Roman', serif" font-size="138" fill="#1D1B18" letter-spacing="-2">Jisr</text>
+  <text x="640" y="206" font-family="'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif" font-size="92" font-weight="600" fill="#2F5D62">جسر</text>
+  <text x="378" y="282" font-family="'Instrument Serif', Georgia, 'Times New Roman', serif" font-style="italic" font-size="46" fill="#57534B">From a positive screen to the right care, on time.</text>
+  <text x="380" y="330" font-family="'IBM Plex Mono', Consolas, 'Courier New', monospace" font-size="20" letter-spacing="4" fill="#6C675E">FUTURE HEALTH CHALLENGE 2026 · STATEMENT C10</text>
+</svg>
