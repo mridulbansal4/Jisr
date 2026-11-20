@@ -1,6 +1,6 @@
 # Team
 > Project: Jisr · Owner: Product lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [Hackathon plan](../00-overview/HACKATHON_PLAN.md) · [Backlog](BACKLOG.md) · [Features](../01-product/FEATURES.md) · [CONTRIBUTING](../../CONTRIBUTING.md)
+> Related: [Project brief](../00-overview/PROJECT_BRIEF.md) · [Hackathon plan](../00-overview/HACKATHON_PLAN.md) · [Backlog](BACKLOG.md) · [Features](../01-product/FEATURES.md) · [CONTRIBUTING](../../.github/CONTRIBUTING.md)
 
 Team size: 2–4 people, JavaScript/TypeScript + Python, ~36-hour build (18–20 Nov 2026), submission 20 Nov 2026 (brief §13). Names are filled in by the team at kick-off; roles are fixed now so every doc can refer to them.
 
@@ -71,4 +71,4 @@ Sleep: each person takes at least one 4-hour block; blocks are staggered so BE o
 5. **Cut rule:** at any demo check, if a Must feature is not working end-to-end, the next Could/Should item on the cut list is dropped immediately.
 
 ## 6. Definition of done (per ticket)
-Code merged to `main` · tests for each engine branch · strings in all three locales · works on the deployed preview · no PII or free text in logs · acceptance criteria in the ticket checked · docs touched if behaviour changed (see [CONTRIBUTING](../../CONTRIBUTING.md)).
+Code merged to `main` · tests for each engine branch · strings in all three locales · works on the deployed preview · no PII or free text in logs · acceptance criteria in the ticket checked · docs touched if behaviour changed (see [CONTRIBUTING](../../.github/CONTRIBUTING.md)).

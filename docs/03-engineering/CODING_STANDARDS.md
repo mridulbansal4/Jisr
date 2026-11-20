@@ -1,6 +1,6 @@
 # Coding Standards
 > Project: Jisr · Owner: Tech lead · Status: Draft v0.1 · Last updated: 2026-11-18
-> Related: [CLAUDE.md](../../CLAUDE.md) · [Contributing](../../CONTRIBUTING.md) · [Backend](BACKEND.md) · [Frontend](FRONTEND.md) · [Testing](TESTING.md) · [Git workflow](GIT_WORKFLOW.md)
+> Related: [CLAUDE.md](../../CLAUDE.md) · [Contributing](../../.github/CONTRIBUTING.md) · [Backend](BACKEND.md) · [Frontend](FRONTEND.md) · [Testing](TESTING.md) · [Git workflow](GIT_WORKFLOW.md)
 
 Short version: **typed, linted, formatted, tested; thresholds only in `packages/rules`; prompts only in `ai/prompts`; no PII or free text in logs.**
 
