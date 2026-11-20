@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="512" height="512">
+  <defs>
+    <filter id="shadow-bare-dk" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0.9" dy="3.5" stdDeviation="3.2" flood-color="#000000" flood-opacity="0.75"/>
+    </filter>
+    <linearGradient id="arch-l-out" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="45%" stop-color="#f2eee6"/>
+      <stop offset="100%" stop-color="#cbc4b8"/>
+    </linearGradient>
+    <linearGradient id="arch-l-in" x1="0.2" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#dcd5c9"/>
+      <stop offset="55%" stop-color="#b5aea0"/>
+      <stop offset="100%" stop-color="#857e72"/>
+    </linearGradient>
+    <linearGradient id="arch-r-out" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#b8dcde"/>
+      <stop offset="45%" stop-color="#76a8ac"/>
+      <stop offset="100%" stop-color="#3c6d71"/>
+    </linearGradient>
+    <linearGradient id="arch-r-in" x1="0.1" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#588a8e"/>
+      <stop offset="55%" stop-color="#346165"/>
+      <stop offset="100%" stop-color="#1b3a3d"/>
+    </linearGradient>
+    <linearGradient id="chev-l-up" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#384046"/>
+      <stop offset="50%" stop-color="#202529"/>
+      <stop offset="100%" stop-color="#111417"/>
+    </linearGradient>
+    <linearGradient id="chev-l-lo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d2226"/>
+      <stop offset="100%" stop-color="#090b0d"/>
+    </linearGradient>
+    <linearGradient id="chev-r-up" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c4e3e5"/>
+      <stop offset="48%" stop-color="#85b5b8"/>
+      <stop offset="100%" stop-color="#528286"/>
+    </linearGradient>
+    <linearGradient id="chev-r-lo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#609094"/>
+      <stop offset="55%" stop-color="#3a676b"/>
+      <stop offset="100%" stop-color="#1f3f42"/>
+    </linearGradient>
+    <linearGradient id="wing-l" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a6c70"/>
+      <stop offset="100%" stop-color="#22383b"/>
+    </linearGradient>
+    <linearGradient id="wing-r" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3e5e62"/>
+      <stop offset="100%" stop-color="#1a2e31"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="50%" cy="50%" r="52%" fx="37%" fy="23%">
+      <stop offset="0%" stop-color="#fffdf7"/>
+      <stop offset="16%" stop-color="#fae5b2"/>
+      <stop offset="42%" stop-color="#dfb26c"/>
+      <stop offset="72%" stop-color="#9e6d36"/>
+      <stop offset="92%" stop-color="#523418"/>
+      <stop offset="100%" stop-color="#2e1b0b"/>
+    </radialGradient>
+    <linearGradient id="orb-bounce" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8dbcbf" stop-opacity="0"/>
+      <stop offset="70%" stop-color="#8dbcbf" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#8dbcbf" stop-opacity="0.38"/>
+    </linearGradient>
+    <linearGradient id="cable" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d8b278" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#e2b46f" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#8dbcbf" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+
+  <g stroke="url(#cable)" stroke-width="0.85" stroke-linecap="round">
+    <line x1="54" y1="35" x2="54" y2="83"/>
+    <line x1="59" y1="34" x2="59" y2="88"/>
+    <line x1="64" y1="33.5" x2="64" y2="92"/>
+    <line x1="69" y1="34" x2="69" y2="88"/>
+    <line x1="74" y1="35" x2="74" y2="83"/>
+  </g>
+
+  <g filter="url(#shadow-bare-dk)">
+    <path d="M 21 62 A 43 43 0 0 1 64 19 L 64 26.5 A 35.5 35.5 0 0 0 28.5 62 Z" fill="url(#arch-l-out)"/>
+    <path d="M 28.5 62 A 35.5 35.5 0 0 1 64 26.5 L 64 34.5 A 27.5 27.5 0 0 0 36.5 62 Z" fill="url(#arch-l-in)"/>
+    <path d="M 64 19 A 43 43 0 0 1 107 62 L 99.5 62 A 35.5 35.5 0 0 0 64 26.5 Z" fill="url(#arch-r-out)"/>
+    <path d="M 64 26.5 A 35.5 35.5 0 0 1 99.5 62 L 91.5 62 A 27.5 27.5 0 0 0 64 34.5 Z" fill="url(#arch-r-in)"/>
+    <path d="M 28.5 62 A 35.5 35.5 0 0 1 64 26.5" fill="none" stroke="#ffffff" stroke-opacity="0.65" stroke-width="0.7"/>
+    <path d="M 64 26.5 A 35.5 35.5 0 0 1 99.5 62" fill="none" stroke="#d4f0f2" stroke-opacity="0.45" stroke-width="0.7"/>
+    <polygon points="24.5,71 34.5,91.5 49,94 40,85" fill="url(#wing-l)"/>
+    <polygon points="103.5,71 93.5,91.5 79,94 88,85" fill="url(#wing-r)"/>
+    <polygon points="29.8,65.5 39.2,65.5 64,90.3 64,99.7" fill="url(#chev-l-up)"/>
+    <polygon points="20.5,65.5 29.8,65.5 64,99.7 64,109" fill="url(#chev-l-lo)"/>
+    <polygon points="64,90.3 88.8,65.5 98.2,65.5 64,99.7" fill="url(#chev-r-up)"/>
+    <polygon points="64,99.7 98.2,65.5 107.5,65.5 64,109" fill="url(#chev-r-lo)"/>
+    <line x1="29.8" y1="65.5" x2="64" y2="99.7" stroke="#ffffff" stroke-opacity="0.22" stroke-width="0.65"/>
+    <line x1="98.2" y1="65.5" x2="64" y2="99.7" stroke="#ffffff" stroke-opacity="0.55" stroke-width="0.7"/>
+    <circle cx="64" cy="62.5" r="14.8" fill="url(#orb)"/>
+    <circle cx="64" cy="62.5" r="14.8" fill="url(#orb-bounce)"/>
+    <circle cx="64" cy="62.5" r="14.5" fill="none" stroke="#fff6df" stroke-opacity="0.32" stroke-width="0.55"/>
+  </g>
+</svg>

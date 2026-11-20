@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 128" width="360" height="128">
+  <rect width="360" height="128" rx="16" fill="#151412"/>
+  <defs>
+    <linearGradient id="plinth" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0%" stop-color="#2a2824"/>
+      <stop offset="48%" stop-color="#191815"/>
+      <stop offset="100%" stop-color="#0e0d0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="37%" cy="8%" r="78%">
+      <stop offset="0%" stop-color="#8dbcbf" stop-opacity="0.24"/>
+      <stop offset="45%" stop-color="#e2b46f" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#151412" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="arch-l-out" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#cbc4b8"/>
+    </linearGradient>
+    <linearGradient id="arch-l-in" x1="0.2" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#dcd5c9"/>
+      <stop offset="100%" stop-color="#857e72"/>
+    </linearGradient>
+    <linearGradient id="arch-r-out" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#b8dcde"/>
+      <stop offset="100%" stop-color="#3c6d71"/>
+    </linearGradient>
+    <linearGradient id="arch-r-in" x1="0.1" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#588a8e"/>
+      <stop offset="100%" stop-color="#1b3a3d"/>
+    </linearGradient>
+    <linearGradient id="chev-l-up" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#384046"/>
+      <stop offset="100%" stop-color="#111417"/>
+    </linearGradient>
+    <linearGradient id="chev-l-lo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d2226"/>
+      <stop offset="100%" stop-color="#090b0d"/>
+    </linearGradient>
+    <linearGradient id="chev-r-up" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c4e3e5"/>
+      <stop offset="100%" stop-color="#528286"/>
+    </linearGradient>
+    <linearGradient id="chev-r-lo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#609094"/>
+      <stop offset="100%" stop-color="#1f3f42"/>
+    </linearGradient>
+    <linearGradient id="wing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a6c70"/>
+      <stop offset="100%" stop-color="#1e3336"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="50%" cy="50%" r="52%" fx="37%" fy="23%">
+      <stop offset="0%" stop-color="#fffdf7"/>
+      <stop offset="18%" stop-color="#fae5b2"/>
+      <stop offset="44%" stop-color="#dfb26c"/>
+      <stop offset="74%" stop-color="#9e6d36"/>
+      <stop offset="100%" stop-color="#2e1b0b"/>
+    </radialGradient>
+  </defs>
+
+  <g transform="translate(16, 16) scale(0.75)">
+    <path d="M 42 6 L 86 6 C 104 6, 113 6, 117.5 10.5 C 122 15, 122 24, 122 42 L 122 86 C 122 104, 122 113, 117.5 117.5 C 113 122, 104 122, 86 122 L 42 122 C 24 122, 15 122, 10.5 117.5 C 6 113, 6 104, 6 86 L 6 42 C 6 24, 6 15, 10.5 10.5 C 15 6, 24 6, 42 6 Z" fill="url(#plinth)"/>
+    <path d="M 42 6 L 86 6 C 104 6, 113 6, 117.5 10.5 C 122 15, 122 24, 122 42 L 122 86 C 122 104, 122 113, 117.5 117.5 C 113 122, 104 122, 86 122 L 42 122 C 24 122, 15 122, 10.5 117.5 C 6 113, 6 104, 6 86 L 6 42 C 6 24, 6 15, 10.5 10.5 C 15 6, 24 6, 42 6 Z" fill="url(#glow)"/>
+    <path d="M 42 6 L 86 6 C 104 6, 113 6, 117.5 10.5 C 122 15, 122 24, 122 42 L 122 86 C 122 104, 122 113, 117.5 117.5 C 113 122, 104 122, 86 122 L 42 122 C 24 122, 15 122, 10.5 117.5 C 6 113, 6 104, 6 86 L 6 42 C 6 24, 6 15, 10.5 10.5 C 15 6, 24 6, 42 6 Z" fill="none" stroke="#eeeae2" stroke-opacity="0.28" stroke-width="1.5"/>
+    <path d="M 21 62 A 43 43 0 0 1 64 19 L 64 26.5 A 35.5 35.5 0 0 0 28.5 62 Z" fill="url(#arch-l-out)"/>
+    <path d="M 28.5 62 A 35.5 35.5 0 0 1 64 26.5 L 64 34.5 A 27.5 27.5 0 0 0 36.5 62 Z" fill="url(#arch-l-in)"/>
+    <path d="M 64 19 A 43 43 0 0 1 107 62 L 99.5 62 A 35.5 35.5 0 0 0 64 26.5 Z" fill="url(#arch-r-out)"/>
+    <path d="M 64 26.5 A 35.5 35.5 0 0 1 99.5 62 L 91.5 62 A 27.5 27.5 0 0 0 64 34.5 Z" fill="url(#arch-r-in)"/>
+    <polygon points="24.5,71 34.5,91.5 49,94 40,85" fill="url(#wing)"/>
+    <polygon points="103.5,71 93.5,91.5 79,94 88,85" fill="url(#wing)"/>
+    <polygon points="29.8,65.5 39.2,65.5 64,90.3 64,99.7" fill="url(#chev-l-up)"/>
+    <polygon points="20.5,65.5 29.8,65.5 64,99.7 64,109" fill="url(#chev-l-lo)"/>
+    <polygon points="64,90.3 88.8,65.5 98.2,65.5 64,99.7" fill="url(#chev-r-up)"/>
+    <polygon points="64,99.7 98.2,65.5 107.5,65.5 64,109" fill="url(#chev-r-lo)"/>
+    <circle cx="64" cy="62.5" r="14.8" fill="url(#orb)"/>
+  </g>
+
+  <text x="128" y="68" fill="#eeeae2" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="38" font-weight="700" letter-spacing="-0.8">Jisr</text>
+  <circle cx="206" cy="56" r="3" fill="#8dbcbf"/>
+  <text x="224" y="68" fill="#8dbcbf" font-family="'IBM Plex Sans Arabic', system-ui, sans-serif" font-size="36" font-weight="600">جسر</text>
+  <text x="129" y="92" fill="#a09a8f" font-family="ui-monospace, monospace" font-size="11" letter-spacing="1.6">STEPPED-CARE LEDGER</text>
+</svg>
